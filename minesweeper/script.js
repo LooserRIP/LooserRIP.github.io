@@ -57,7 +57,7 @@ function xmur3(str) {
     }
 }
 async function reloadnames() {
-  namejson = await fetch("/getstats");
+  namejson = await fetch("https://minesweeper-online.glitch.me/getstats");
   namejson = await namejson.json();
   namejson = namejson.users;
 }
