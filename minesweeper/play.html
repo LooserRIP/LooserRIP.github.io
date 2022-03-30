@@ -1,0 +1,49 @@
+<head>
+  <title>Minesweeper Online</title>
+  <script src="script.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="google-site-verification" content="7OI87_cwXvjJF2uwks6-F21JTXpSrhIXVbx2Q3wTlCo" />
+  <meta name="description" content="Infinite, Online Multiplayer Minesweeper with Biomes!" />
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="shortcut icon" href="#">
+  <link rel="shortcut icon" type="image/x-icon" href="https://imgur.com/kuzo1Nc.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9630575390918843"
+     crossorigin="anonymous"></script>
+  
+</head>
+<body oncontextmenu="return false;" onload="init()">
+  <div class="container" id="chunkcontainer">
+    
+  </div>
+  <div class="chatdiv" id="chatdiv" onclick="openchatbox()">
+    <div class="chatbox" id="chatbox" onclick="openchatbox()">
+     
+    </div>
+     <input type="text" class="chatinput" id="chatinput"/>
+  </div>
+  <div class="nickdiv" id="nickdiv">
+  <p class="nicktext">
+    Nickname
+  </p>
+   
+  <input type="text" class="nickinput" id="nickinput" onchange="changenick()"/>
+
+  <p class="coordtext">
+    Coordinates
+  </p>
+   
+  <input type="text" class="coordinput" id="coordinput" onchange="changecoord()"/>
+    
+    
+  <p class="coordtext">
+    Score
+  </p>
+  <p class="scoretext" id="sct">
+    
+  </p>
+    
+  </div>
+</body>

@@ -1,0 +1,154 @@
+
+.chatinput {
+  top:8px !important;
+  width: 195px !important;
+  height: 12px !important;
+  position: relative;
+  bottom: 5px;
+}
+
+body {
+  overscroll-behavior: contain !important;
+  font-size: 50%;
+  height: 100%;
+  position: fixed;
+  /* prevent overscroll bounce*/
+  background-color: lightgreen;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+.infotext {
+  font-size:200%;
+  }
+.chatbox {
+  top: 5px;
+  left: 5px;
+  position:relative;
+  height: 201px !important;
+  width: 195px !important;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
+.chatmessage {
+  display: absolute;
+  width: 380px;
+  text-align: left;
+  margin: 0;
+  position:relative;
+  font-size: 125%;
+  font-family: "roboto", sans-serif;
+}
+
+.chatdiv {
+  height: 225px !important;
+  width: 200px !important;
+  float:left;
+  position:absolute;
+  bottom: 1%;
+  left: 6px;
+  overflow: hidden;
+}
+
+
+.nickdiv {
+  height: 175px !important;
+  width: 150px !important;
+  font-size: 100%;
+  font-family: "roboto", sans-serif;
+  float:right;
+  right: calc(0 - 10px) !important;
+  position: fixed !important;
+  display:absolute;
+  z-index: 1;
+}
+
+.scoretext {
+  font-size: 200%;
+}
+
+.submitnick {
+  position:relative;
+  display: block;
+  text-align:center;
+  top: 30px;
+  left: 35%;
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+  font-size: 150%;
+  z-index: 1;
+  image-rendering: auto;image-rendering: crisp-edges;image-rendering: pixelated;
+}
+
+.nickinput {
+  opacity: 1;
+  height: 10px !important;
+  width: 100px !important;
+  font-size: 100%;
+  font-family: "roboto", sans-serif;
+  vertical-align: middle;
+  position:relative;
+  display:absolute;
+  z-index: 1;
+}
+
+.coordinput {
+  height: 10px !important;
+  width: 100px !important;
+  font-size: 100%;
+  font-family: "roboto", sans-serif;
+  vertical-align: middle;
+  position:relative;
+  display:absolute;
+  z-index: 1;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+input[type="text"] {
+  border: none;
+  
+  background-color: #FFFFFF00;
+  border-bottom: 1px solid #000000;
+  color: #000000;
+  font-family: 'Roboto', sans-serif;
+}
+.nicktext {
+  position:relative;
+  text-align:center;
+  top: 10px;
+  
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+  font-size: 150%;
+  z-index: 1;
+}
+.coordtext {
+  position:relative;
+  text-align:center;
+  top: 10px;
+  
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+  font-size: 150%;
+  z-index: 1;
+}
