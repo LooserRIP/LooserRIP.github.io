@@ -1158,6 +1158,7 @@ function genLoop() {
       for (let iy = -2 + (rendermode * 1); iy < minheight + 1; iy++) {
         var sx = ((rcx * - 1) + ix) * 600;
         var sy = ((rcy * -1) + iy) * 600;
+        console.log("Generating chunk " + sx + ", " + sy);
         if (!chunkloadlist.includes(sx + "," + sy)) {
           chunkloadlist.push(sx + "," + sy);
           generateChunk(sx, sy);
