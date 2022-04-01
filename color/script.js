@@ -43,13 +43,13 @@ function generateColor() {
     colorhue = guess.h;
     colorsatur = guess.s;
     colorbright = guess.v;
-    submitcolor();
+    submitcolor(false);
   }
 
 }
 
 
-function submitcolor() {
+function submitcolor(firsttime) {
   if (guesses.length >= 6) return;
   guesses.push({h: colorhue, s: colorsatur, v: colorbright});
   /*
@@ -61,10 +61,7 @@ function submitcolor() {
   var dist = deltaE(hsvToRgb2(colorhue, colorsatur, colorbright), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));
   var dist = 100 - dist;
   createGuess(colorhue,colorsatur,colorbright,Math.floor(dist));
-  var firstTimeWin = false;
-  if (JSON.parse(localStorage.guesses) != guesses) {
-    firstTimeWin = true;
-  }
+  var firstTimeWin = firsttime;
   localStorage.guesses = JSON.stringify(guesses);
   if (colorhue == colorgoalhue && colorsatur == colorgoalsatur && colorbright == colorgoalbright) {
     win(firstTimeWin);
@@ -86,7 +83,7 @@ async function win(first) {
     var stats = JSON.parse(localStorage.stats);
     stats.w += 1;
     stats["w" + guesses.length] += 1;
-    localStorage.stats = stats;
+    localStorage.stats = JSON.stringify(stats);
   }
   if (guesses.length == 1) {
     document.getElementById("wintext").innerText = "mf cheated";
@@ -104,7 +101,7 @@ async function defeat(first) {
   if (first) {
     var stats = JSON.parse(localStorage.stats);
     stats.l += 1;
-    localStorage.stats = stats;
+    localStorage.stats = JSON.stringify(stats);
   }
   revealBackground();
   await sleep(1400);
@@ -247,6 +244,10 @@ function rgbToHex(r, g, b) {
 
 function share() {
 
+  var now = new Date();
+  var days = Math.floor(now/8.64e7) + 2;
+  console.log(days);
+
   var sharetext = "untitled wordle clone #" + (days - 19085) + " " + guesses.length + "/6";
   if (!won) sharetext = "untitled wordle clone #" + (days - 19085) + " " + "X/6";
   for (let i = 0; i < guesses.length; i++) {
@@ -254,16 +255,16 @@ function share() {
     var dist = deltaE(hsvToRgb2(guess.h, guess.s, guess.v), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));
     var dist = 100 - dist;
     if (dist == 100) {
-      sharetext = sharetext + "\n🟩 " + dist + "%";
+      sharetext = sharetext + "\n🟩 " + Math.floor(dist) + "%";
     } else if (dist >= 50) {
-      sharetext = sharetext + "\n🟨 " + dist + "%";
+      sharetext = sharetext + "\n🟨 " + Math.floor(dist) + "%";
     } else {
-      sharetext = sharetext + "\n⬛ " + dist + "%";
+      sharetext = sharetext + "\n⬛ " + Math.floor(dist) + "%";
     }
-    sharetext = sharetext + "\nhttps://looserrip.github.io/color"
-    
   }
+  sharetext = sharetext + "\nhttps://looserrip.github.io/color";
   
+  console.log(sharetext);
 
   navigator.clipboard.writeText(sharetext);
 }
