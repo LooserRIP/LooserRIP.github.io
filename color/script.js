@@ -22,6 +22,7 @@ function init() {
 function generateColor() {
   var now = new Date();
   var days = Math.floor(now/8.64e7) + 2;
+  console.log(now/8.64e7);
   console.log(days);
   if (localStorage["lastday"] != days) {
     localStorage["guesses"] = JSON.stringify([]);
@@ -60,7 +61,7 @@ function submitcolor(firsttime) {
   */
   var dist = deltaE(hsvToRgb2(colorhue, colorsatur, colorbright), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));
   var dist = 100 - dist;
-  createGuess(colorhue,colorsatur,colorbright,Math.floor(dist));
+  createGuess(colorhue,colorsatur,colorbright,Math.floor(dist), guesses.length - 1);
   var firstTimeWin = firsttime;
   localStorage.guesses = JSON.stringify(guesses);
   if (colorhue == colorgoalhue && colorsatur == colorgoalsatur && colorbright == colorgoalbright) {
@@ -92,6 +93,7 @@ async function win(first) {
     document.getElementById("wintext").innerText = "fr you clutched";
   }
   revealBackground();
+  document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l;
   document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
@@ -104,6 +106,7 @@ async function defeat(first) {
     localStorage.stats = JSON.stringify(stats);
   }
   revealBackground();
+  document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l;
   document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
@@ -145,18 +148,26 @@ function rgb2lab(rgb){
   return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
 }
 
-function createGuess(h, s, v, dist) {
+function createGuess(h, s, v, dist, ind) {
   var guess = document.createElement("DIV");
   guess.className = "guess";
   var guesscolor = document.createElement("DIV");
   guesscolor.className = "guesscolor";
   guesscolor.style.backgroundColor = hsvToHex(h, s, v);
+  guesscolor.setAttribute("onclick", "copycolor(" + ind + ")")
   var guessdist = document.createElement("P");
   guessdist.className = "guessdist";
   guessdist.innerText = dist + "%";
   guess.appendChild(guesscolor);
   guess.appendChild(guessdist);
   document.getElementById("guesses").appendChild(guess);
+}
+
+function copycolor(i) {
+  colorhue = guesses[i].h;
+  colorsatur = guesses[i].s;
+  colorbright = guesses[i].v;
+  updateColorButtons();
 }
 
 function randomInt(min, max, seed) {
@@ -248,8 +259,8 @@ function share() {
   var days = Math.floor(now/8.64e7) + 2;
   console.log(days);
 
-  var sharetext = "untitled wordle clone #" + (days - 19085) + " " + guesses.length + "/6";
-  if (!won) sharetext = "untitled wordle clone #" + (days - 19085) + " " + "X/6";
+  var sharetext = "Daily Color Picker #" + (days - 19085) + " " + guesses.length + "/6\n";
+  if (!won) sharetext = "Daily Color Picker #" + (days - 19085) + " " + "X/6\n";
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var dist = deltaE(hsvToRgb2(guess.h, guess.s, guess.v), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));

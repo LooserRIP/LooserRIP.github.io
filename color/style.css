@@ -1,6 +1,13 @@
 body {
-  background-color: #141414;
+  background-color: #0a0a0a;
   overflow: hidden;
+}
+* {
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
 }
 .colorpickerparent {
   height: auto;
@@ -24,12 +31,14 @@ body {
   margin: 2px;
   cursor: pointer;
   transform: scale(1);
-  transition: transform 0.2s, border 0.2s, border-bottom 0.2s;
+  transition: transform 0.2s, border 0.2s, border-bottom 0.2s, outline 0.2s;
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   -o-user-select: none;
+  border: 0px solid white;
+  box-sizing:border-box;
 }
 [data-button="1"][data-selected="1"] {
   transform: scale(0.5) rotate(4deg);
@@ -39,6 +48,7 @@ body {
 }
 [data-button="1"]:hover {
   transform: scale(1.1);
+  border: 4px solid white;
 }
 
 #confirmingcolor {
@@ -81,8 +91,8 @@ body {
 .guesscolor {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   border-radius: 7px;
   margin: 2px;
   cursor: pointer;
@@ -94,6 +104,13 @@ body {
   -webkit-user-select: none;
   -o-user-select: none;
   display: inline-block;
+  border: 0px solid white;
+  margin-bottom: 12px;
+  box-sizing:border-box;
+}
+.guesscolor:hover {
+  transform: scale(1.1);
+  border: 4px solid white;
 }
 .guessdist {
   color: #FFFFFF;
@@ -154,13 +171,33 @@ body {
   height: 0px;
   opacity: 0;
   pointer-events: none;
-
+  z-index: 2;
   transition: height 0.3s, opacity 0.3s;
 }
 .winui[data-reveal="1"] {
   height: 400px;
   pointer-events:auto;
   opacity: 1;
+}
+.winuioverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Roboto', sans-serif;
+  background-color: #141414;
+  border-radius: 14px;
+  width: 200%;
+  height: 200%;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  transition: opacity 1s;
+}
+.winuioverlay[data-reveal="1"] {
+  pointer-events:auto;
+  opacity: 0.5;
 }
 .wintext {
   font-family: 'Roboto', sans-serif;
@@ -201,6 +238,10 @@ body {
   cursor: pointer;
   float: right;
   margin-right: 12px;
+  transition: transform 0.2s;
+}
+.sharebutton:active {
+  transform: scale(0.9);
 }
 .sharecaption {
   font-family: 'Roboto', sans-serif;
