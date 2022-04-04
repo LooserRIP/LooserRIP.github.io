@@ -1,0 +1,82 @@
+
+@font-face {
+	font-family: metropolis;
+	src: url("metropolis.ttf") format("opentype");
+  }
+  
+
+
+body {
+  background-color: #191919;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+    text-align: center;  
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	font-family: "metropolis", sans-serif;
+}
+
+.hell {
+	position: absolute;
+	height: 100%;
+	width: 100px;
+	background: linear-gradient(90deg, rgba(255, 0, 0, 0.527) 0%, rgba(0,0,0,0) 100%);
+	transition: background 0.5s, width 0.5s;
+}
+.hell[data-active="1"] {
+	background: linear-gradient(90deg, rgb(255, 38, 0) 0%, rgba(0,0,0,0) 100%);
+	width: 150px;
+}
+.heaven {
+	position: absolute;
+	left: 100%;
+	height: 100%;
+	width: 100px;
+	background: linear-gradient(270deg, #ffee00b6 0%, rgba(0,0,0,0) 100%);
+	transform: translateX(-100%);
+	transition: background 0.5s, width 0.5s;
+}
+.heaven[data-active="1"] {
+	background: linear-gradient(270deg, #ffef00FF 0%, rgba(0,0,0,0) 100%);
+	width: 150px;
+}
+.judgedimage {
+	position: absolute;
+	width: 300px;
+	height: 300px;
+	transform: scale(1) translate(-50%, -50%);
+	transition: transform 0.2s;
+	border-radius: 0.7em;
+	
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	background-position: center;
+   background-size: cover;
+   background-repeat: no-repeat;
+   z-index: 1;
+}
+.judgedimage:hover {
+	transform: scale(1.1) translate(-45%, -45%);
+}
+.judgedimage:active {
+	transform: scale(1.2) translate(-40%, -40%);
+}
+.placetext {
+	color: #FFFFFF;
+	font-size: 200%;
+	font-family: "metropolis", sans-serif;
+	transition: font-size 0.5s;
+}
+[data-active="1"] > .placetext {
+	font-size: 250%;
+}
+.statstext {
+	color: #FFFFFF;
+	font-size: 250%;
+	font-family: "metropolis", sans-serif;
+}
