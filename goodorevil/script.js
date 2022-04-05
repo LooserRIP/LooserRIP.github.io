@@ -59,9 +59,9 @@ function vote(mode) {
   if (mode == "u") up++;
   if (mode == "d") down++;
   if (down > up) {
-    document.getElementById("statspercentage").innerText = (((down / (down + up))) * 100) + "% Evil";
+    document.getElementById("statspercentage").innerText = Math.floor(((down / (down + up))) * 100) + "% Evil";
   } else {
-    document.getElementById("statspercentage").innerText = (((up / (down + up))) * 100) + "% Good";
+    document.getElementById("statspercentage").innerText = Math.floor(((up / (down + up))) * 100) + "% Good";
   }
   document.getElementById("statsvotes").innerText = (down + up) + " Votes";
   if (up > down) document.getElementById("statsverdict").dataset.mode = "heaven";
