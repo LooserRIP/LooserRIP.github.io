@@ -64,7 +64,7 @@ function submitcolor(firsttime) {
   createGuess(colorhue,colorsatur,colorbright,Math.floor(dist), guesses.length - 1);
   var firstTimeWin = firsttime;
   localStorage.guesses = JSON.stringify(guesses);
-  if (colorhue == colorgoalhue && colorsatur == colorgoalsatur && colorbright == colorgoalbright) {
+  if (dist == 100) {
     win(firstTimeWin);
   } else {
     if (guesses.length == 6) {
