@@ -1,0 +1,65 @@
+
+@font-face {
+	font-family: metropolis;
+	src: url("metropolis.ttf") format("opentype");
+  }
+  
+
+
+body {
+  background-color: rgb(19, 22, 31);
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+    text-align: center;  
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	font-family: "metropolis", sans-serif;
+	color: #FFF;
+	font-family: 'Roboto';
+}
+input[type="text"] {
+	font-size: 200%;
+	padding: 2px;
+	border-radius: 7px;
+	background-color: #000;
+	display: block;
+	color: #FFF;
+	font-family: 'Roboto';
+
+}
+input[type="password"] {
+	font-size: 200%;
+	padding: 2px;
+	border-radius: 7px;
+	background-color: #000;
+	display: block;
+	color: #FFF;
+	font-family: 'Roboto';
+
+}
+textarea:focus, input:focus{
+    outline: none;
+}
+.submit {
+	color: #FFFFFF;
+	height: 50px;
+	background-color: rgb(76, 78, 87);
+	cursor: pointer;
+	user-select: none;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select: none;
+	width: 376px;
+	border-radius: 7px;
+	
+}
+.submittext {
+	font-size: 190%;
+	position: relative;
+	top: calc(50% + 2px);
+	transform: translateY(-50%);
+	pointer-events: none;
+}

@@ -49,17 +49,32 @@ serverConnection.onopen = function() {
 }
 var modeSave;
 function vote(mode) {
-  serverConnection.send(JSON.stringify({vote: index, votemode: mode}));
+  serverConnection.send(JSON.stringify({vote: leftItems[index].id, votemode: mode}));
   votingOn = mode;
   loadTime = 1;
   document.getElementById("statsui").dataset.active = "1";
+  document.getElementById("statsname").innerText = leftItems[index].n;
+  var up = leftItems[index].u;
+  var down = leftItems[index].d;
+  if (mode == "u") up++;
+  if (mode == "d") down++;
+  if (down > up) {
+    document.getElementById("statspercentage").innerText = (((down / (down + up))) * 100) + "% Evil";
+  } else {
+    document.getElementById("statspercentage").innerText = (((up / (down + up))) * 100) + "% Good";
+  }
+  document.getElementById("statsvotes").innerText = (down + up) + " Votes";
+  if (up > down) document.getElementById("statsverdict").dataset.mode = "heaven";
+  if (down > up) document.getElementById("statsverdict").dataset.mode = "hell";
+  if (up == down) document.getElementById("statsverdict").dataset.mode = "neutral";
   modeSave = mode;
-
+  leftItems.splice(index, 1);
 }
 
 function continueOn() {
   loadTime = 0;
   document.getElementById("statsui").dataset.active = "0";
+  spawnItem();
 }
 
 function physics() {
@@ -122,9 +137,19 @@ function spawnItem() {
   if (leftItems.length > 0) {
     index = randomInt(0, leftItems.length - 1);
     var item = leftItems[index];
+    const width  = window.innerWidth  || document.documentElement.clientWidth  || document.body.clientWidth;
+    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    judgedimage.style.left = (((parseFloat(judgedimage.style.left) * 20) + (width / 2))/21) + "px";
+    judgedimage.style.top = (-height - 100) + "px";
     judgedimage.style.backgroundImage = "url('" + item.l + "')";
   } else {
-    console.error("no items left FRRR");
+    document.getElementById("statsui").dataset.active = "1";
+    document.getElementById("statsname").innerText = "Sorry!";
+    document.getElementById("statspercentage").innerText = "but you have judged all items!";
+    document.getElementById("statsvotes").innerText = "";
+    document.getElementById("statsverdict").style.display = "none";
+    document.getElementById("judgedimage").style.display = "none";
+    document.getElementById("statsbutton").style.display = "none";
   }
 }
 
