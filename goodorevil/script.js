@@ -34,6 +34,25 @@ function init() {
       judgedimage.style.left = newPos.x + "px";
     }
   }
+  document.body.ontouchend = function() {
+    if (mouseDown && loaded) {
+      if (dHell.dataset.active == "1") {
+        vote("d");
+      } else if (dHeaven.dataset.active == "1") {
+        vote("u");
+      }
+    }
+    mouseDown = false;
+  }
+  document.body.ontouchmove = function(event) {
+    if (mouseDown) {
+      var touchLocation = event.targetTouches[0];
+      mp = {x: touchLocation.pageX, y: touchLocation.pageY};
+      var newPos = {x: mp.x + dragOffset.x, y: mp.y + dragOffset.y};
+      judgedimage.style.top = newPos.y + "px";
+      judgedimage.style.left = newPos.x + "px";
+    }
+  }
   setInterval(physics, 5);
 }
 
@@ -105,6 +124,13 @@ function physics() {
 function startdrag(event) {
   mouseDown = true;
   dragOffset = {x: parseFloat(judgedimage.style.left) - event.clientX, y: parseFloat(judgedimage.style.top) - event.clientY};
+  console.log(dragOffset);
+}
+function startdragm(event) {
+  mouseDown = true;
+  var touchLocation = event.targetTouches[0];
+  mp = {x: touchLocation.pageX, y: touchLocation.pageY};
+  dragOffset = {x: parseFloat(judgedimage.style.left) - mp.x, y: parseFloat(judgedimage.style.top) - mp.y};
   console.log(dragOffset);
 }
 

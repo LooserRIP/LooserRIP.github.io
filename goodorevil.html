@@ -2,6 +2,7 @@
   <title>Good or Evil</title>
   <script src="goodorevil/script.js"></script>
   <link rel="stylesheet" href="goodorevil/style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no" />
   <link rel="shortcut icon" href="#">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -9,7 +10,7 @@
 </head>
 <body onload="init()">
   <div class="container" id="container">
-    <div class="judgedimage" id="judgedimage" onmousedown="startdrag(event)" style="top: 0px; left: 0px;" draggable="false">
+    <div class="judgedimage" id="judgedimage" onmousedown="startdrag(event)" ontouchstart="startdragm(event)" style="top: 0px; left: 0px;" draggable="false">
 
     </div>
   </div>
