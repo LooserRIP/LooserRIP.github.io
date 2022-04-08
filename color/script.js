@@ -52,7 +52,7 @@ function generateColor() {
 
 
 function submitcolor(firsttime) {
-  if (guesses.length >= 6) return;
+  if (guesses.length >= 4) return;
   guesses.push({h: colorhue, s: colorsatur, v: colorbright});
   /*
   var huediff = (Math.abs(Math.round(colorgoalhue/36) - Math.round(colorhue/36)) / 9);
@@ -68,7 +68,7 @@ function submitcolor(firsttime) {
   if (dist == 100) {
     win(firstTimeWin);
   } else {
-    if (guesses.length == 6) {
+    if (guesses.length == 4) {
       defeat(firstTimeWin);
     }
   }
@@ -90,7 +90,7 @@ async function win(first) {
   if (guesses.length == 1) {
     document.getElementById("wintext").innerText = "mf cheated";
   }
-  if (guesses.length == 6) {
+  if (guesses.length == 4) {
     document.getElementById("wintext").innerText = "fr you clutched";
   }
   revealBackground();
@@ -207,7 +207,7 @@ async function createGuess(h, s, v, dist, ind) {
   var diff2 = Math.abs(Math.round(s / 0.1) - Math.round(colorgoalsatur / 0.1));
   if (diff2 == 0) {
     guessc_satur.dataset["state"] = "3";
-  } else if (diff2 == 1 || diff2 == 10) {
+  } else if (diff2 == 1) {
     guessc_satur.dataset["state"] = "2";
   } else {
     guessc_satur.dataset["state"] = "1";
@@ -216,7 +216,7 @@ async function createGuess(h, s, v, dist, ind) {
   var diff3 = Math.abs(Math.round(v / 0.1) - Math.round(colorgoalbright / 0.1));
   if (diff3 == 0) {
     guessc_bright.dataset["state"] = "3";
-  } else if (diff3 == 1 || diff3 == 10) {
+  } else if (diff3 == 1) {
     guessc_bright.dataset["state"] = "2";
   } else {
     guessc_bright.dataset["state"] = "1";
@@ -320,8 +320,8 @@ function share() {
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
   console.log(days);
 
-  var sharetext = "Daily Color Picker #" + (days - 18990) + " " + guesses.length + "/6\n";
-  if (!won) sharetext = "Daily Color Picker #" + (days - 18990) + " " + "X/6\n";
+  var sharetext = "Daily Color Picker #" + (days - 18990) + " " + guesses.length + "/4\n";
+  if (!won) sharetext = "Daily Color Picker #" + (days - 18990) + " " + "X/4\n";
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var charhue = "⬛";
@@ -334,11 +334,11 @@ function share() {
     var diff = Math.abs(Math.round(guess.s / 0.1) - Math.round(colorgoalsatur /0.1));
     if (diff == 0) {
       charsatur = "🟩";
-    } else if (diff == 1 || diff == 10) {charsatur = "🟨"}
+    } else if (diff == 1) {charsatur = "🟨"}
     var diff = Math.abs(Math.round(guess.v / 0.1) - Math.round(colorgoalbright /0.1));
     if (diff == 0) {
       charbright = "🟩";
-    } else if (diff == 1 || diff == 10) {charbright = "🟨"}
+    } else if (diff == 1) {charbright = "🟨"}
     sharetext = sharetext + "\n" + charhue + charsatur + charbright;
   }
   sharetext = sharetext + "\nhttps://looserrip.github.io/color";
