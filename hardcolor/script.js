@@ -259,8 +259,8 @@ function share() {
   var days = Math.floor(now/8.64e7) + 2;
   console.log(days);
 
-  var sharetext = "Daily Hard Color Picker #" + (days - 19085) + " " + guesses.length + "/6\n";
-  if (!won) sharetext = "Daily Hard Color Picker #" + (days - 19085) + " " + "X/6\n";
+  var sharetext = "Daily Hard Color Picker #" + (days - 19092) + " " + guesses.length + "/6\n";
+  if (!won) sharetext = "Daily Hard Color Picker #" + (days - 19092) + " " + "X/6\n";
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var dist = deltaE(hsvToRgb2(guess.h, guess.s, guess.v), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));
