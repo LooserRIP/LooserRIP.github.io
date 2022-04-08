@@ -147,15 +147,15 @@ body {
   position: absolute;
   left: -8px;
   top: -8px;
-  background-color: #FF00FF;
+  background-color: #000000;
   border-radius: 5000px;
   transform: scale(0);
   opacity: 0;
-  transition: transform 2s, opacity 1s;
+  transition: transform 2.5s, opacity 1.75s;
   z-index: -1;
 }
 .background[data-reveal="1"] {
-  transform: scale(2);
+  transform: scale(3);
   opacity: 1;
 }
 
