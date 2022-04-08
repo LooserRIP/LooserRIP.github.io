@@ -24,12 +24,12 @@ function generateColor() {
   var days = Math.floor(now/8.64e7) + 2;
   console.log(now/8.64e7);
   console.log(days);
-  if (localStorage["lastday"] != days) {
-    localStorage["guesses"] = JSON.stringify([]);
-    localStorage["lastday"] = days;
+  if (localStorage["h_lastday"] != days) {
+    localStorage["h_guesses"] = JSON.stringify([]);
+    localStorage["h_lastday"] = days;
   }
-  if (localStorage["stats"] == undefined) {
-    localStorage["stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0});
+  if (localStorage["h_stats"] == undefined) {
+    localStorage["h_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0});
   }
   
   colorgoalhue = randomInt(0, 9, days) * 36;
@@ -38,7 +38,7 @@ function generateColor() {
   colorgoal = hsvToHex(colorgoalhue, colorgoalsatur, colorgoalbright);
   document.getElementById("colorref").innerText = colorgoal;
 
-  var tempguesses = JSON.parse(localStorage.guesses);
+  var tempguesses = JSON.parse(localStorage.h_guesses);
   for (let i= 0; i < tempguesses.length; i++) {
     const guess = tempguesses[i];
     colorhue = guess.h;
@@ -63,7 +63,7 @@ function submitcolor(firsttime) {
   var dist = 100 - dist;
   createGuess(colorhue,colorsatur,colorbright,Math.floor(dist), guesses.length - 1);
   var firstTimeWin = firsttime;
-  localStorage.guesses = JSON.stringify(guesses);
+  localStorage.h_guesses = JSON.stringify(guesses);
   if (dist == 100) {
     win(firstTimeWin);
   } else {
@@ -81,10 +81,10 @@ function revealBackground() {
 async function win(first) {
   won = true;
   if (first) {
-    var stats = JSON.parse(localStorage.stats);
+    var stats = JSON.parse(localStorage.h_stats);
     stats.w += 1;
     stats["w" + guesses.length] += 1;
-    localStorage.stats = JSON.stringify(stats);
+    localStorage.h_stats = JSON.stringify(stats);
   }
   if (guesses.length == 1) {
     document.getElementById("wintext").innerText = "mf cheated";
@@ -95,21 +95,21 @@ async function win(first) {
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
-  document.getElementById("ws_played").innerText = JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l;
-  document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
+  document.getElementById("ws_played").innerText = JSON.parse(localStorage.h_stats).w + JSON.parse(localStorage.h_stats).l;
+  document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.h_stats).w / (JSON.parse(localStorage.h_stats).w + JSON.parse(localStorage.h_stats).l) * 100) + "%";
   document.getElementById("winui").dataset.reveal = "1";
 }
 async function defeat(first) {
   if (first) {
-    var stats = JSON.parse(localStorage.stats);
+    var stats = JSON.parse(localStorage.h_stats);
     stats.l += 1;
-    localStorage.stats = JSON.stringify(stats);
+    localStorage.h_stats = JSON.stringify(stats);
   }
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
-  document.getElementById("ws_played").innerText = JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l;
-  document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
+  document.getElementById("ws_played").innerText = JSON.parse(localStorage.h_stats).w + JSON.parse(localStorage.h_stats).l;
+  document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.h_stats).w / (JSON.parse(localStorage.h_stats).w + JSON.parse(localStorage.h_stats).l) * 100) + "%";
   document.getElementById("wintext").innerText = "LLLLL";
   document.getElementById("winui").dataset.reveal = "1";
 }
