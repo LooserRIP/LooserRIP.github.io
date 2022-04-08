@@ -21,7 +21,8 @@ function init() {
 
 function generateColor() {
   var now = new Date();
-  var days = Math.floor(now/8.64e7) - 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 100;
+  console.log((now - (now.getTimezoneOffset() * 60000)) /8.64e7);
   console.log(now/8.64e7);
   console.log(days);
   if (localStorage["lastday"] != days) {
@@ -316,7 +317,7 @@ function rgbToHex(r, g, b) {
 function share() {
 
   var now = new Date();
-  var days = Math.floor(now/8.64e7)- 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
   console.log(days);
 
   var sharetext = "Daily Color Picker #" + (days - 18990) + " " + guesses.length + "/6\n";
