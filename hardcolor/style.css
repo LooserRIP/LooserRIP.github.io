@@ -84,7 +84,6 @@ body {
   -webkit-user-select: none;
   -o-user-select: none;
   position: relative;
-  margin-bottom: -5px;
   left: 50%;
   transform: translateX(-50%);
   
@@ -92,8 +91,8 @@ body {
 .guesscolor {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height:60px;
+  width: 48px;
+  height: 48px;
   border-radius: 7px;
   margin: 2px;
   cursor: pointer;
@@ -264,65 +263,3 @@ body {
 .winpreshare {
   height: 328px;
 }
-
-.guessconfs {
-  color: #FFFFFF;
-  font-family: 'Roboto', sans-serif;
-  display: inline-block;
-  font-size: 200%;
-  
-  
-  margin: 0;
-  padding: 0;
-  position:relative;
-  float: right;
-  user-select: none;
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
-}
-.guessc {
-  margin-right: 7px;
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  background-color: #3A3A3C;
-  border-radius: 7px;
-  transform: scaleX(1);
-  transition: transform 0.25s;
-  /*cursor: pointer;*/
-}
-.guessc[data-state="a"] {
-  transform: scaleX(0);
-}
-.guessc[data-state="1"] {
-  background-color: #3A3A3C;
-  transform: scaleX(1);
-}
-.guessc[data-state="2"] {
-  background-color: #B59F3B;
-  transform: scaleX(1);
-}
-.guessc[data-state="3"] {
-  background-color: #538D4E;
-  transform: scaleX(1);
-}
-.guessct {
-  color: #FFF;
-  text-align: center;
-  position: relative;
-  top: -20px;
-  user-select: none;
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -o-user-select: none;
-  pointer-events: none;
-  font-weight: bold;
-  transition: transform 0.25s;
-}
-/*
-.guessc:hover > .guessct {
-  transform: scale(1.1);
-}*/

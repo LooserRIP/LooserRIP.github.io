@@ -21,7 +21,7 @@ function init() {
 
 function generateColor() {
   var now = new Date();
-  var days = Math.floor(now/8.64e7) - 100;
+  var days = Math.floor(now/8.64e7) + 2;
   console.log(now/8.64e7);
   console.log(days);
   if (localStorage["lastday"] != days) {
@@ -96,7 +96,7 @@ async function win(first) {
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l;
-  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
+  document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
   document.getElementById("winui").dataset.reveal = "1";
 }
 async function defeat(first) {
@@ -109,7 +109,7 @@ async function defeat(first) {
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l;
-  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
+  document.getElementById("ws_wlr").innerText = (JSON.parse(localStorage.stats).w / (JSON.parse(localStorage.stats).w + JSON.parse(localStorage.stats).l) * 100) + "%";
   document.getElementById("wintext").innerText = "LLLLL";
   document.getElementById("winui").dataset.reveal = "1";
 }
@@ -148,79 +148,19 @@ function rgb2lab(rgb){
   return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)]
 }
 
-async function createGuess(h, s, v, dist, ind) {
+function createGuess(h, s, v, dist, ind) {
   var guess = document.createElement("DIV");
   guess.className = "guess";
   var guesscolor = document.createElement("DIV");
   guesscolor.className = "guesscolor";
   guesscolor.style.backgroundColor = hsvToHex(h, s, v);
   guesscolor.setAttribute("onclick", "copycolor(" + ind + ")")
-  var guessconfs = document.createElement("DIV");
-  guessconfs.className = "guessconfs";
-  var guessc_hue = document.createElement("DIV");
-  guessc_hue.className = "guessc";
-  guessc_hue.dataset["state"] = "0";
-  var guessc_hue_text = document.createElement("P");
-  guessc_hue_text.className = "guessct";
-  guessc_hue_text.innerText = "H";
-  guessc_hue.appendChild(guessc_hue_text);
-  guessconfs.appendChild(guessc_hue);
-  var guessc_satur = document.createElement("DIV");
-  guessc_satur.className = "guessc";
-  guessc_satur.dataset["state"] = "0";
-  var guessc_satur_text = document.createElement("P");
-  guessc_satur_text.className = "guessct";
-  guessc_satur_text.innerText = "S";
-  guessc_satur.appendChild(guessc_satur_text);
-  guessconfs.appendChild(guessc_satur);
-  var guessc_bright = document.createElement("DIV");
-  guessc_bright.className = "guessc";
-  guessc_bright.dataset["state"] = "0";
-  var guessc_bright_text = document.createElement("P");
-  guessc_bright_text.className = "guessct";
-  guessc_bright_text.innerText = "V";
-  guessc_bright.appendChild(guessc_bright_text);
-  guessconfs.appendChild(guessc_bright);
-
+  var guessdist = document.createElement("P");
+  guessdist.className = "guessdist";
+  guessdist.innerText = dist + "%";
   guess.appendChild(guesscolor);
-  guess.appendChild(guessconfs);
+  guess.appendChild(guessdist);
   document.getElementById("guesses").appendChild(guess);
-
-  await sleep(0);
-  guessc_hue.dataset["state"] = "a";
-  await sleep(100);
-  guessc_satur.dataset["state"] = "a";
-  await sleep(100);
-  guessc_bright.dataset["state"] = "a";
-  await sleep(50);
-  var diff = Math.abs(Math.round(h / 36) - Math.round(colorgoalhue / 36));
-  console.log(diff);
-  if (diff == 0) {
-    guessc_hue.dataset["state"] = "3";
-  } else if (diff == 1 || diff == 9) {
-    guessc_hue.dataset["state"] = "2";
-  } else {
-    guessc_hue.dataset["state"] = "1";
-  }
-  await sleep(100);
-  var diff2 = Math.abs(Math.round(s / 0.1) - Math.round(colorgoalsatur / 0.1));
-  if (diff2 == 0) {
-    guessc_satur.dataset["state"] = "3";
-  } else if (diff2 == 1 || diff2 == 10) {
-    guessc_satur.dataset["state"] = "2";
-  } else {
-    guessc_satur.dataset["state"] = "1";
-  }
-  await sleep(100);
-  var diff3 = Math.abs(Math.round(v / 0.1) - Math.round(colorgoalbright / 0.1));
-  if (diff3 == 0) {
-    guessc_bright.dataset["state"] = "3";
-  } else if (diff3 == 1 || diff3 == 10) {
-    guessc_bright.dataset["state"] = "2";
-  } else {
-    guessc_bright.dataset["state"] = "1";
-  }
-  
 }
 
 function copycolor(i) {
@@ -316,31 +256,24 @@ function rgbToHex(r, g, b) {
 function share() {
 
   var now = new Date();
-  var days = Math.floor(now/8.64e7)- 100;
+  var days = Math.floor(now/8.64e7) + 2;
   console.log(days);
 
-  var sharetext = "Daily Color Picker #" + (days - 18990) + " " + guesses.length + "/6\n";
-  if (!won) sharetext = "Daily Color Picker #" + (days - 18990) + " " + "X/6\n";
+  var sharetext = "Daily Hard Color Picker #" + (days - 19085) + " " + guesses.length + "/6\n";
+  if (!won) sharetext = "Daily Hard Color Picker #" + (days - 19085) + " " + "X/6\n";
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
-    var charhue = "⬛";
-    var charsatur = "⬛";
-    var charbright = "⬛";
-    var diff = Math.abs(Math.round(guess.h / 36) - Math.round(colorgoalhue /36));
-    if (diff == 0) {
-      charhue = "🟩";
-    } else if (diff == 1 || diff == 9) {charhue = "🟨"}
-    var diff = Math.abs(Math.round(guess.s / 0.1) - Math.round(colorgoalsatur /0.1));
-    if (diff == 0) {
-      charsatur = "🟩";
-    } else if (diff == 1 || diff == 10) {charsatur = "🟨"}
-    var diff = Math.abs(Math.round(guess.v / 0.1) - Math.round(colorgoalbright /0.1));
-    if (diff == 0) {
-      charbright = "🟩";
-    } else if (diff == 1 || diff == 10) {charbright = "🟨"}
-    sharetext = sharetext + "\n" + charhue + charsatur + charbright;
+    var dist = deltaE(hsvToRgb2(guess.h, guess.s, guess.v), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));
+    var dist = 100 - dist;
+    if (dist == 100) {
+      sharetext = sharetext + "\n🟩 " + Math.floor(dist) + "%";
+    } else if (dist >= 75) {
+      sharetext = sharetext + "\n🟨 " + Math.floor(dist) + "%";
+    } else {
+      sharetext = sharetext + "\n⬛ " + Math.floor(dist) + "%";
+    }
   }
-  sharetext = sharetext + "\nhttps://looserrip.github.io/color";
+  sharetext = sharetext + "\nhttps://looserrip.github.io/hardcolor";
   
   console.log(sharetext);
 

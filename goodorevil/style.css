@@ -46,7 +46,7 @@ body {
 	width: 300px;
 	height: 300px;
 	transform: scale(1) translate(-50%, -50%);
-	transition: transform 0.2s;
+	transition: transform 0.5s, outline 0.25s, outline-offset 0.25s;
 	border-radius: 0.7em;
 	
 	user-select: none;
@@ -55,15 +55,28 @@ body {
 	-webkit-user-select: none;
 	-o-user-select: none;
 	background-position: center;
-   background-size: cover;
-   background-repeat: no-repeat;
-   z-index: 1;
+	background-size: cover;
+	background-repeat: no-repeat;
+	outline: 0px solid rgb(255, 255, 255);
+	outline-offset: 0px;
+	z-index: 1;
 }
 .judgedimage:hover {
 	transform: scale(1.1) translate(-45%, -45%);
+	outline: 0px solid rgb(255, 255, 255);
+	outline-offset: 0px;
 }
-.judgedimage:active {
-	transform: scale(1.2) translate(-40%, -40%);
+.judgedimage[data-hovering="1"] {
+	transform: scale(1.15) translate(-40%, -40%);
+	outline: 4px solid rgb(255, 255, 255);
+}
+.judgedimage[data-select="hell"] {
+	outline: 8px solid rgb(255, 27, 27);
+	outline-offset: 8px;
+}
+.judgedimage[data-select="heaven"] {
+	outline: 8px solid rgb(251, 255, 27);
+	outline-offset: 8px;
 }
 .placetext {
 	position: relative;

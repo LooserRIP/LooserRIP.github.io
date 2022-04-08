@@ -18,6 +18,8 @@ function init() {
   document.body.onmousedown = function() { 
   }
   document.body.onmouseup = function() {
+    judgedimage.dataset.hovering = "0";
+    judgedimage.dataset.select = "0";
     if (mouseDown && loaded) {
       if (dHell.dataset.active == "1") {
         vote("d");
@@ -35,6 +37,8 @@ function init() {
     }
   }
   document.body.ontouchend = function() {
+    judgedimage.dataset.hovering = "0";
+    judgedimage.dataset.select = "0";
     if (mouseDown && loaded) {
       if (dHell.dataset.active == "1") {
         vote("d");
@@ -112,21 +116,26 @@ function physics() {
   }
   if (parseFloat(judgedimage.style.left) < 300) {
     dHell.dataset.active = "1";
+    judgedimage.dataset.select = "hell";
   } else {
     dHell.dataset.active = "0";
-  }
-  if (parseFloat(judgedimage.style.left) > width - 300) {
-    dHeaven.dataset.active = "1";
-  } else {
-    dHeaven.dataset.active = "0";
+    if (parseFloat(judgedimage.style.left) > width - 300) {
+      dHeaven.dataset.active = "1";
+      judgedimage.dataset.select = "heaven";
+    } else {
+      dHeaven.dataset.active = "0";
+      judgedimage.dataset.select = "0";
+    }
   }
 }
 function startdrag(event) {
+  judgedimage.dataset.hovering = "1";
   mouseDown = true;
   dragOffset = {x: parseFloat(judgedimage.style.left) - event.clientX, y: parseFloat(judgedimage.style.top) - event.clientY};
   console.log(dragOffset);
 }
 function startdragm(event) {
+  judgedimage.dataset.hovering = "1";
   mouseDown = true;
   var touchLocation = event.targetTouches[0];
   mp = {x: touchLocation.pageX, y: touchLocation.pageY};
