@@ -175,6 +175,7 @@ async function win(first) {
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
+  if (ismobile) document.getElementById("twitterbutton").remove();
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
   //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
@@ -193,6 +194,7 @@ async function defeat(first) {
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
+  if (ismobile) document.getElementById("twitterbutton").remove();
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
   //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
@@ -402,8 +404,45 @@ function share() {
   
   consolelog(sharetext);
 
-  navigator.clipboard.writeText(sharetext);
+  if (ismobile) {
+    navigator.share(sharetext);
+  } else {
+    navigator.clipboard.writeText(sharetext);
+  }
 }
+function settweet() {
+  var now = new Date();
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+  var sharetext = "Shadle%20%23" + (days - 18990) + "%20" + guesses.length + "/4%20(" + colorgoal.replace("#", "%23") + ")%0a";
+  if (!won) sharetext = "Shadle%20%23" + (days - 18990) + "%20X/4%20(" + colorgoal + ")%0a";
+  for (let i = 0; i < guesses.length; i++) {
+    var guess = guesses[i];
+    var charhue = "%E2%9A%AB";
+    var charsatur = "%E2%9A%AB";
+    var charbright = "%E2%9A%AB";
+    var diff = Math.abs(Math.round(guess.h / 36) - Math.round(colorgoalhue /36));
+    if (colorgoalsatur == 0 || colorgoalbright == 0) diff = 0;
+    if (diff == 0) {
+      charhue = "%F0%9F%9F%A2";
+    } else if (diff == 1 || diff == 9) {charhue = "%F0%9F%9F%A1"}
+    var diff = Math.abs(Math.round(guess.s / 0.1) - Math.round(colorgoalsatur /0.1));
+    if (colorgoalbright == 0) diff = 0;
+    if (diff == 0) {
+      charsatur = "%F0%9F%9F%A2";
+    } else if (diff == 1) {charsatur = "%F0%9F%9F%A1"}
+    var diff = Math.abs(Math.round(guess.v / 0.1) - Math.round(colorgoalbright /0.1));
+    if (diff == 0) {
+      charbright = "%F0%9F%9F%A2";
+    } else if (diff == 1) {charbright = "%F0%9F%9F%A1"}
+    sharetext = sharetext + "%0a" + charhue + charsatur + charbright;
+  }
+  sharetext = sharetext + "%0ahttps://looserrip.github.io/shadle";
+  consolelog(sharetext);
+  location.href = "https://twitter.com/intent/tweet?text=" + sharetext;
+  //document.getElementById("twitterspan").setAttribute("href", "https://twitter.com/intent/tweet?text=" + sharetext);
+  //navigator.clipboard.writeText(sharetext);
+}
+
 
 
 function addcss(path) {
