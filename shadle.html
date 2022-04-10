@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <script src="shadle/script.js"></script>
+  <link rel="stylesheet" href="shadle/style.css"/>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta charset="utf-8">
+    <title>Shadle</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Shadle</title>
+  </head>
+  <body onload="init()">
+    <div class="background" id="background"></div>
+    
+    <div class="header">
+      <img class="logo" src="shadle/logo.png" alt="Shadle">
+    </div>
+
+    <div class="target">
+      <h1 class="target-color" id="colorref">#5b92e5</h1>
+      <p class="target-tip">You are trying to guess the color from this hex code in four or less attempts.</p>
+    </div>
+
+    <div class="guesses" id="guesses">
+    </div>
+
+    <div class="picker">
+      <div class="picker-preview">
+        <div class="picker-color" id="confirmingcolor"></div>
+        <button class="submit" onclick="submitcolor(true)">
+          <span class="material-icons">
+            done
+          </span>
+        </button>
+      </div>
+
+        <div class="slider">
+          <div class="color" id="hue_0" data-id="0" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_1" data-id="1" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_2" data-id="2" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_3" data-id="3" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_4" data-id="4" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_5" data-id="5" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_6" data-id="6" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_7" data-id="7" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_8" data-id="8" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="hue_9" data-id="9" data-type="hue" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+        </div>
+        <div class="slider">
+          <div class="color" id="satur_10" data-id="10" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_9" data-id="9" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_8" data-id="8" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_7" data-id="7" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_6" data-id="6" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_5" data-id="5" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_4" data-id="4" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_3" data-id="3" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_2" data-id="2" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_1" data-id="1" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="satur_0" data-id="0" data-type="satur" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+        </div>
+        <div class="slider">
+          <div class="color" id="bright_10" data-id="10" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_9" data-id="9" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_8" data-id="8" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_7" data-id="7" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_6" data-id="6" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_5" data-id="5" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_4" data-id="4" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_3" data-id="3" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_2" data-id="2" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_1" data-id="1" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+          <div class="color" id="bright_0" data-id="0" data-type="bright" onmouseover="mouseover(this)" onclick="clickcolor(this)" onmousedown="clickcolor(this)"></div>
+        </div>
+      </div>
+
+
+      <div class="winuioverlay" id="winuioverlay"></div>
+      <div class="winui" id="winui" data-reveal="0">
+        <div class="winpreshare">
+          <p class="wintext" id="wintext">Congratulations!</p>
+          <div class="winstats">
+            <div class="winstat">
+              <p class="winstatval" id="ws_played">0</p>
+              <p class="winstatcap">Played</p>
+            </div>
+            <div class="winstat">
+              <p class="winstatval" id="ws_wlr">100%</p>
+              <p class="winstatcap">Win/Loss Ratio</p>
+            </div>
+            <div class="winstat">
+              <p class="winstatval" id="ws_str">0</p>
+              <p class="winstatcap">Current Streak</p>
+            </div>
+            <div class="winstat">
+              <p class="winstatval" id="ws_mstr">0</p>
+              <p class="winstatcap">Max Streak</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="sharebutton" onclick="share()">
+          <p class="sharecaption">SHARE</p>
+        </div>
+
+      </div>
+
+  </body>
+</html>

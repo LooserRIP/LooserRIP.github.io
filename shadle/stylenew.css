@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;900&display=swap');
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* General Styles */
+body {
+  width: 100%;
+  height: 100vh;
+  background-color: #333333;
+  font-family: 'Lato', sans-serif;
+  color: white;
+  overflow: hidden;
+}
+
+.header {
+  box-shadow: 0px -4px 7px black;
+  padding: 12px;
+  text-align: center;
+}
+
+.material-icons {
+  margin: 0;
+}
+
+/* Information */
+
+.target {
+  margin-top: 8px;
+  padding: 12px;
+  color: white;
+  text-align: center;
+}
+
+.target-color {
+  font-size: 3.25rem;
+  font-weight: 700;
+}
+
+.target-tip {
+  font-size: 1.25rem;
+}
+
+/* Color Picker */
+.picker {
+  box-shadow: 0px 4px 7px black;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.slider {
+  display: flex;
+  margin: 20px auto;
+  width: 400px;
+  border-radius: 15px;
+  overflow: hidden;
+  outline: 3px solid white;
+  outline-offset: 2px;
+}
+
+/* We only really need to add mobile support to the color picker */
+@media only screen and (max-width: 400px) {
+  .slider {
+    width: 85%;
+  }
+}
+
+.picker-preview {
+  padding: 10px 10px 0px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-gap: 20px;
+}
+
+.picker-color {
+  width: 220px;
+  height: 12px;
+  outline: 3px solid white;
+  outline-offset: 2px;
+  background-color: #ffffff;
+  border-radius: 999px;
+}
+
+.submit {
+  background-color: white;
+  border: none;
+  height: 24px;
+  width: 24px;
+  padding: 0;
+  border-radius: 999px;
+  outline: 3px solid white;
+  outline-offset: 2px;
+}
+
+/* This is temporary */
+.color {
+  width: 60px;
+  height: 40px;
+  background-color: #ff0000;
+  transition: 0.2s;
+}
+
+.color2 {
+  width: 60px;
+  height: 40px;
+  background-color: #ffaa00;
+}
+
+.color3 {
+  width: 60px;
+  height: 40px;
+  background-color: #ffff00;
+}
+
+/* guesses */
+@keyframes zoom {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transition: scale(1);
+  }
+}
+
+.guesses {
+  padding: 10px 20px 20px 20px;
+}
+
+.guess {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  grid-gap: 20px;
+}
+
+.guess-color {
+  width: 35px;
+  height: 35px;
+  opacity: 0;
+  background-color: #ffffff;
+  outline: 3px solid white;
+  outline-offset: 2px;
+  border-radius: 5px;
+  animation: zoom;
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+}
+
+.hint {
+  width: 35px;
+  height: 35px;
+  opacity: 0;
+  font-weight: 700;
+  line-height: 35px;
+  text-align: center;
+  font-size: 1.15rem;
+  outline: 3px solid white;
+  outline-offset: 2px;
+  border-radius: 999px;
+  animation: zoom;
+  animation-duration: 0.25s;
+  animation-fill-mode: forwards;
+}
+
+.hint:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.hint:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.hint:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.hint[type=correct] {
+  background-color: #81b29a;
+}
+
+.hint[type=close] {
+  background-color: #E5BE40;
+}
+
+.hint[type=incorrect] {
+  background-color: #666666;
+}
