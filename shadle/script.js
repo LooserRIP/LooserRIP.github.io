@@ -240,27 +240,27 @@ async function createGuess(h, s, v, dist, ind) {
 
   var diff = Math.abs(Math.round(h / 36) - Math.round(colorgoalhue / 36));
   if (diff == 0) {
-    guesshinthue.setAttribute("type", "correct");
+    guesshinthue.dataset["type"] = "correct";
   } else if (diff == 1 || diff == 9) {
-    guesshinthue.setAttribute("type", "close");
+    guesshinthue.dataset["type"] = "close";
   } else {
-    guesshinthue.setAttribute("type", "incorrect");
+    guesshinthue.dataset["type"] = "incorrect";
   }
   var diff2 = Math.abs(Math.round(s / 0.1) - Math.round(colorgoalsatur / 0.1));
   if (diff2 == 0) {
-    guesshintsatur.setAttribute("type", "correct");
+    guesshintsatur.dataset["type"] = "correct";
   } else if (diff2 == 1) {
-    guesshintsatur.setAttribute("type", "close");
+    guesshintsatur.dataset["type"] = "close";
   } else {
-    guesshintsatur.setAttribute("type", "incorrect");
+    guesshintsatur.dataset["type"] = "incorrect";
   }
   var diff3 = Math.abs(Math.round(v / 0.1) - Math.round(colorgoalbright / 0.1));
   if (diff3 == 0) {
-    guesshintbright.setAttribute("type", "correct");
+    guesshintbright.dataset["type"] = "correct";
   } else if (diff3 == 1) {
-    guesshintbright.setAttribute("type", "close");
+    guesshintbright.dataset["type"] = "close";
   } else {
-    guesshintbright.setAttribute("type", "incorrect");
+    guesshintbright.dataset["type"] = "incorrect";
   }
   
 }

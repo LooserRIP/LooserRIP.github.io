@@ -255,15 +255,15 @@ body {
   animation-delay: 0.6s;
 }
 
-.hint[type=correct] {
+.hint[data-type=correct] {
   background-color: #81b29a;
 }
 
-.hint[type=close] {
+.hint[data-type=close] {
   background-color: #E5BE40;
 }
 
-.hint[type=incorrect] {
+.hint[data-type=incorrect] {
   background-color: #666666;
 }
 
