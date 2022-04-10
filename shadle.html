@@ -77,35 +77,54 @@
       </div>
 
 
-      <div class="winuioverlay" id="winuioverlay"></div>
-      <div class="winui" id="winui" data-reveal="0">
-        <div class="winpreshare">
-          <p class="wintext" id="wintext">Congratulations!</p>
-          <div class="winstats">
-            <div class="winstat">
-              <p class="winstatval" id="ws_played">0</p>
-              <p class="winstatcap">Played</p>
+      <div class="stats" id="winuioverlay" data-reveal="0">
+        <div class="stats-window" id="winui" data-reveal="0">
+          <h1 class="stats-title" id="wintext">Statistics</h1>
+          <p>You're so good at this game.</p>
+  
+          <div class="stats-numbers">
+            <div class="stat-number">
+              <span class="material-icons stats-icon">
+                gamepad
+              </span>
+              <h1 class="stats-number" id="ws_played">100</h1>
+              <h1>Played</h1>
             </div>
-            <div class="winstat">
-              <p class="winstatval" id="ws_wlr">100%</p>
-              <p class="winstatcap">Win/Loss Ratio</p>
+  
+            <div class="stat-number">
+              <span class="material-icons stats-icon">
+                emoji_events
+              </span>
+              <h1 class="stats-number" id="ws_wlr">60</h1>
+              <h1>Win/Loss Ratio</h1>
             </div>
-            <div class="winstat">
-              <p class="winstatval" id="ws_str">0</p>
-              <p class="winstatcap">Current Streak</p>
-            </div>
-            <div class="winstat">
-              <p class="winstatval" id="ws_mstr">0</p>
-              <p class="winstatcap">Max Streak</p>
+  
+            <div class="stat-number">
+              <span class="material-icons stats-icon">
+                military_tech
+              </span>
+              <h1 class="stats-number" id="ws_str">20</h1>
+              <h1>Streak</h1>
             </div>
           </div>
+  
+          <div class="stats-options">
+            <button class="stats-option" data-button="close">
+              <span class="material-icons" onclick="closemenu()">
+                close
+              </span>
+            </button>
+            <button class="stats-option" data-button="share">
+              <span class="material-icons" id="sharespan" onclick="share()">
+                share
+              </span>
+            </button>
+          </div>
+  
+  
         </div>
-        
-        <div class="sharebutton" onclick="share()">
-          <p class="sharecaption" draggable=false>SHARE</p>
-        </div>
-
       </div>
+
 
   </body>
 </html>
