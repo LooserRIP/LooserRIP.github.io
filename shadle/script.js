@@ -28,9 +28,14 @@ function init() {
 }
 
 function updateStreak() {
+  
+  if (localStorage["shadle_stats"] == undefined) {
+    localStorage["shadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0, str: 0, mstr: 0});
+  }
+
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
-  var stats = JSON.parse(localStorage.shadle_stats);
+  var stats = JSON.parse(localStorage["shadle_stats"]);
   if (stats["str"] == undefined) stats["str"] = 0;
   if (stats["strday"] == undefined) stats["strday"] = 0;
   if (days > stats.strday) stats.str = 0;
