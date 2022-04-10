@@ -75,13 +75,17 @@ function clickcolor(elm) {
   updateColorButtons();
 }
 
+function consolelog() {
+  
+}
+
 
 function generateColor() {
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 100;
-  console.log((now - (now.getTimezoneOffset() * 60000)) /8.64e7);
-  console.log(now/8.64e7);
-  console.log(days);
+  consolelog((now - (now.getTimezoneOffset() * 60000)) /8.64e7);
+  consolelog(now/8.64e7);
+  consolelog(days);
   if (localStorage["shadle_lastday"] != days) {
     localStorage["shadle_guesses"] = JSON.stringify([]);
     localStorage["shadle_lastday"] = days;
@@ -115,7 +119,7 @@ function submitcolor(firsttime) {
   var huediff = (Math.abs(Math.round(colorgoalhue/36) - Math.round(colorhue/36)) / 9);
   var saturdiff = (Math.abs(Math.round(colorgoalsatur/10) - Math.round(colorsatur/10)) / 10);
   var brightdiff = (Math.abs(Math.round(colorgoalbright/10) - Math.round(colorbright/10)) / 11);
-  console.log(huediff, saturdiff,brightdiff);
+  consolelog(huediff, saturdiff,brightdiff);
   */
   var dist = deltaE(hsvToRgb2(colorhue, colorsatur, colorbright), hsvToRgb2(colorgoalhue, colorgoalsatur, colorgoalbright));
   var dist = 100 - dist;
@@ -307,7 +311,7 @@ function updateColorButtons() {
   for (let i= 0; i < 11; i++) {
     var btn = document.getElementById("satur_" + i);
     btn.style.backgroundColor = hsvToHex(colorhue, i * 0.1, colorbright);
-    console.log(i * 0.1, colorsatur, i);
+    consolelog(i * 0.1, colorsatur, i);
     if (colorsatur == i * 0.1) {
       btn.dataset["selected"] = "1";
     } else {
@@ -349,7 +353,7 @@ function share() {
 
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
-  console.log(days);
+  consolelog(days);
 
   var sharetext = "Shadle #" + (days - 18990) + " " + guesses.length + "/4  (" + colorgoal + ")\n";
   if (!won) sharetext = "Shadle #" + (days - 18990) + " X/4  (" + colorgoal + ")\n";
@@ -375,7 +379,7 @@ function share() {
   }
   sharetext = sharetext + "\nhttps://looserrip.github.io/shadle";
   
-  console.log(sharetext);
+  consolelog(sharetext);
 
   navigator.clipboard.writeText(sharetext);
 }
