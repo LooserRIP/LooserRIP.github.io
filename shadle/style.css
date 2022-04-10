@@ -134,7 +134,10 @@ body {
   outline: 3px solid white;
   outline-offset: 2px;
   background-color: #ffffff;
-  border-radius: 999px;
+  border-top-left-radius:  999px;
+  border-top-right-radius:  999px;
+  border-bottom-left-radius:  999px;
+  border-bottom-right-radius:  999px;
 }
 
 .submit {
