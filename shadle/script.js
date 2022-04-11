@@ -506,6 +506,7 @@ function settweet() {
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
-  
+  console.log("PROMPTTTT");
+  e.prompt();
 });
 
