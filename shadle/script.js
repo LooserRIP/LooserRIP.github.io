@@ -36,7 +36,7 @@ function init() {
 
   
   if (ismobile) document.getElementById("twitterbutton").remove();
-  if (!ismobile) document.getElementById("getappbutton").remove();
+  if (true) document.getElementById("getappbutton").remove();
 
 }
 
