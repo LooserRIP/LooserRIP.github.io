@@ -107,11 +107,11 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   width: 400px;
   border-radius: 15px;
   text-align: right;
-  right: 28px;
+  right: 24px;
   /*outline: 3px solid white; */
   /*outline-offset: 2px; */
 }
-.slider:nth-child(2) { right: 32px;}
+.slider:nth-child(2) { right: 28px;}
 
 .slidertext {
   color: #666666;
@@ -136,6 +136,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .picker-preview {
+  
   padding: 10px 10px 0px 10px;
   display: flex;
   align-items: center;
@@ -144,6 +145,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .picker-color {
+  position: relative;
   width: 220px;
   height: 12px;
   /*outline: 3px solid white; */
