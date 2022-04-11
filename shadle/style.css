@@ -167,7 +167,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   width: 60px;
   height: 40px;
   background-color: #00000000;
-  transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform: scaleY(1) scaleX(1.05);
 }
 .color:hover {

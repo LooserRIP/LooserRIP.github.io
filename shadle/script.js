@@ -411,7 +411,7 @@ function share() {
     navigator.share({
       title: title,
       text: description,
-      url: https://looserrip.github.io/shadle,
+      url: "https://looserrip.github.io/shadle",
     });
   } else {
     navigator.clipboard.writeText(sharetext);
