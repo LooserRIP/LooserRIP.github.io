@@ -410,8 +410,8 @@ function share() {
   if (ismobile) {
     navigator.share({
       title: title,
-      text: description,
-      url: "\nhttps://looserrip.github.io/shadle",
+      text: sharetext,
+      url: "",
     });
   } else {
     navigator.clipboard.writeText(sharetext);
