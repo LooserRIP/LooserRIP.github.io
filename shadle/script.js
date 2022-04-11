@@ -224,6 +224,7 @@ async function win(first) {
     document.getElementById("wintext").innerText = "Clutch!";
   }
   await sleep(1400);
+  document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
@@ -242,6 +243,7 @@ async function defeat(first) {
     localStorage.shadle_stats = JSON.stringify(stats);
   }
   await sleep(1400);
+  document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;

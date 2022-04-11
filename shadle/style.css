@@ -170,6 +170,16 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 .submit:hover {
   transform: scale(1.1);
 }
+.submit[data-reveal="1"] {
+  background-color: #666666;
+  color: #333333;
+  transform: scale(0.9) rotate(360deg);
+  cursor: auto;
+}
+.submit[data-reveal="1"]:hover {
+  transform: scale(0.9) rotate(360deg);
+  cursor: auto;
+}
 
 /* This is temporary */
 .color {
