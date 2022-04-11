@@ -36,7 +36,7 @@ function init() {
 
   
   if (ismobile) document.getElementById("twitterbutton").remove();
-  if (true) document.getElementById("getappbutton").remove();
+  if (!ismobile) document.getElementById("getappbutton").remove();
 
 }
 
@@ -502,6 +502,7 @@ function settweet() {
   //document.getElementById("twitterspan").setAttribute("href", "https://twitter.com/intent/tweet?text=" + sharetext);
   //navigator.clipboard.writeText(sharetext);
 }
+
 let deferredPrompt;
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -531,7 +532,7 @@ window.addEventListener('appinstalled', () => {
   // Optionally, send analytics event to indicate successful install
   console.log('PWA was installed');
 });
-s
+
 
 function addcss(path) {
   var fileref = document.createElement("link");
