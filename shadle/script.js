@@ -516,7 +516,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   console.log(`'beforeinstallprompt' event was fired.`);
 });
 
-function getapp() {
+async function getapp() {
     // Show the install prompt
     deferredPrompt.prompt();
     // Wait for the user to respond to the prompt
