@@ -380,7 +380,7 @@ function share() {
   if (!won) sharetext = "Shadle #" + (days - 18990) + " X/4  (" + colorgoal + ")\n";
   var title = sharetext;
   //sharetext = sharetext + colorgoal + "\n";
-  var description = "";
+  var description = sharetext;
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var charhue = "⚫";
@@ -411,7 +411,7 @@ function share() {
     navigator.share({
       title: title,
       text: description,
-      url: "https://looserrip.github.io/shadle",
+      url: "\nhttps://looserrip.github.io/shadle",
     });
   } else {
     navigator.clipboard.writeText(sharetext);
