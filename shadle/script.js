@@ -176,6 +176,7 @@ async function win(first) {
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
   if (ismobile) document.getElementById("twitterbutton").remove();
+  if (!ismobile) document.getElementById("getappbutton").remove();
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
   //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
@@ -195,6 +196,7 @@ async function defeat(first) {
   document.getElementById("winuioverlay").dataset.reveal = "1";
   await sleep(1400);
   if (ismobile) document.getElementById("twitterbutton").remove();
+  if (!ismobile) document.getElementById("getappbutton").remove();
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
   //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
@@ -450,7 +452,9 @@ function settweet() {
   //navigator.clipboard.writeText(sharetext);
 }
 
-
+function getapp() {
+  location.href = "shadle/manifest.json";
+}
 
 function addcss(path) {
   var fileref = document.createElement("link");

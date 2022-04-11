@@ -407,3 +407,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 .stats-option[data-button="tweet"] {
   background-color: #427d83;
 }
+
+.stats-option[data-button="getapp"] {
+  background-color: #666666;
+}
