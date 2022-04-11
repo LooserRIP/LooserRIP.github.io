@@ -46,7 +46,7 @@ function updateStreak() {
   var stats = JSON.parse(localStorage["shadle_stats"]);
   if (stats["str"] == undefined) stats["str"] = 0;
   if (stats["strday"] == undefined) stats["strday"] = 0;
-  if (days > stats.strday) stats.str = 0;
+  if (days > stats.strday + 1) stats.str = 0;
   localStorage.shadle_stats = JSON.stringify(stats);
 }
 function pickhue(elm) {
@@ -378,7 +378,9 @@ function share() {
 
   var sharetext = "Shadle #" + (days - 18990) + " " + guesses.length + "/4  (" + colorgoal + ")\n";
   if (!won) sharetext = "Shadle #" + (days - 18990) + " X/4  (" + colorgoal + ")\n";
+  var title = sharetext;
   //sharetext = sharetext + colorgoal + "\n";
+  var description = "";
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var charhue = "⚫";
@@ -399,13 +401,18 @@ function share() {
       charbright = "🟢";
     } else if (diff == 1) {charbright = "🟡"}
     sharetext = sharetext + "\n" + charhue + charsatur + charbright;
+    description = description + "\n" + charhue + charsatur + charbright;
   }
   sharetext = sharetext + "\nhttps://looserrip.github.io/shadle";
   
   consolelog(sharetext);
 
   if (ismobile) {
-    navigator.share(sharetext);
+    navigator.share({
+      title: title,
+      text: description,
+      url: https://looserrip.github.io/shadle,
+    });
   } else {
     navigator.clipboard.writeText(sharetext);
   }
