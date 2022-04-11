@@ -13,5 +13,6 @@
   "display": "standalone",
   "scope": "/shadle",
   "theme_color": "#333333",
-  "description": "Shadle - your daily color guessing game!"
+  "description": "Shadle - your daily color guessing game!",
+  "prefer_related_applications": true
 }
