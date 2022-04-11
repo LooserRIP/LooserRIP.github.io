@@ -458,10 +458,11 @@ function share() {
   consolelog(sharetext);
   console.log(sharetext);
   if(!gamedone) sharetext="Your daily color guessing game!\nhttps://looserrip.github.io/shadle";
+  if(!gamedone) description="Your daily color guessing game!\n";
   if (ismobile) {
     navigator.share({
       title: "",
-      text: sharetext,
+      text: description,
       url: "",
     });
   } else {
