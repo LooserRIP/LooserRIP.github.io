@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+  
   <script src="shadle/script.js"></script>
   <link rel="stylesheet" href="shadle/style.css"/>
   <head>
@@ -34,6 +35,18 @@
     
     <div class="header">
       <img class="logo" src="shadle/logo.png" alt="Shadle" draggable=false>
+      
+      <button class="header-option" data-button="statsmenu" id="header_stats">
+        <span class="material-icons" id="hi_stats" onclick="statsmenu()">
+          bar_chart
+        </span>
+      </button>
+      <button class="header-option" data-button="helpmenu" id="header_help">
+        <span class="material-icons" id="hi_help" onclick="helpmenu()">
+          help_outline
+        </span>
+      </button>
+
     </div>
 
     <div class="target">
@@ -97,8 +110,8 @@
 
       <div class="stats" id="winuioverlay" data-reveal="0">
         <div class="stats-window" id="winui" data-reveal="0">
-          <h1 class="stats-title" id="wintext">Statistics</h1>
-          <p>You're so good at this game.</p>
+          <h1 class="stats-title">Statistics</h1>
+          <p id="wintext">You're so good at this game.</p>
   
           <div class="stats-numbers">
             <div class="stat-number">
@@ -147,8 +160,29 @@
               </span>
             </button>
           </div>
+        </div>
+      </div>
+
+      <div class="tutorial" id="tutorialuioverlay" data-reveal="0">
+        <div class="tutorial-window" id="tutorialui" data-reveal="0">
+          <h1 class="tutorial-title">How to Play</h1>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1">tag</span><p class="tutorialtext"> Every day, you'll get a hex color.</p> </div>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1">colorize</span><p class="tutorialtext"> You'll try to guess the color that the hex shows with the picker below.</p> </div>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1">opacity</span><p class="tutorialtext"> The picker has 3 shades (from top to bottom) hue, saturation and value.</p> </div>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1">lightbulb</span><p class="tutorialtext"> You'll get hints on each shade of the color:</p> </div>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1" data-tutorial="1">brightness_1</span><p class="tutorialtext"> Means that the shade is not the correct value.</p> </div>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1" data-tutorial="2">brightness_1</span><p class="tutorialtext"> Means that the shade is 1 value off.</p> </div>
+          <div class="tutorialrow"><span class="material-icons" data-nl="1" data-tutorial="3">brightness_1</span><p class="tutorialtext"> Means that the shade is the correct value.</p> </div>
+          
   
   
+          <div class="tutorials-options">
+            <button class="stats-option" data-button="play">
+              <span class="material-icons" onclick="play()">
+                play_arrow
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 

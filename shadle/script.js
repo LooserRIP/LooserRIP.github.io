@@ -20,7 +20,8 @@ function init() {
   updateStreak();
   generateColor();
   updateColorButtons();
-  
+  tutorial();
+
   document.body.onmousedown = function(evt) { 
     mouseDown[evt.button] = true;
   }
@@ -33,6 +34,55 @@ function init() {
     addcss("shadle/mobilestyle.css");
   }
 
+  
+  if (ismobile) document.getElementById("twitterbutton").remove();
+  if (true) document.getElementById("getappbutton").remove();
+
+}
+
+
+
+async function tutorial() {
+  if (localStorage["shadle_tutorial"] == undefined) {
+    document.getElementById("tutorialuioverlay").dataset.reveal = "1";
+    await sleep(100);
+    document.getElementById("tutorialui").dataset.reveal = "1";
+  }
+}
+
+function helpmenu() {
+  document.getElementById("tutorialuioverlay").dataset.reveal = "1";
+  document.getElementById("tutorialui").dataset.reveal = "1";
+}
+async function statsmenu() {
+  document.getElementById("wintext").innerText = "";
+  if (gamedone) {
+    document.getElementById("wintext").innerText = "You're so good at this game.";
+    if (guesses.length == 1) {
+      document.getElementById("wintext").innerText = "Wow! one attempt!";
+    }
+    if (guesses.length == 4) {
+      document.getElementById("wintext").innerText = "Clutch!";
+    }
+    if (!won) {
+      document.getElementById("wintext").innerText = "You'll get it next time. :)";
+    }
+  }
+  document.getElementById("winuioverlay").dataset.reveal = "1";
+  document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
+  document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
+  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
+  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100) + "%";
+  if (isNaN(Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100))) {
+    document.getElementById("ws_wlr").innerText = "0%";
+  }
+  document.getElementById("winui").dataset.reveal = "1";
+}
+
+async function play() {
+  localStorage["shadle_tutorial"] = "1";
+  document.getElementById("tutorialui").dataset.reveal = "0";
+  document.getElementById("tutorialuioverlay").dataset.reveal = "0";
 }
 
 function updateStreak() {
@@ -166,17 +216,16 @@ async function win(first) {
     stats["w" + guesses.length] += 1;
     localStorage.shadle_stats = JSON.stringify(stats);
   }
+  document.getElementById("wintext").innerText = "You're so good at this game.";
   if (guesses.length == 1) {
-    document.getElementById("wintext").innerText = "mf cheated";
+    document.getElementById("wintext").innerText = "Wow! one attempt!";
   }
   if (guesses.length == 4) {
-    document.getElementById("wintext").innerText = "fr you clutched";
+    document.getElementById("wintext").innerText = "Clutch!";
   }
+  await sleep(1400);
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
-  await sleep(1400);
-  if (ismobile) document.getElementById("twitterbutton").remove();
-  if (true) document.getElementById("getappbutton").remove();
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
   //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
@@ -192,16 +241,14 @@ async function defeat(first) {
     stats.l += 1;
     localStorage.shadle_stats = JSON.stringify(stats);
   }
+  await sleep(1400);
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
-  await sleep(1400);
-  if (ismobile) document.getElementById("twitterbutton").remove();
-  if (true) document.getElementById("getappbutton").remove();
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
   //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
   document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100) + "%";
-  document.getElementById("wintext").innerText = "LLLLL";
+  document.getElementById("wintext").innerText = "You'll get it next time. :)";
   document.getElementById("winui").dataset.reveal = "1";
 }
 
@@ -368,7 +415,6 @@ function rgbToHex(r, g, b) {
 
 async function closemenu() {
   document.getElementById("winui").dataset.reveal = "0";
-  await sleep(500);
   document.getElementById("winuioverlay").dataset.reveal = "0";
 }
 
@@ -409,6 +455,7 @@ function share() {
   
   consolelog(sharetext);
   console.log(sharetext);
+  if(!gamedone) sharetext="Your daily color guessing game!\nhttps://looserrip.github.io/shadle";
   if (ismobile) {
     navigator.share({
       title: "",
@@ -447,6 +494,7 @@ function settweet() {
   }
   sharetext = sharetext + "%0ahttps://looserrip.github.io/shadle";
   consolelog(sharetext);
+  if(!gamedone) sharetext="Your%20daily%20color%20guessing%20game!%0ahttps://looserrip.github.io/shadle";
   location.href = "https://twitter.com/intent/tweet?text=" + sharetext;
   //document.getElementById("twitterspan").setAttribute("href", "https://twitter.com/intent/tweet?text=" + sharetext);
   //navigator.clipboard.writeText(sharetext);
