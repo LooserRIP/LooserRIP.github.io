@@ -8,10 +8,10 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/shadle",
+  "start_url": "",
   "background_color": "#333333",
   "display": "standalone",
-  "scope": "/shadle",
+  "scope": "",
   "theme_color": "#333333",
   "description": "Shadle - your daily color guessing game!"
 }
