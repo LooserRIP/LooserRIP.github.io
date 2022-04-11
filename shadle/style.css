@@ -472,12 +472,13 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 #sharespan {
   position: relative;
   right: 2px;
-  top: 2px;
+  top: 1px;
   font-size: 150%;
 }
 #twitterspan {
   position: relative;
-  top: 2px;
+  top: 1px;
+  left: 1px;
   font-size: 150%;
 }
 
