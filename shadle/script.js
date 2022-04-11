@@ -406,10 +406,10 @@ function share() {
   sharetext = sharetext + "\nhttps://looserrip.github.io/shadle";
   
   consolelog(sharetext);
-
+  console.log(sharetext);
   if (ismobile) {
     navigator.share({
-      title: title,
+      title: "",
       text: sharetext,
       url: "",
     });
