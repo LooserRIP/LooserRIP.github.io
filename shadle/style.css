@@ -101,12 +101,30 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 }
 
 .slider {
+  position:relative;
   display: flex;
   margin: 20px auto;
   width: 400px;
   border-radius: 15px;
+  text-align: right;
+  right: 28px;
   /*outline: 3px solid white; */
   /*outline-offset: 2px; */
+}
+.slider:nth-child(2) { right: 32px;}
+
+.slidertext {
+  color: #666666;
+  font-size:200%;
+  position:relative;
+  right: 15px;
+  width: 75px;
+  padding:0;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;   
+  -o-user-select: none; 
 }
 
 
@@ -166,7 +184,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   transform: scaleY(1.125) scaleX(1.05);
   
 }
-.color:first-child {
+.color:nth-child(2) {
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
 }
@@ -174,7 +192,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   border-bottom-right-radius: 15px;
   border-top-right-radius: 15px;
 }
-.color:first-child[data-selected="1"] {
+.color:nth-child(2)[data-selected="1"] {
   transform: scaleY(1.25) scaleX(1.175) translateX(-2px);
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
@@ -465,8 +483,6 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   top: 10px;
   background-color: #59846f;
 }
-
-
 
 /* Tutorial UI stuff */
 
