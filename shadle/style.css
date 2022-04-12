@@ -324,10 +324,11 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position:relative;
 }
+/*  removing because harper's a jackass
 .logo:active {
   transform: rotate(360deg);
 }
-
+*/
 .header-option {
   position: relative;
   top: 12px;
