@@ -20,7 +20,7 @@ async function setAnalytic(type, value) {
   
   var now = new Date();
   var day = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7);
-  var fetch = await fetch("https://wakeful-enchanted-theory.glitch.me/analytics", {
+  var yayfetch = await fetch("https://wakeful-enchanted-theory.glitch.me/analytics", {
     method: "POST",
     body: JSON.stringify({type: type, value: value, day: day})
     }) 
@@ -54,6 +54,10 @@ function init() {
 
 
 async function tutorial() {
+  if (localStorage["shadle_first"] == undefined) {
+    localStorage["shadle_first"] = "1";
+    setAnalytic("users","");
+  }
   if (localStorage["shadle_tutorial"] == undefined) {
     document.getElementById("tutorialuioverlay").dataset.reveal = "1";
     await sleep(100);
@@ -225,6 +229,8 @@ async function win(first) {
     if (stats.str >= stats.mstr) stats.mstr = stats.str;
     stats.w += 1;
     stats["w" + guesses.length] += 1;
+    setAnalytic("beats",1);
+    setAnalytic("attempts", guesses.length);
     localStorage.shadle_stats = JSON.stringify(stats);
   }
   document.getElementById("wintext").innerText = "You're so good at this game.";
@@ -251,6 +257,7 @@ async function defeat(first) {
     if (stats["mstr"] == undefined) stats["mstr"] = 0;
     stats.str = 0;
     stats.l += 1;
+    setAnalytic("beats",0);
     localStorage.shadle_stats = JSON.stringify(stats);
   }
   await sleep(1400);
