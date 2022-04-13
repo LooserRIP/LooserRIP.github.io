@@ -16,6 +16,17 @@ const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
+async function setAnalytic(type, value) {
+  
+  var now = new Date();
+  var day = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7);
+  var fetch = await fetch("https://wakeful-enchanted-theory.glitch.me/analytics", {
+    method: "POST",
+    body: JSON.stringify({type: type, value: value, day: day})
+    }) 
+}
+
+
 function init() {
   updateStreak();
   generateColor();
