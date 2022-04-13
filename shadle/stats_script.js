@@ -25,4 +25,5 @@ async function init() {
     }
   }
   document.getElementById("beatpercentage").innerText = "Beat Percentage: " + Math.floor(beatsVals / beatsAmt * 100) + "%";
+  document.getElementById("gamesplayed").innerText = "Games Played: " + beatsAmt;
 }
