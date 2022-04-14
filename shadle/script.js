@@ -214,6 +214,12 @@ function submitcolor(firsttime) {
 function revealBackground() {
   document.getElementById("background").style.backgroundColor = colorgoal;
   document.getElementById("background").dataset["reveal"] = "1";
+  var root = document.querySelector(':root');
+  
+  root.style.setProperty("--bg", colorgoal);
+  root.style.setProperty("--bgoutline", hsvToHex(colorgoalhue, colorgoalsatur, colorgoalbright * 0.8));
+  root.style.setProperty("--outline", "2px");
+  root.style.setProperty("--outlinen", "-2px");
 }
 
 async function win(first) {
