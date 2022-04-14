@@ -30,9 +30,21 @@
     <title>Shadle</title>
   </head>
   <body onload="init()">
-    <p id="totalusers">Total Users: </p>
-    <p id="averageattempts">Average Attempts: </p>
-    <p id="beatpercentage">Beat Percentage: </p>
-    <p id="gamesplayed">Games Played: </p>
+    <div class="statsheader">
+      <div class="statstext">
+        <p id="totalusers">Total Users: </p>
+        <p id="averageattempts">Average Attempts: </p>
+        <p id="beatpercentage">Beat Percentage: </p>
+        <p id="gamesplayed">Games Played: </p>
+      </div>
+      <div class="graphs">
+        <img class="graph" id="graph_games" src="https://cdn.discordapp.com/attachments/842858258540265504/962038542618480640/1649438247334.jpg"/>
+        <img class="graph" id="graph_beatperc" src="https://cdn.discordapp.com/attachments/842858258540265504/962038542618480640/1649438247334.jpg"/>
+      </div>
+    </div>
+
+    <div class="days" id="days">
+    </div>
+
   </body>
 </html>
