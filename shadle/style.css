@@ -229,6 +229,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   z-index:1;
   transform: scaleY(1.25) scaleX(1.05);
   border-radius: 5px;
+  outline: 2px solid white;
 }
 
 /* guesses */
