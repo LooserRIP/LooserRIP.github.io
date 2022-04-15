@@ -225,7 +225,11 @@ function revealBackground() {
     root.style.setProperty("color-scheme", "light dark");
     root.style.setProperty("--color", "#000000");
     root.style.setProperty("--colortransparent", "#00000060");
-    document.getElementById("logo").setAttribute("src", "shadle/invertedlogo.png");
+  } else {
+    document.body.dataset["dark"] = "0";
+    root.style.removeProperty("color-scheme");
+    root.style.setProperty("--color", "#FFFFFF");
+    root.style.setProperty("--colortransparent", "#FFFFFF60");
   }
   if (colorgoalbright < 0.5 && colorgoalsatur == 0) {
     bgoutline = colorgoal;
@@ -260,6 +264,7 @@ async function win(first) {
   if (guesses.length == 4) {
     document.getElementById("wintext").innerText = "Clutch!";
   }
+  revealBackground();
   await sleep(1400);
   document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
   revealBackground();
@@ -280,9 +285,9 @@ async function defeat(first) {
     setAnalytic("beats",0);
     localStorage.shadle_stats = JSON.stringify(stats);
   }
+  revealBackground();
   await sleep(1400);
   document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
-  revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
   document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
   document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
@@ -431,7 +436,6 @@ function updateColorButtons() {
       btn.dataset["selected"] = "0";
     }
   }
-
   document.getElementById("confirmingcolor").style.backgroundColor = hsvToHex(colorhue, colorsatur, colorbright);
 }
 

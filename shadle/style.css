@@ -73,7 +73,7 @@ body {
   font-family: 'Lato', sans-serif;
   color: var(--color);
   overflow: hidden;
-  transition: background-color 1s, color 1s;
+  transition: background-color 2s, color 2s;
   
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 
@@ -99,7 +99,7 @@ body[data-dark="1"] img {
   padding: 12px;
   color: var(--color);
   text-align: center;
-  transition: color 1s;
+  transition: color 2s;
 }
 
 .target-color {
@@ -118,7 +118,7 @@ body[data-dark="1"] img {
   bottom: 0;
   width: 100%;
   background-color: var(--bg);
-  transition: background-color 1s;
+  transition: background-color 2s;
 }
 
 .slider {
@@ -137,7 +137,7 @@ body[data-dark="1"] img {
 
 .slidertext {
   color: var(--colortransparent);
-  transition: color 1s;
+  transition: color 2s;
   font-size:clamp(0%, 3.75vw, 200%);
   right: 20px;
   position:relative;
@@ -207,7 +207,7 @@ body[data-dark="1"] img {
   color: var(--bg);
   transform: scale(0.9) rotate(360deg);
   cursor: auto;
-  transition: color 1s;
+  transition: color 2s;
 }
 .submit[data-reveal="1"]:hover {
   transform: scale(0.9) rotate(360deg);
@@ -225,6 +225,7 @@ body[data-dark="1"] img {
 }
 .color:hover {
   transform: scaleY(1.125) scaleX(1.05);
+  z-index:1;
   
 }
 .color:nth-child(2) {
@@ -250,7 +251,7 @@ body[data-dark="1"] img {
   border-top-left-radius: 5px;
 }
 .color[data-selected="1"] {
-  z-index:1;
+  z-index:2;
   transform: scaleY(1.25) scaleX(1.05);
   border-radius: 5px;
 }
@@ -280,7 +281,7 @@ body[data-dark="1"] img {
   opacity: 0;
   background-color: #ffffff;
   box-shadow: 0 0 0 3pt var(--bgoutline);
-  transition: box-shadow 1s;
+  transition: box-shadow 2s;
   /*
   box-shadow: var(--outline) var(--outline) 0px #333333FF, var(--outlinen) var(--outlinen) 0px #333333FF, var(--outline) var(--outlinen) 0px #333333FF, var(--outlinen) var(--outline) 0px #333333FF,calc(var(--outline) * 2) calc(var(--outline) * 2) 0px #333333FF, calc(var(--outlinen) * 2) calc(var(--outlinen) * 2) 0px #333333FF, calc(var(--outline) * 2) calc(var(--outlinen) * 2) 0px #333333FF, calc(var(--outlinen) * 2) calc(var(--outline) * 2) 0px #333333FF;
   transition: box-shadow 1s;
@@ -302,7 +303,7 @@ body[data-dark="1"] img {
   text-align: center;
   font-size: 1.15rem;
   box-shadow: 0 0 0 3pt var(--bgoutline);
-  transition: box-shadow 1s;
+  transition: box-shadow 2s;
   color: #FFF;
   /*
   box-shadow: var(--outline) var(--outline) 0px #333333FF, var(--outlinen) var(--outlinen) 0px #333333FF, var(--outline) var(--outlinen) 0px #333333FF, var(--outlinen) var(--outline) 0px #333333FF,calc(var(--outline) * 2) calc(var(--outline) * 2) 0px #333333FF, calc(var(--outlinen) * 2) calc(var(--outlinen) * 2) 0px #333333FF, calc(var(--outline) * 2) calc(var(--outlinen) * 2) 0px #333333FF, calc(var(--outlinen) * 2) calc(var(--outline) * 2) 0px #333333FF;
@@ -346,7 +347,7 @@ body[data-dark="1"] img {
   padding: 12px;
   text-align: center;
   background-color: var(--bg);
-  transition: background-color 1s;
+  transition: background-color 2s;
   /*
   display: flex;
   justify-content: center;
@@ -355,8 +356,11 @@ body[data-dark="1"] img {
 }
 
 .logo {
-  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 2s;
   position:relative;
+}
+body[data-dark="1"] .logo {
+  filter: invert(1);
 }
 /*  removing because harper's a jackass
 .logo:active {
@@ -447,7 +451,7 @@ body[data-dark="1"] img {
   padding: 24px;
   border-radius: 10px;
   background-color: var(--bg);
-  transition: background-color 1s;
+  transition: background-color 2s;
   text-align: center;
   animation: zoom;
   animation-duration: 0.25s;
@@ -502,7 +506,7 @@ body[data-dark="1"] img {
   transform: scale(1.5);
   border-radius: 999px;
   box-shadow: 0 0 0 2pt var(--bgoutline);
-  transition: box-shadow 1s;
+  transition: box-shadow 2s;
 }
 .stats-option:active {
   transform: scale(1.3) rotate(0deg);
@@ -577,7 +581,7 @@ body[data-dark="1"] img {
   padding: 24px;
   border-radius: 10px;
   background-color: var(--bg);
-  transition: background-color 1s;
+  transition: background-color 2s;
   text-align: center;
   animation: zoom;
   animation-duration: 0.25s;
