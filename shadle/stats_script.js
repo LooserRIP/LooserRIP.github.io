@@ -32,6 +32,7 @@ async function init() {
   var graph_days = [];
   var graph_beatperc = [];
   var graph_played = [];
+  var graph_averageattempts = [];
 
   for (var id = days.length - 1; id >= 0; id--) {
     var day = days[id] - 100;
@@ -59,6 +60,7 @@ async function init() {
     innerhtml = innerhtml.replaceAll("REPLACE_COLOR", color).replace("REPLACE_DAY", (day - 18990)).replace("REPLACE_GAMES", beatsAmt).replace("REPLACE_BEATPERC", Math.floor(beatsVals / beatsAmt * 100) + "%").replace("REPLACE_AVERAGEATTEMPTS", Math.round((attemptVals / attemptAmt) * 100) / 100);
     if (id < days.length - 2) innerhtml = innerhtml.replace("color: #FFFFFF", "color: " + color);
     graph_beatperc.unshift(Math.floor(beatsVals / beatsAmt * 100));
+    graph_averageattempts.unshift(Math.round((attemptVals / attemptAmt) * 100) / 100);
     graph_played.unshift(beatsAmt);
     graph_days.unshift("Day " + (day - 18990));
     dayelm.innerHTML = innerhtml;
@@ -66,8 +68,10 @@ async function init() {
   }
   var graphlink = "https://quickchart.io/chart/render/zm-0dedf14f-8028-4d26-aedd-d90b43389ae1?labels=" + graph_days.join(",") + "&data1=" + graph_played.join(",");
   var graphlink2 = "https://quickchart.io/chart/render/zm-9c3594e8-e613-4f7d-bdc0-4692bc4d494b?labels=" + graph_days.join(",") + "&data1=" + graph_beatperc.join(",");
+  var graphlink3 = "https://quickchart.io/chart/render/zm-7361eeb2-871d-4254-b72b-1028d4934d0f?labels=" + graph_days.join(",") + "&data1=" + graph_averageattempts.join(",");
   document.getElementById("graph_games").setAttribute("src", graphlink);
   document.getElementById("graph_beatperc").setAttribute("src", graphlink2);
+  document.getElementById("graph_averageattempts").setAttribute("src", graphlink3);
 
 }
 
