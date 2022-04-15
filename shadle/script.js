@@ -47,8 +47,6 @@ function init() {
 
   
   if (ismobile) document.getElementById("twitterbutton").remove();
-  if (true) document.getElementById("getappbutton").remove();
-
 }
 
 
