@@ -215,11 +215,25 @@ function revealBackground() {
   document.getElementById("background").style.backgroundColor = colorgoal;
   document.getElementById("background").dataset["reveal"] = "1";
   var root = document.querySelector(':root');
-  
   root.style.setProperty("--bg", colorgoal);
-  root.style.setProperty("--bgoutline", hsvToHex(colorgoalhue, colorgoalsatur, colorgoalbright * 0.8));
   root.style.setProperty("--outline", "2px");
   root.style.setProperty("--outlinen", "-2px");
+  console.log(colorgoalbright);
+  var bgoutline = hsvToHex(colorgoalhue, colorgoalsatur, (colorgoalbright * 0.8));
+  if (colorgoalbright > 0.5) {
+    document.body.dataset["dark"] = "1";
+    root.style.setProperty("color-scheme", "light dark");
+    root.style.setProperty("--color", "#000000");
+    root.style.setProperty("--colortransparent", "#00000060");
+    document.getElementById("logo").setAttribute("src", "shadle/invertedlogo.png");
+  }
+  if (colorgoalbright < 0.5 && colorgoalsatur == 0) {
+    bgoutline = colorgoal;
+  }
+  if (colorgoalbright < 0.25) {
+    bgoutline = hsvToHex(colorgoalhue, colorgoalsatur, (colorgoalbright * 0.7));
+  }
+  root.style.setProperty("--bgoutline", bgoutline); 
 }
 
 async function win(first) {
