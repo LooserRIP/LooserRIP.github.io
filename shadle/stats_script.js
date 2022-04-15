@@ -1,7 +1,18 @@
 let database;
+let normaldatabase;
+let harddatabase;
 async function init() {
-  database = await fetch("https://wakeful-enchanted-theory.glitch.me/database");
-  database = await database.json();
+  normaldatabase = await fetch("https://wakeful-enchanted-theory.glitch.me/database");
+  normaldatabase = await normaldatabase.json();
+  harddatabase = await fetch("https://wakeful-enchanted-theory.glitch.me/harddatabase");
+  harddatabase = await harddatabase.json();
+  updateStats(normaldatabase, 0);
+}
+
+
+
+function updateStats(db, mode) {
+  database = db;
   document.getElementById("totalusers").innerText = "Total Users: " + database.users.length;
   var keys = Object.keys(database.attempts);
   var attemptVals = 0;
@@ -34,6 +45,11 @@ async function init() {
   var graph_played = [];
   var graph_averageattempts = [];
 
+  const myNode = document.getElementById("days");
+  while (myNode.firstChild) {
+    myNode.removeChild(myNode.lastChild);
+  }
+
   for (var id = days.length - 1; id >= 0; id--) {
     var day = days[id] - 100;
     console.log(day);
@@ -56,6 +72,9 @@ async function init() {
     var dayelm = document.createElement("DIV");
     dayelm.className = "day";
     var color = generateColor(day);
+    if (mode == 1) {
+      color = generateHardColor(day - 6869);
+    }
     var innerhtml = '<div class="daynum"><p class="daynumtxt">Day #REPLACE_DAY </p><p class="daycolor" style="color: #FFFFFF"> (REPLACE_COLOR)</p></div><p class="gamesplayed">Played REPLACE_GAMES games.</p><p class="beatperc">REPLACE_BEATPERC Beat percentage.</p><p class="averageattempts">REPLACE_AVERAGEATTEMPTS Average attempts</p>';
     innerhtml = innerhtml.replaceAll("REPLACE_COLOR", color).replace("REPLACE_DAY", (day - 18990)).replace("REPLACE_GAMES", beatsAmt).replace("REPLACE_BEATPERC", Math.floor(beatsVals / beatsAmt * 100) + "%").replace("REPLACE_AVERAGEATTEMPTS", Math.round((attemptVals / attemptAmt) * 100) / 100);
     if (id < days.length - 2) innerhtml = innerhtml.replace("color: #FFFFFF", "color: " + color);
@@ -72,10 +91,22 @@ async function init() {
   document.getElementById("graph_games").setAttribute("src", graphlink);
   document.getElementById("graph_beatperc").setAttribute("src", graphlink2);
   document.getElementById("graph_averageattempts").setAttribute("src", graphlink3);
-
 }
 
 
+
+function togglemode() {
+  if (document.getElementById("hardmode").dataset["active"] == undefined) document.getElementById("hardmode").dataset["active"] = "0";
+   var active = document.getElementById("hardmode").dataset.active;
+   if (active == 0) {
+      document.getElementById("hardmode").dataset.active = "1";
+      updateStats(harddatabase, 1);
+   }
+   if (active == 1) {
+      document.getElementById("hardmode").dataset.active = "0";
+      updateStats(normaldatabase, 0);
+   }
+}
 
 
 function generateColor(days) {
@@ -98,6 +129,12 @@ function mulberry32(a) {
   };
 }
 
+function generateHardColor(days) {
+  var colorgoalhue = randomInt(0, 18, days) * 18;
+  var colorgoalsatur = randomInt(0, 20, days + 500) * 0.05;
+  var colorgoalbright = randomInt(0, 20, days + 1000) * 0.05;
+  return hsvToHex(colorgoalhue, colorgoalsatur, colorgoalbright);
+}
 
 function hsvToHex(hue, saturation, value) {
   var rgb = hsvToRgb(hue, saturation, value);
