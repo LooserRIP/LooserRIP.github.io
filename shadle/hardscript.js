@@ -20,7 +20,7 @@ async function setAnalytic(type, value) {
   
   var now = new Date();
   var day = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7);
-  var yayfetch = await fetch("https://wakeful-enchanted-theory.glitch.me/analytics", {
+  var yayfetch = await fetch("https://wakeful-enchanted-theory.glitch.me/hardanalytics", {
     method: "POST",
     body: JSON.stringify({type: type, value: value, day: day})
     }) 
@@ -54,11 +54,11 @@ function init() {
 
 
 async function tutorial() {
-  if (localStorage["shadle_first"] == undefined) {
-    localStorage["shadle_first"] = "1";
+  if (localStorage["hardshadle_first"] == undefined) {
+    localStorage["hardshadle_first"] = "1";
     setAnalytic("users","");
   }
-  if (localStorage["shadle_tutorial"] == undefined) {
+  if (localStorage["hardshadle_tutorial"] == undefined) {
     document.getElementById("tutorialuioverlay").dataset.reveal = "1";
     await sleep(100);
     document.getElementById("tutorialui").dataset.reveal = "1";
@@ -84,67 +84,67 @@ async function statsmenu() {
     }
   }
   document.getElementById("winuioverlay").dataset.reveal = "1";
-  document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
-  document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
-  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
-  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100) + "%";
-  if (isNaN(Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100))) {
+  document.getElementById("ws_played").innerText = JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l;
+  document.getElementById("ws_str").innerText = JSON.parse(localStorage.hardshadle_stats).str;
+  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.hardshadle_stats).mstr;
+  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.hardshadle_stats).w / (JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l) * 100) + "%";
+  if (isNaN(Math.floor(JSON.parse(localStorage.hardshadle_stats).w / (JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l) * 100))) {
     document.getElementById("ws_wlr").innerText = "0%";
   }
   document.getElementById("winui").dataset.reveal = "1";
 }
 
 async function play() {
-  localStorage["shadle_tutorial"] = "1";
+  localStorage["hardshadle_tutorial"] = "1";
   document.getElementById("tutorialui").dataset.reveal = "0";
   document.getElementById("tutorialuioverlay").dataset.reveal = "0";
 }
 
 function updateStreak() {
   
-  if (localStorage["shadle_stats"] == undefined) {
-    localStorage["shadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0, str: 0, mstr: 0});
+  if (localStorage["hardshadle_stats"] == undefined) {
+    localStorage["hardshadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0, str: 0, mstr: 0});
   }
 
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
-  var stats = JSON.parse(localStorage["shadle_stats"]);
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 6969;
+  var stats = JSON.parse(localStorage["hardshadle_stats"]);
   if (stats["str"] == undefined) stats["str"] = 0;
   if (stats["strday"] == undefined) stats["strday"] = 0;
   if (days > stats.strday + 1) stats.str = 0;
-  localStorage.shadle_stats = JSON.stringify(stats);
+  localStorage.hardshadle_stats = JSON.stringify(stats);
 }
 function pickhue(elm) {
   var ind = elm.dataset.id;
-  colorhue = ind * 36;
+  colorhue = ind * 18;
   updateColorButtons();
 }
 function pickbright(elm) {
   var ind = elm.dataset.id;
-  colorbright = ind * 0.1;
+  colorbright = ind * 0.01;
   updateColorButtons();
 }
 function picksatur(elm) {
   var ind = elm.dataset.id;
-  colorsatur = ind * 0.1;
+  colorsatur = ind * 0.05;
   updateColorButtons();
 }
 
 function mouseover(elm) {
   var ind = elm.dataset.id;
   if (mouseDown[0]) {
-    if (elm.dataset.type == "hue") colorhue = ind * 36;
-    if (elm.dataset.type == "satur") colorsatur = ind * 0.1;
-    if (elm.dataset.type == "bright") colorbright = ind * 0.1;
+    if (elm.dataset.type == "hue") colorhue = ind * 18;
+    if (elm.dataset.type == "satur") colorsatur = ind * 0.05;
+    if (elm.dataset.type == "bright") colorbright = ind * 0.05;
     updateColorButtons();
   }
 }
 
 function clickcolor(elm) {
   var ind = elm.dataset.id;
-  if (elm.dataset.type == "hue") colorhue = ind * 36;
-  if (elm.dataset.type == "satur") colorsatur = ind * 0.1;
-  if (elm.dataset.type == "bright") colorbright = ind * 0.1;
+  if (elm.dataset.type == "hue") colorhue = ind * 18;
+  if (elm.dataset.type == "satur") colorsatur = ind * 0.05;
+  if (elm.dataset.type == "bright") colorbright = ind * 0.05;
   updateColorButtons();
 }
 
@@ -155,25 +155,25 @@ function consolelog() {
 
 function generateColor() {
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 6969;
   consolelog((now - (now.getTimezoneOffset() * 60000)) /8.64e7);
   consolelog(now/8.64e7);
   consolelog(days);
-  if (localStorage["shadle_lastday"] != days) {
-    localStorage["shadle_guesses"] = JSON.stringify([]);
-    localStorage["shadle_lastday"] = days;
+  if (localStorage["hardshadle_lastday"] != days) {
+    localStorage["hardshadle_guesses"] = JSON.stringify([]);
+    localStorage["hardshadle_lastday"] = days;
   }
-  if (localStorage["shadle_stats"] == undefined) {
-    localStorage["shadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0});
+  if (localStorage["hardshadle_stats"] == undefined) {
+    localStorage["hardshadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0});
   }
   
-  colorgoalhue = randomInt(0, 9, days) * 36;
-  colorgoalsatur = randomInt(0, 10, days + 500) * 0.1;
-  colorgoalbright = randomInt(0, 10, days + 1000) * 0.1;
+  colorgoalhue = randomInt(0, 18, days) * 18;
+  colorgoalsatur = randomInt(0, 20, days + 500) * 0.05;
+  colorgoalbright = randomInt(0, 20, days + 1000) * 0.05;
   colorgoal = hsvToHex(colorgoalhue, colorgoalsatur, colorgoalbright);
   document.getElementById("colorref").innerText = colorgoal;
 
-  var tempguesses = JSON.parse(localStorage.shadle_guesses);
+  var tempguesses = JSON.parse(localStorage.hardshadle_guesses);
   for (let i= 0; i < tempguesses.length; i++) {
     const guess = tempguesses[i];
     colorhue = guess.h;
@@ -187,7 +187,7 @@ function generateColor() {
 
 function submitcolor(firsttime) {
   if (gamedone) return;
-  if (guesses.length >= 4) return;
+  if (guesses.length >= 6) return;
   guesses.push({h: colorhue, s: colorsatur, v: colorbright});
   /*
   var huediff = (Math.abs(Math.round(colorgoalhue/36) - Math.round(colorhue/36)) / 9);
@@ -199,12 +199,12 @@ function submitcolor(firsttime) {
   var dist = 100 - dist;
   createGuess(colorhue,colorsatur,colorbright,Math.floor(dist), guesses.length - 1);
   var firstTimeWin = firsttime;
-  localStorage.shadle_guesses = JSON.stringify(guesses);
+  localStorage.hardshadle_guesses = JSON.stringify(guesses);
   if (dist == 100) {
     gamedone = true;
     win(firstTimeWin);
   } else {
-    if (guesses.length == 4) {
+    if (guesses.length == 6) {
       gamedone = true;
       defeat(firstTimeWin);
     }
@@ -243,11 +243,11 @@ function revealBackground() {
 async function win(first) {
   won = true;
   if (first) {
-    var stats = JSON.parse(localStorage.shadle_stats);
+    var stats = JSON.parse(localStorage.hardshadle_stats);
     if (stats["str"] == undefined) stats["str"] = 0;
     if (stats["mstr"] == undefined) stats["mstr"] = 0;
     var now = new Date();
-    var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+    var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 6969;
     stats.strday = days;
     stats.str += 1;
     if (stats.str >= stats.mstr) stats.mstr = stats.str;
@@ -255,13 +255,13 @@ async function win(first) {
     stats["w" + guesses.length] += 1;
     setAnalytic("beats",1);
     setAnalytic("attempts", guesses.length);
-    localStorage.shadle_stats = JSON.stringify(stats);
+    localStorage.hardshadle_stats = JSON.stringify(stats);
   }
-  document.getElementById("wintext").innerText = "You're so good at this game.";
+  document.getElementById("wintext").innerText = "Impressive!";
   if (guesses.length == 1) {
-    document.getElementById("wintext").innerText = "Wow! one attempt!";
+    document.getElementById("wintext").innerText = "You're actually insane..!";
   }
-  if (guesses.length == 4) {
+  if (guesses.length == 6) {
     document.getElementById("wintext").innerText = "Clutch!";
   }
   revealBackground();
@@ -269,30 +269,30 @@ async function win(first) {
   document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
   revealBackground();
   document.getElementById("winuioverlay").dataset.reveal = "1";
-  document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
-  document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
-  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
-  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100) + "%";
+  document.getElementById("ws_played").innerText = JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l;
+  document.getElementById("ws_str").innerText = JSON.parse(localStorage.hardshadle_stats).str;
+  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.hardshadle_stats).mstr;
+  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.hardshadle_stats).w / (JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l) * 100) + "%";
   document.getElementById("winui").dataset.reveal = "1";
 }
 async function defeat(first) {
   if (first) {
-    var stats = JSON.parse(localStorage.shadle_stats);
+    var stats = JSON.parse(localStorage.hardshadle_stats);
     if (stats["str"] == undefined) stats["str"] = 0;
     if (stats["mstr"] == undefined) stats["mstr"] = 0;
     stats.str = 0;
     stats.l += 1;
     setAnalytic("beats",0);
-    localStorage.shadle_stats = JSON.stringify(stats);
+    localStorage.hardshadle_stats = JSON.stringify(stats);
   }
   revealBackground();
   await sleep(1400);
   document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
   document.getElementById("winuioverlay").dataset.reveal = "1";
-  document.getElementById("ws_played").innerText = JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l;
-  document.getElementById("ws_str").innerText = JSON.parse(localStorage.shadle_stats).str;
-  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.shadle_stats).mstr;
-  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.shadle_stats).w / (JSON.parse(localStorage.shadle_stats).w + JSON.parse(localStorage.shadle_stats).l) * 100) + "%";
+  document.getElementById("ws_played").innerText = JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l;
+  document.getElementById("ws_str").innerText = JSON.parse(localStorage.hardshadle_stats).str;
+  //document.getElementById("ws_mstr").innerText = JSON.parse(localStorage.hardshadle_stats).mstr;
+  document.getElementById("ws_wlr").innerText = Math.floor(JSON.parse(localStorage.hardshadle_stats).w / (JSON.parse(localStorage.hardshadle_stats).w + JSON.parse(localStorage.hardshadle_stats).l) * 100) + "%";
   document.getElementById("wintext").innerText = "You'll get it next time. :)";
   document.getElementById("winui").dataset.reveal = "1";
 }
@@ -357,16 +357,16 @@ async function createGuess(h, s, v, dist, ind) {
   guess.appendChild(guesshintbright);
   document.getElementById("guesses").appendChild(guess);
 
-  var diff = Math.abs(Math.round(h / 36) - Math.round(colorgoalhue / 36));
+  var diff = Math.abs(Math.round(h / 18) - Math.round(colorgoalhue / 18));
   if (colorgoalsatur == 0 || colorgoalbright == 0) diff = 0;
   if (diff == 0) {
     guesshinthue.dataset["type"] = "correct";
-  } else if (diff == 1 || diff == 9) {
+  } else if (diff == 1 || diff == 18) {
     guesshinthue.dataset["type"] = "close";
   } else {
     guesshinthue.dataset["type"] = "incorrect";
   }
-  var diff2 = Math.abs(Math.round(s / 0.1) - Math.round(colorgoalsatur / 0.1));
+  var diff2 = Math.abs(Math.round(s / 0.05) - Math.round(colorgoalsatur / 0.05));
   if (colorgoalbright == 0) diff2 = 0;
   if (diff2 == 0) {
     guesshintsatur.dataset["type"] = "correct";
@@ -375,7 +375,7 @@ async function createGuess(h, s, v, dist, ind) {
   } else {
     guesshintsatur.dataset["type"] = "incorrect";
   }
-  var diff3 = Math.abs(Math.round(v / 0.1) - Math.round(colorgoalbright / 0.1));
+  var diff3 = Math.abs(Math.round(v / 0.05) - Math.round(colorgoalbright / 0.05));
   if (diff3 == 0) {
     guesshintbright.dataset["type"] = "correct";
   } else if (diff3 == 1) {
@@ -418,29 +418,28 @@ function mulberry32(a) {
 
 
 function updateColorButtons() {
-  for (let i= 0; i < 10; i++) {
+  for (let i= 0; i < 20; i++) {
     var btn = document.getElementById("hue_" + i);
-    btn.style.backgroundColor = hsvToHex(i * 36, colorsatur, colorbright);
-    if (colorhue == i * 36) {
+    btn.style.backgroundColor = hsvToHex(i * 18, colorsatur, colorbright);
+    if (colorhue == i * 18) {
       btn.dataset["selected"] = "1";
     } else {
       btn.dataset["selected"] = "0";
     }
   }
-  for (let i= 0; i < 11; i++) {
+  for (let i= 0; i < 21; i++) {
     var btn = document.getElementById("satur_" + i);
-    btn.style.backgroundColor = hsvToHex(colorhue, i * 0.1, colorbright);
-    consolelog(i * 0.1, colorsatur, i);
-    if (colorsatur == i * 0.1) {
+    btn.style.backgroundColor = hsvToHex(colorhue, i * 0.05, colorbright);
+    if (colorsatur == i * 0.05) {
       btn.dataset["selected"] = "1";
     } else {
       btn.dataset["selected"] = "0";
     }
   }
-  for (let i= 0; i < 11; i++) {
+  for (let i= 0; i < 21; i++) {
     var btn = document.getElementById("bright_" + i);
-    btn.style.backgroundColor = hsvToHex(colorhue, colorsatur, i * 0.1);
-    if (colorbright == i * 0.1) {
+    btn.style.backgroundColor = hsvToHex(colorhue, colorsatur, i * 0.05);
+    if (colorbright == i * 0.05) {
       btn.dataset["selected"] = "1";
     } else {
       btn.dataset["selected"] = "0";
@@ -475,11 +474,11 @@ async function closemenu() {
 function share() {
 
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 6969;
   consolelog(days);
 
-  var sharetext = "Shadle #" + (days - 18990) + " " + guesses.length + "/4  (" + colorgoal + ")\n";
-  if (!won) sharetext = "Shadle #" + (days - 18990) + " X/4  (" + colorgoal + ")\n";
+  var sharetext = "Hard Shadle #" + (days - 18990 + 6862) + " " + guesses.length + "/6  (" + colorgoal + ")\n";
+  if (!won) sharetext = "Hard Shadle #" + (days - 18990 + 6862) + " X/6  (" + colorgoal + ")\n";
   var title = sharetext;
   //sharetext = sharetext + colorgoal + "\n";
   var description = sharetext;
@@ -488,28 +487,28 @@ function share() {
     var charhue = "⚫";
     var charsatur = "⚫";
     var charbright = "⚫";
-    var diff = Math.abs(Math.round(guess.h / 36) - Math.round(colorgoalhue /36));
+    var diff = Math.abs(Math.round(guess.h / 18) - Math.round(colorgoalhue /18));
     if (colorgoalsatur == 0 || colorgoalbright == 0) diff = 0;
     if (diff == 0) {
       charhue = "🟢";
     } else if (diff == 1 || diff == 9) {charhue = "🟡"}
-    var diff = Math.abs(Math.round(guess.s / 0.1) - Math.round(colorgoalsatur /0.1));
+    var diff = Math.abs(Math.round(guess.s / 0.05) - Math.round(colorgoalsatur /0.05));
     if (colorgoalbright == 0) diff = 0;
     if (diff == 0) {
       charsatur = "🟢";
     } else if (diff == 1) {charsatur = "🟡"}
-    var diff = Math.abs(Math.round(guess.v / 0.1) - Math.round(colorgoalbright /0.1));
+    var diff = Math.abs(Math.round(guess.v / 0.05) - Math.round(colorgoalbright /0.05));
     if (diff == 0) {
       charbright = "🟢";
     } else if (diff == 1) {charbright = "🟡"}
     sharetext = sharetext + "\n" + charhue + charsatur + charbright;
     description = description + "\n" + charhue + charsatur + charbright;
   }
-  sharetext = sharetext + "\nhttps://looserrip.github.io/shadle";
+  sharetext = sharetext + "\nhttps://looserrip.github.io/shadle/hard";
   
   consolelog(sharetext);
   console.log(sharetext);
-  if(!gamedone) sharetext="Your daily color guessing game!\nhttps://looserrip.github.io/shadle";
+  if(!gamedone) sharetext="Your daily color guessing game!\nhttps://looserrip.github.io/shadle/hard";
   if(!gamedone) description="Your daily color guessing game!\n";
   if (ismobile) {
     navigator.share({
@@ -523,33 +522,33 @@ function share() {
 }
 function settweet() {
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
-  var sharetext = "Shadle%20%23" + (days - 18990) + "%20" + guesses.length + "/4%20(" + colorgoal.replace("#", "%23") + ")%0a";
-  if (!won) sharetext = "Shadle%20%23" + (days - 18990) + "%20X/4%20(" + colorgoal + ")%0a";
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 6969;
+  var sharetext = "Hard Shadle%20%23" + (days - 18990 + 6862) + "%20" + guesses.length + "/6%20(" + colorgoal.replace("#", "%23") + ")%0a";
+  if (!won) sharetext = "Hard Shadle%20%23" + (days - 18990 + 6862) + "%20X/6%20(" + colorgoal + ")%0a";
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var charhue = "%E2%9A%AB";
     var charsatur = "%E2%9A%AB";
     var charbright = "%E2%9A%AB";
-    var diff = Math.abs(Math.round(guess.h / 36) - Math.round(colorgoalhue /36));
+    var diff = Math.abs(Math.round(guess.h / 18) - Math.round(colorgoalhue /18));
     if (colorgoalsatur == 0 || colorgoalbright == 0) diff = 0;
     if (diff == 0) {
       charhue = "%F0%9F%9F%A2";
     } else if (diff == 1 || diff == 9) {charhue = "%F0%9F%9F%A1"}
-    var diff = Math.abs(Math.round(guess.s / 0.1) - Math.round(colorgoalsatur /0.1));
+    var diff = Math.abs(Math.round(guess.s / 0.05) - Math.round(colorgoalsatur /0.05));
     if (colorgoalbright == 0) diff = 0;
     if (diff == 0) {
       charsatur = "%F0%9F%9F%A2";
     } else if (diff == 1) {charsatur = "%F0%9F%9F%A1"}
-    var diff = Math.abs(Math.round(guess.v / 0.1) - Math.round(colorgoalbright /0.1));
+    var diff = Math.abs(Math.round(guess.v / 0.05) - Math.round(colorgoalbright /0.05));
     if (diff == 0) {
       charbright = "%F0%9F%9F%A2";
     } else if (diff == 1) {charbright = "%F0%9F%9F%A1"}
     sharetext = sharetext + "%0a" + charhue + charsatur + charbright;
   }
-  sharetext = sharetext + "%0ahttps://looserrip.github.io/shadle";
+  sharetext = sharetext + "%0ahttps://looserrip.github.io/shadle/hard";
   consolelog(sharetext);
-  if(!gamedone) sharetext="Your%20daily%20color%20guessing%20game!%0ahttps://looserrip.github.io/shadle";
+  if(!gamedone) sharetext="Your%20daily%20color%20guessing%20game!%0ahttps://looserrip.github.io/shadle/hard";
   location.href = "https://twitter.com/intent/tweet?text=" + sharetext;
   //document.getElementById("twitterspan").setAttribute("href", "https://twitter.com/intent/tweet?text=" + sharetext);
   //navigator.clipboard.writeText(sharetext);
