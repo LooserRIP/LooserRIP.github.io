@@ -100,10 +100,12 @@ function togglemode() {
    var active = document.getElementById("hardmode").dataset.active;
    if (active == 0) {
       document.getElementById("hardmode").dataset.active = "1";
+      document.getElementById("background").dataset.hardmode = "1";
       updateStats(harddatabase, 1);
    }
    if (active == 1) {
-      document.getElementById("hardmode").dataset.active = "0";
+    document.getElementById("hardmode").dataset.active = "0";
+    document.getElementById("background").dataset.hardmode = "0";
       updateStats(normaldatabase, 0);
    }
 }
