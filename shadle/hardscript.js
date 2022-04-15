@@ -470,7 +470,7 @@ async function closemenu() {
   document.getElementById("winuioverlay").dataset.reveal = "0";
 }
 
-function share() {
+async function share() {
 
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 6969;
@@ -519,7 +519,7 @@ function share() {
     navigator.clipboard.writeText(sharetext);
   }
 }
-function settweet() {
+async function settweet() {
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 6969;
   var sharetext = "Hard Shadle%20%23" + (days - 18990 + 6862) + "%20" + guesses.length + "/6%20(" + colorgoal.replace("#", "%23") + ")%0a";
