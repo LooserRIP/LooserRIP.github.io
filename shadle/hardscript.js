@@ -47,7 +47,6 @@ function init() {
 
   
   if (ismobile) document.getElementById("twitterbutton").remove();
-  if (true) document.getElementById("getappbutton").remove();
 
 }
 
@@ -549,6 +548,7 @@ function settweet() {
   sharetext = sharetext + "%0ahttps://looserrip.github.io/shadle/hard";
   consolelog(sharetext);
   if(!gamedone) sharetext="Your%20daily%20color%20guessing%20game!%0ahttps://looserrip.github.io/shadle/hard";
+  await sleep(500);
   location.href = "https://twitter.com/intent/tweet?text=" + sharetext;
   //document.getElementById("twitterspan").setAttribute("href", "https://twitter.com/intent/tweet?text=" + sharetext);
   //navigator.clipboard.writeText(sharetext);

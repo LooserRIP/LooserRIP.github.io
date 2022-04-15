@@ -521,7 +521,7 @@ function share() {
     navigator.clipboard.writeText(sharetext);
   }
 }
-function settweet() {
+async function settweet() {
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
   var sharetext = "Shadle%20%23" + (days - 18990) + "%20" + guesses.length + "/4%20(" + colorgoal.replace("#", "%23") + ")%0a";
@@ -550,6 +550,7 @@ function settweet() {
   sharetext = sharetext + "%0ahttps://looserrip.github.io/shadle";
   consolelog(sharetext);
   if(!gamedone) sharetext="Your%20daily%20color%20guessing%20game!%0ahttps://looserrip.github.io/shadle";
+  await sleep(500);
   location.href = "https://twitter.com/intent/tweet?text=" + sharetext;
   //document.getElementById("twitterspan").setAttribute("href", "https://twitter.com/intent/tweet?text=" + sharetext);
   //navigator.clipboard.writeText(sharetext);
@@ -562,3 +563,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   e.prompt();
 });
 
+async function hardmode() {
+  await sleep(500);
+  location.href = "https://looserrip.github.io/shadle/hard";
+}
