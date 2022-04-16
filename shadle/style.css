@@ -540,7 +540,8 @@ body[data-dark="1"] .logo {
 #hardmodespan {
   position: relative;
   font-size: 125%;
-  top: 1px;
+  top: 4px;
+  color: var(--color);
 }
 
 .stats-option[data-button="share"] {
@@ -665,4 +666,9 @@ body[data-dark="1"] .logo {
 .material-icons[data-tutorial="3"] {
   margin-left: 20px;
   color:#59846f;
+}
+.hardmodeb {
+  height: 100%;
+  display:block;
+    color: var(--color);
 }
