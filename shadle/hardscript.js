@@ -152,7 +152,7 @@ function consolelog() {
 }
 
 
-function generateColor() {
+async function generateColor() {
   var now = new Date();
   var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 6969;
   consolelog((now - (now.getTimezoneOffset() * 60000)) /8.64e7);
@@ -172,6 +172,7 @@ function generateColor() {
   colorgoal = hsvToHex(colorgoalhue, colorgoalsatur, colorgoalbright);
   document.getElementById("colorref").innerText = colorgoal;
 
+  document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
   var tempguesses = JSON.parse(localStorage.hardshadle_guesses);
   for (let i= 0; i < tempguesses.length; i++) {
     const guess = tempguesses[i];
@@ -179,7 +180,9 @@ function generateColor() {
     colorsatur = guess.s;
     colorbright = guess.v;
     submitcolor(false);
+    await sleep(200);
   }
+  document.getElementById("submitcolorbutton").dataset["reveal"] = "0";
 
 }
 

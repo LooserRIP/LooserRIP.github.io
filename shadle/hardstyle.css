@@ -122,11 +122,12 @@ body[data-dark="1"] img {
   position:relative;
   display: flex;
   margin: 20px auto;
-  width: 400px;
+  width: 800px;
   border-radius: 15px;
   text-align: right;
   
   box-shadow: 0 0 0 3pt var(--bgoutline);
+  transition: box-shadow 2s;
   /*outline: 3px solid white; */
   /*outline-offset: 2px; */
 }
@@ -156,7 +157,7 @@ body[data-dark="1"] img {
 
 
 /* We only really need to add mobile support to the color picker */
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 920px) {
   .slider {
     width: 85%;
   }
@@ -315,6 +316,9 @@ body[data-dark="1"] img {
   cursor: pointer;
 }
 
+.guess-color {
+  animation: delay 0s;
+}
 .hint:nth-child(2) {
   animation-delay: 0.4s;
 }
@@ -323,7 +327,14 @@ body[data-dark="1"] img {
 }
 .hint:nth-child(4) {
   animation-delay: 0.6s;
-}
+}/*
+.guess:nth-child(2) > .guess-color {animation: delay 0.4s;}
+.guess:nth-child(2) > .hint:nth-child(2) { animation-delay: 0.4s;}
+.guess:nth-child(2) > .hint:nth-child(3) { animation-delay: 0.4s;}
+.guess:nth-child(2) > .hint:nth-child(4) { animation-delay: 0.4s;}*/
+
+
+
 
 .hint[data-type=correct] {
   background-color: #589469;
