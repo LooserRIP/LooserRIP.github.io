@@ -179,6 +179,7 @@ async function generateColor() {
     colorsatur = guess.s;
     colorbright = guess.v;
     submitcolor(false);
+    updateColorButtons();
     await sleep(200);
   }
   document.getElementById("submitcolorbutton").dataset["reveal"] = "0";
