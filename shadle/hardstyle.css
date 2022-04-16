@@ -315,10 +315,6 @@ body[data-dark="1"] img {
   animation-fill-mode: forwards;
   cursor: pointer;
 }
-
-.guess-color {
-  animation: delay 0s;
-}
 .hint:nth-child(2) {
   animation-delay: 0.4s;
 }
