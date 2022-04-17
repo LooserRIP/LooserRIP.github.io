@@ -1,7 +1,11 @@
 let database;
 let normaldatabase;
 let harddatabase;
+var hardmode;
+var background;
 async function init() {
+  hardmode = document.getElementById("hardmode");
+  background = document.getElementById("background");
   normaldatabase = await fetch("https://wakeful-enchanted-theory.glitch.me/database");
   normaldatabase = await normaldatabase.json();
   harddatabase = await fetch("https://wakeful-enchanted-theory.glitch.me/harddatabase");
@@ -94,18 +98,16 @@ function updateStats(db, mode) {
 }
 
 
-
 function togglemode() {
-  if (document.getElementById("hardmode").dataset["active"] == undefined) document.getElementById("hardmode").dataset["active"] = "0";
-   var active = document.getElementById("hardmode").dataset.active;
+   var active = hardmode.dataset.active;
    if (active == 0) {
-      document.getElementById("hardmode").dataset.active = "1";
-      document.getElementById("background").dataset.hardmode = "1";
+      hardmode.dataset.active = "1";
+      background.dataset.hardmode = "1";
       updateStats(harddatabase, 1);
    }
    if (active == 1) {
-    document.getElementById("hardmode").dataset.active = "0";
-    document.getElementById("background").dataset.hardmode = "0";
+    hardmode.dataset.active = "0";
+    background.dataset.hardmode = "0";
       updateStats(normaldatabase, 0);
    }
 }

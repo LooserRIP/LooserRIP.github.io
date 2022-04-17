@@ -11,13 +11,15 @@ let won = false;
 let gamedone = false;
 let mouseDown = [0,0,0,0,0,0,0,0];
 let ismobile = false;
+let dayoffset = 0;
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
 async function setAnalytic(type, value) {
-  
+  if (localStorage["shadle_unlimited"] == "1") return;
+
   var now = new Date();
   var day = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7);
   var yayfetch = await fetch("https://wakeful-enchanted-theory.glitch.me/analytics", {
@@ -28,7 +30,9 @@ async function setAnalytic(type, value) {
 
 
 function init() {
-  updateStreak();
+  
+  if (localStorage["shadle_unlimited"] == "1") dayoffset = Math.round(Math.random() * 1000);
+  if (localStorage["shadle_unlimited"] != "1") updateStreak();
   generateColor();
   updateColorButtons();
   tutorial();
@@ -105,7 +109,7 @@ function updateStreak() {
   }
 
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100 + dayoffset;
   var stats = JSON.parse(localStorage["shadle_stats"]);
   if (stats["str"] == undefined) stats["str"] = 0;
   if (stats["strday"] == undefined) stats["strday"] = 0;
@@ -153,16 +157,18 @@ function consolelog() {
 
 async function generateColor() {
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7) - 100 + dayoffset;
   consolelog((now - (now.getTimezoneOffset() * 60000)) /8.64e7);
   consolelog(now/8.64e7);
   consolelog(days);
-  if (localStorage["shadle_lastday"] != days) {
-    localStorage["shadle_guesses"] = JSON.stringify([]);
-    localStorage["shadle_lastday"] = days;
-  }
-  if (localStorage["shadle_stats"] == undefined) {
-    localStorage["shadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0});
+  if (localStorage["shadle_unlimited"] != "1") {
+    if (localStorage["shadle_lastday"] != days) {
+      localStorage["shadle_guesses"] = JSON.stringify([]);
+      localStorage["shadle_lastday"] = days;
+    }
+    if (localStorage["shadle_stats"] == undefined) {
+      localStorage["shadle_stats"] = JSON.stringify({w1: 0, w2: 0, w3: 0, w4: 0, w5: 0, w6: 0, w: 0, l: 0});
+    }
   }
   
   colorgoalhue = randomInt(0, 9, days) * 36;
@@ -172,15 +178,17 @@ async function generateColor() {
   document.getElementById("colorref").innerText = colorgoal;
 
   document.getElementById("submitcolorbutton").dataset["reveal"] = "1";
-  var tempguesses = JSON.parse(localStorage.shadle_guesses);
-  for (let i= 0; i < tempguesses.length; i++) {
-    const guess = tempguesses[i];
-    colorhue = guess.h;
-    colorsatur = guess.s;
-    colorbright = guess.v;
-    submitcolor(false);
-    updateColorButtons();
-    await sleep(200);
+  if (localStorage["shadle_unlimited"] != "1") {
+    var tempguesses = JSON.parse(localStorage.shadle_guesses);
+    for (let i= 0; i < tempguesses.length; i++) {
+      const guess = tempguesses[i];
+      colorhue = guess.h;
+      colorsatur = guess.s;
+      colorbright = guess.v;
+      submitcolor(false);
+      updateColorButtons();
+      await sleep(200);
+    }
   }
   document.getElementById("submitcolorbutton").dataset["reveal"] = "0";
 
@@ -201,7 +209,7 @@ function submitcolor(firsttime) {
   var dist = 100 - dist;
   createGuess(colorhue,colorsatur,colorbright,Math.floor(dist), guesses.length - 1);
   var firstTimeWin = firsttime;
-  localStorage.shadle_guesses = JSON.stringify(guesses);
+  if (localStorage["shadle_unlimited"] != "1") localStorage.shadle_guesses = JSON.stringify(guesses);
   if (dist == 100) {
     gamedone = true;
     win(firstTimeWin);
@@ -244,12 +252,13 @@ function revealBackground() {
 
 async function win(first) {
   won = true;
+  if (localStorage["shadle_unlimited"] == "1") first = false;
   if (first) {
     var stats = JSON.parse(localStorage.shadle_stats);
     if (stats["str"] == undefined) stats["str"] = 0;
     if (stats["mstr"] == undefined) stats["mstr"] = 0;
     var now = new Date();
-    var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+    var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100 + dayoffset;
     stats.strday = days;
     stats.str += 1;
     if (stats.str >= stats.mstr) stats.mstr = stats.str;
@@ -278,6 +287,7 @@ async function win(first) {
   document.getElementById("winui").dataset.reveal = "1";
 }
 async function defeat(first) {
+  if (localStorage["shadle_unlimited"] == "1") first = false;
   if (first) {
     var stats = JSON.parse(localStorage.shadle_stats);
     if (stats["str"] == undefined) stats["str"] = 0;
@@ -477,11 +487,12 @@ async function closemenu() {
 function share() {
 
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100 + dayoffset;
   consolelog(days);
 
   var sharetext = "Shadle #" + (days - 18990) + " " + guesses.length + "/4  (" + colorgoal + ")\n";
   if (!won) sharetext = "Shadle #" + (days - 18990) + " X/4  (" + colorgoal + ")\n";
+  if (localStorage["shadle_unlimited"] == "1") sharetext = sharetext.replace("#" + (days - 18990), "Unlimited");
   var title = sharetext;
   //sharetext = sharetext + colorgoal + "\n";
   var description = sharetext;
@@ -525,9 +536,10 @@ function share() {
 }
 async function settweet() {
   var now = new Date();
-  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100;
+  var days = Math.floor((now - (now.getTimezoneOffset() * 60000))/8.64e7)- 100 + dayoffset;
   var sharetext = "Shadle%20%23" + (days - 18990) + "%20" + guesses.length + "/4%20(" + colorgoal.replace("#", "%23") + ")%0a";
   if (!won) sharetext = "Shadle%20%23" + (days - 18990) + "%20X/4%20(" + colorgoal + ")%0a";
+  if (localStorage["shadle_unlimited"] == "1") sharetext = sharetext.replace("%20%23" + (days - 18990), "Unlimited");
   for (let i = 0; i < guesses.length; i++) {
     var guess = guesses[i];
     var charhue = "%E2%9A%AB";
@@ -569,3 +581,4 @@ async function hardmode() {
   await sleep(500);
   location.href = "https://looserrip.github.io/shadle/hard";
 }
+
