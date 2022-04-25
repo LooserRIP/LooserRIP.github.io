@@ -123,7 +123,7 @@ function updateStats(db, mode) {
   document.getElementById("graph_beatperc").setAttribute("src", graphlink2);
   document.getElementById("graph_averageattempts").setAttribute("src", graphlink3);
   document.getElementById("graph_newusers").setAttribute("src", graphlink4);
-  document.getElementById("graph_engagement").setAttribute("src", graphlink5);
+  //document.getElementById("graph_engagement").setAttribute("src", graphlink5);
 }
 
 
