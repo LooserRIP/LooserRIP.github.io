@@ -71,6 +71,10 @@ function helpmenu() {
   document.getElementById("tutorialuioverlay").dataset.reveal = "1";
   document.getElementById("tutorialui").dataset.reveal = "1";
 }
+function settingsmenu() {
+  document.getElementById("settingsuioverlay").dataset.reveal = "1";
+  document.getElementById("settingsui").dataset.reveal = "1";
+}
 async function statsmenu() {
   document.getElementById("wintext").innerText = "";
   if (gamedone) {
@@ -100,6 +104,11 @@ async function play() {
   localStorage["shadle_tutorial"] = "1";
   document.getElementById("tutorialui").dataset.reveal = "0";
   document.getElementById("tutorialuioverlay").dataset.reveal = "0";
+}
+
+async function exitsettings() {
+  document.getElementById("settingsui").dataset.reveal = "0";
+  document.getElementById("settingsuioverlay").dataset.reveal = "0";
 }
 
 function updateStreak() {

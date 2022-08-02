@@ -47,6 +47,7 @@ function updateStats(db, mode) {
   var graph_days = [];
   var graph_beatperc = [];
   var graph_played = [];
+  var graph_newusers = [];
   var graph_averageattempts = [];
 
   const myNode = document.getElementById("days");
@@ -54,15 +55,24 @@ function updateStats(db, mode) {
     myNode.removeChild(myNode.lastChild);
   }
 
+  var userscount = [];
+  var usercheck = {};
   for (var id = days.length - 1; id >= 0; id--) {
     var day = days[id] - 100;
     console.log(day);
     var kd = database.beats[days[id]];
     var beatsVals = 0;
     var beatsAmt = 0;
+    var newUsers = 0;
     for(var iv = 0; iv < kd.v.length; iv++) {
       beatsAmt++;
       beatsVals += kd.v[iv];
+      if (usercheck[kd.u[iv]] == undefined) usercheck[kd.u[iv]] = 0;
+      usercheck[kd.u[iv]]++;
+      if (!userscount.includes(kd.u[iv])) {
+        userscount.push(kd.u[iv])
+        newUsers++;
+      }
     }
     var ka = database.attempts[days[id]];
     var attemptVals = 0;
@@ -86,15 +96,34 @@ function updateStats(db, mode) {
     graph_averageattempts.unshift(Math.round((attemptVals / attemptAmt) * 100) / 100);
     graph_played.unshift(beatsAmt);
     graph_days.unshift("Day " + (day - 18990));
+    graph_newusers.unshift(newUsers);
     dayelm.innerHTML = innerhtml;
     document.getElementById("days").appendChild(dayelm);
   }
+  var keysusers = Object.keys(usercheck);
+  var usercheckvals = {};
+  var graph_engagementlabels = [];
+  var graph_engagementvalues = [];
+  for (let icc = 0; icc < keysusers.length; icc++) {
+    if (usercheckvals[usercheck[keysusers[icc]]] == undefined) usercheckvals[usercheck[keysusers[icc]]] = 0;
+    usercheckvals[usercheck[keysusers[icc]]]++;
+  }
+  var keysusersc = Object.keys(usercheckvals);
+  for (let icc2 = 0; icc2 < keysusersc.length; icc2++) {
+    graph_engagementlabels.push(keysusersc[icc2]);
+    graph_engagementvalues.push(usercheckvals[keysusersc[icc2]]);
+  }
+
   var graphlink = "https://quickchart.io/chart/render/zm-0dedf14f-8028-4d26-aedd-d90b43389ae1?labels=" + graph_days.join(",") + "&data1=" + graph_played.join(",");
   var graphlink2 = "https://quickchart.io/chart/render/zm-9c3594e8-e613-4f7d-bdc0-4692bc4d494b?labels=" + graph_days.join(",") + "&data1=" + graph_beatperc.join(",");
   var graphlink3 = "https://quickchart.io/chart/render/zm-7361eeb2-871d-4254-b72b-1028d4934d0f?labels=" + graph_days.join(",") + "&data1=" + graph_averageattempts.join(",");
+  var graphlink4 = "https://quickchart.io/chart/render/zm-bbf57a2f-6335-4100-8552-d4421415c843?labels=" + graph_days.join(",") + "&data1=" + graph_newusers.join(",");
+  var graphlink5 = "https://quickchart.io/chart/render/zm-602871b0-4bf1-4e69-922f-08cd3d4b2b0c?labels=" + graph_engagementlabels.join(",") + "&data1=" + graph_engagementvalues.join(",");
   document.getElementById("graph_games").setAttribute("src", graphlink);
   document.getElementById("graph_beatperc").setAttribute("src", graphlink2);
   document.getElementById("graph_averageattempts").setAttribute("src", graphlink3);
+  document.getElementById("graph_newusers").setAttribute("src", graphlink4);
+  //document.getElementById("graph_engagement").setAttribute("src", graphlink5);
 }
 
 

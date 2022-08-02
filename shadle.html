@@ -38,6 +38,11 @@
           help_outline
         </span>
       </button>
+      <button class="header-option" data-button="settings" id="header_settings">
+        <span class="material-icons" id="hi_settings" onclick="settingsmenu()">
+          settings
+        </span>
+      </button>
       <img class="logo" width="120" height="47" id="logo" src="shadle/logo.png" alt="Shadle" draggable=false>
       
       <button class="header-option" data-button="statsmenu" id="header_stats">
@@ -184,6 +189,20 @@
             <button class="stats-option" data-button="play">
               <span class="material-icons" onclick="play()">
                 play_arrow
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings" id="settingsuioverlay" data-reveal="0">
+        <div class="settings-window" id="settingsui" data-reveal="0">
+          <h1 class="settings-title">Settings</h1>
+          <p>sorry bro there aren't really any settings yet</p>
+          <div class="tutorials-options">
+            <button class="stats-option" data-button="exitsettings">
+              <span onclick="exitsettings()">
+                Done
               </span>
             </button>
           </div>
