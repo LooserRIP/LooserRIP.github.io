@@ -1,0 +1,18 @@
+{
+  "short_name": "Shadle",
+  "name": "Shadle - your daily color guessing game!",
+  "icons": [
+    {
+      "src": "og.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/shadle",
+  "background_color": "#333333",
+  "display": "standalone",
+  "scope": "/shadle",
+  "theme_color": "#333333",
+  "description": "Shadle - your daily color guessing game!",
+  "prefer_related_applications": true
+}
