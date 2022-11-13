@@ -1,7 +1,7 @@
 
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
-} //
+} 
 
 function init() {
   initLocalStorage();

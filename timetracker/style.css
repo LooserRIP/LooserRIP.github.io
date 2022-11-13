@@ -1,73 +1,23 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;900&display=swap');
-
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
+/*
 * {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
+}*/
 :root {
-}
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-body {
-	line-height: 1;
-}
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-
-
-
-
-/* General Styles */
-body {
-  width: 100%;
-  height: 100vh;
-  background-color: var(--bg);
-  font-family: 'Lato', sans-serif;
-  color: var(--color);
-  overflow: hidden;
-  transition: background-color 2s, color 2s;
+  --c0: #000000;
+  --c1: #3a405a;
+  --c2: #aec5eb;
+  --c3: #f9dec9;
+  --c4: #e9afa3;
+  --c5: #685044;
+  /*
+  --c1: #223843;
+  --c2: #eff1f3;
+  --c3: #dbd3d8;
+  --c4: #d8b4a0;
+  --c5: #d77a61;
+  */
 }
 .material-icons {
   user-select: none;
@@ -78,4 +28,174 @@ body {
   margin: 0;
 }
 
-/* Information */
+/*
+ * -- BASE STYLES --
+ * Most of these are inherited from Base, but I want to change a few.
+ */
+body {
+  background-color: var(--c1);
+  color: var(--c2);
+  font-family: 'Helvetica', sans-serif;
+}
+a {
+  float:right;
+  text-decoration: none;
+  color: var(--c2);
+  font-size: 220% !important;
+}
+p {
+  padding: 0;
+  margin: 0;
+  margin-left: 8px;
+  font-size: 500%;
+}
+#hello {
+  margin-top: 8px;
+  font-size: 200%;
+  display: none;
+}
+#namehello {
+  font-size: 400%;
+  display: none;
+}
+#totalhello {
+  margin-top: 8px;
+  font-size: 200%;
+  display: block;
+}
+.primary-button,
+.secondary-button {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border-radius: 20px;
+}
+.primary-button {
+  color: var(--c1);
+  background: #1b98f8;
+  margin: 1em 0;
+}
+.secondary-button {
+  background: var(--c1);
+  border: 1px solid #ddd;
+  color: #666;
+  padding: 0.5em 2em;
+  font-size: 80%;
+}
+
+
+.buttonHolder {
+  vertical-align: top;
+  display: inline-block;
+  flex-grow: 1;
+  margin-top: 8px;
+  margin-right: 8px;
+}
+.buttonHolder > a {
+  color: var(--c2);
+}
+.titleHolder {
+  vertical-align: top;
+  display: inline-block;
+}
+.header {
+  vertical-align: top;
+  display: flex;
+  background-color: var(--c1);
+}
+hr.headerHr {
+  border: 2px solid var(--c0);
+  opacity: 0.2;
+}
+.activity {
+  width: 75px;
+  height: 75px;
+  outline: solid 3px var(--c1);
+  outline-offset: 3px;
+}
+
+
+.material-symbols-outlined {
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;   
+  -o-user-select: none; 
+  margin: 0;
+
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 40
+}
+
+/* Activity Styling */
+.activityButton {
+  margin-left: 5px;
+  width: 57px;
+  height: 57px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  background-color: var(--c1);
+  outline: solid 3px var(--c2);
+  outline-offset: 0px;
+  border-radius: 25%;
+  transition: transform 0.2s, outline-offset 0.2s;
+}
+.activityButton:active {
+  transform: scale(calc(1 / 1.16));
+}
+.activityDisc {
+  width: 50px;
+  height: 50px;
+  background-color: #e9afa377;
+  border-radius: 25%;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  transition: transform 0.2s, outline-offset 0.2s;
+}
+.activityButton:active > .activityDisc {
+  transform: scale(1.25);
+  outline-offset: 3px;
+}
+
+.activityDisc > span {
+}
+
+
+
+
+
+
+
+
+/* Media Adjustments */
+
+@media only screen and (max-width :480px) { 
+  #hello {
+    display: block;
+  }
+  #namehello {
+    display: block;
+  }
+  #totalhello {
+    display: none;
+  }
+  .buttonHolder > a {
+    color: var(--c2);
+  }
+  .material-icons {
+    font-size: 200% !important;
+    /*
+    font-family: 'Material Symbols Outlined' !important;
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 40
+    */
+  }
+}

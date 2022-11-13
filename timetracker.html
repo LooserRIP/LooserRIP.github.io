@@ -1,38 +1,36 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  
-  <script src="timetracker/script.js"></script>
-  <link rel="stylesheet" href="timetracker/style.css"/>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="google-site-verification" content="QwSBN3n72BPDrQXZ5uT1lxC_gluEKWwTuZhsoJGKp3U" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="black">
+<!doctype html>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <meta name="robots" content="noindex,nofollow">
-    <title>Shadle</title>
-
-    <meta name="description" content="Track your time, from hour 0 to the end of the day.">
-    <meta itemprop="name" content="Time Tracker - Stop lying to yourself.">
-    <meta itemprop="description" content="Track your time, from hour 0 to the end of the day.">
-    <meta property="og:url" content="https://looserrip.github.io/timetracker">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Time Tracker - Stop lying to yourself.">
-    <meta property="og:description" content="Track your time, from hour 0 to the end of the day.">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Time Tracker - Stop lying to yourself.">
-    <meta name="twitter:description" content="Track your time, from hour 0 to the end of the day.">
-
-    <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Stop lying to yourself.">
+    <title>Time Tracker</title>
+    <link rel="stylesheet" href="timetracker/purecss.css">
+    <link rel="stylesheet" href="timetracker/style.css">
+    <script src="timetracker/script.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-      <link rel="icon" type="image/x-icon" href="timetracker/icon.png">
-      <link rel="manifest" href="timetracker/manifest.json">
-    <title>Time Tracker</title>
-  </head>
-  <body onload="init()">
-    <div class="timebuttons" id="timebuttons">
-      <button class="timebutton" onclick="timebutton(0)"><span class="timespan">Test</span></button>
-      <button class="timebutton" onclick="timebutton(0)"><span class="timespan">Test</span></button>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<body>
+  <div class="header">
+    <div class="titleHolder">
+      <p class="titleText" id="hello">Hello,</p>
+      <p class="titleText" id="namehello">Koren!</p>
+      <p class="titleText" id="totalhello">Hello, Koren!</p>
     </div>
-  </body>
+    <div class="buttonHolder">
+      <a class="material-icons">settings</a>
+      <a class="material-icons">insert_chart</a>
+    </div>
+  </div>
+  <hr class="headerHr">
+  <div class="currentActivity"> 
+    <div class="activityButton">
+      <div class="activityDisc">
+        <span class="material-icons">self_improvement</span>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
