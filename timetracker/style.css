@@ -11,6 +11,7 @@
   --c3: #f9dec9;
   --c4: #e9afa3;
   --c5: #685044;
+  --picked: #e9afa3;
   /*
   --c1: #223843;
   --c2: #eff1f3;
@@ -51,6 +52,7 @@ p {
 }
 #hello {
   margin-top: 8px;
+  margin-left: 9px;
   font-size: 200%;
   display: none;
 }
@@ -152,6 +154,8 @@ hr.activityHr {
 }
 .activityButton[data-big="0"] {
   display: inline-flex;
+  margin-top: 5px;
+  white-space: nowrap;
 }
 .activityButton[data-big="0"]:active {
   transform: scale(calc(1 / 1.16));
@@ -191,7 +195,7 @@ hr.activityHr {
   font-size: 20%;
   position: relative;
   top: 0px;
-  margin-left: 15px;
+  margin-left: 25px;
 }
 .activityText > * {
   margin: 0;
@@ -213,15 +217,50 @@ hr.activityHr {
 }
 
 .pickActivity {
-  margin-top: 25px;
+  margin-top: 35px;
 }
 .activitySlider {
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
-  height: 60px;
+  height: 75px;
+  white-space: nowrap;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-right: 5px;
 }
 
+.activityTexts {
+  margin-top: 15px;
+}
+.activityTextPick {
+  font-size: 130%;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  background-color: #00000025;
+  color: var(--c2);
+  position: relative;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px;
 
+  transition: padding-left 0.2s, color 0.2s, background-color 0.2s, font-size 0.2s, transform 0.2s;
+}
+.activityTextPick:hover {
+  color: var(--picked);
+  padding-left: 20px;
+}
+/*
+.activityTextPick:active {
+  color: var(--picked);
+  transform:scale(1.1) translateX(20px);
+  background-color: #00000040;
+  padding-left: 20px;
+  
+}
+*/
 
 
 /* Media Adjustments */
@@ -251,3 +290,28 @@ hr.activityHr {
     */
   }
 }
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: 4px;
+    scrollbar-color: #00000077 #00000000;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+
+  *::-webkit-scrollbar-track {
+    /*background: #ffdbdb;*/
+  }
+
+  *::-webkit-scrollbar-thumb {
+    
+    scrollbar-width: 3px;
+    height: 2px;
+    background-color: #00000077;
+    border-radius: 14px;
+  }
