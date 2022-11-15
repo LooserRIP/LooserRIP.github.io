@@ -157,7 +157,7 @@ hr.activityHr {
   margin-top: 5px;
   white-space: nowrap;
 }
-.activityButton[data-big="0"]:active {
+.activityButton[data-selected="1"] {
   transform: scale(calc(1 / 1.16));
 }
 .activityDisc {
@@ -178,7 +178,7 @@ hr.activityHr {
   width: 73px;
   height: 73px;
 }
-.activityButton[data-big="0"]:active > .activityDisc {
+.activityButton[data-selected="1"] > .activityDisc {
   transform: scale(1.25);
   outline-offset: 3px;
 }
@@ -239,7 +239,8 @@ hr.activityHr {
   margin-bottom: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-left: 10px;
+  padding-left: -20px;
+  text-align:left;
   background-color: #00000025;
   color: var(--c2);
   position: relative;
@@ -251,6 +252,17 @@ hr.activityHr {
 .activityTextPick:hover {
   color: var(--picked);
   padding-left: 20px;
+}
+.activityTextPick::before {
+  position: relative;
+  top: 3px;
+  font-family: "Material Icons";
+  content: "check ";
+  transition: font-size 0.2s, transform 0.2s, opacity 0.2s, width 0.2s;
+  opacity: 0;
+}
+.activityTextPick:hover::before {
+  opacity: 1;
 }
 /*
 .activityTextPick:active {
