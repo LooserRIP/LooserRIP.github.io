@@ -264,6 +264,9 @@ hr.activityHr {
 .activityTextPick:hover::before {
   opacity: 1;
 }
+#addActivityText {
+  text-align: center;
+}
 /*
 .activityTextPick:active {
   color: var(--picked);
