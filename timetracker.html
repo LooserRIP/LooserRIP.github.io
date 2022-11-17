@@ -85,11 +85,23 @@
   </div>
   <div class="windowsParent" id="windowsParent">
     <div id="windowBackground"> </div>
-    <div class="window" id="window_add" data-form="1">
+    <div class="window" id="window_addCategory" data-form="1">
       <label class="field modern">
         <input type="text" placeholder=" " id="inputaddwindow"/>
         <span class="placeholder">Enter Category Name</span>
       </label>
+      <div class="choosersTab">
+        <div class="iconChoose">
+          <a class="iconChooseIcon material-icons" id="iconChoose">
+            face
+          </a>
+          <p class="iconChooseText"">Choose<br>Icon</p>
+        </div>
+        <div class="colorChoose">
+          <input type="color" class="colorChooseIcon"/>
+          <p class="colorChooseText"">Choose<br>Color</p>
+        </div>
+      </div>
       <div class="windowBottom">
         <hr class="windowHr">
         <div class="windowbuttons">
@@ -101,5 +113,44 @@
       </div>
     </div>
   </div>
+  <div class="window" id="window_addText" data-form="1">
+    <label class="field modern">
+      <input type="text" placeholder=" " id="inputaddwindow"/>
+      <span class="placeholder">Enter Activity Name</span>
+    </label>
+    <div class="windowBottom">
+      <hr class="windowHr">
+      <div class="windowbuttons">
+        <button class="button" style="border-bottom-left-radius: 9px">Cancel</button>
+        <div class="windowVr"></div>
+        <button class="button" style="border-bottom-right-radius: 9px">Add</button>
+        <div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="window" id="window_chooseIcon" data-form="1">
+  <label class="field modern">
+    <input type="text" placeholder=" " id="inputaddwindow"/>
+    <span class="placeholder">Enter Activity Name</span>
+  </label>
+  <div class="chooseIcon_iconList">
+    <a class="iconListIcon material-icons">face</a>
+    <a class="iconListIcon material-icons">add</a>
+    <a class="iconListIcon material-icons">hotel</a>
+    <a class="iconListIcon material-icons">fitness_center</a>
+    <a class="iconListIcon material-icons">sports_esports</a>
+  </div>
+  <div class="windowBottom">
+    <hr class="windowHr">
+    <div class="windowbuttons">
+      <button class="button" style="border-bottom-left-radius: 9px">Cancel</button>
+      <div class="windowVr"></div>
+      <button class="button" style="border-bottom-right-radius: 9px">Add</button>
+      <div>
+    </div>
+  </div>
+</div>
+</div>
 </body>
 </html>
