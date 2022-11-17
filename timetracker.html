@@ -12,7 +12,7 @@
       rel="stylesheet">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
-<body>
+<body onload="init()">
   <div class="header">
     <div class="titleHolder">
       <p class="titleText" id="hello">Hello,</p>
@@ -83,9 +83,22 @@
       <p class="activityTextPick" id="addActivityText">+</p>
     </div>
   </div>
-  <div class="windowsParent">
-    <div class="window" id="add_window">
-
+  <div class="windowsParent" id="windowsParent">
+    <div id="windowBackground"> </div>
+    <div class="window" id="window_add" data-form="1">
+      <label class="field modern">
+        <input type="text" placeholder=" " id="inputaddwindow"/>
+        <span class="placeholder">Enter Category Name</span>
+      </label>
+      <div class="windowBottom">
+        <hr class="windowHr">
+        <div class="windowbuttons">
+          <button class="button" style="border-bottom-left-radius: 9px">Cancel</button>
+          <div class="windowVr"></div>
+          <button class="button" style="border-bottom-right-radius: 9px">Add</button>
+          <div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
