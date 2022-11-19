@@ -234,6 +234,7 @@ hr.activityHr {
 }
 .currentActivity {
   margin-top: 15px;
+  margin-left: 8px;
 }
 
 .pickActivity {
@@ -251,6 +252,9 @@ hr.activityHr {
 
 .activityTexts {
   margin-top: 15px;
+  height: 500px;
+  overflow-y: auto;
+  overflow-x: none;
 }
 .activityTextPick {
   font-size: 130%;
@@ -318,8 +322,10 @@ hr.activityHr {
   display: flex;
   flex-direction: column;
   transition: opacity 0.4s, transform 0.4s, width 0.4s, outline 0.8s, outline-offset 0.8s, top 0.4s;
+  pointer-events:none;
 }
 .window[data-open="1"] {
+  pointer-events:unset;
   outline: solid 3px var(--c2);
   outline-offset: 3px;
   width: calc(100% - 26px);
@@ -333,10 +339,24 @@ hr.activityHr {
   height: min(120px, 50%);
 }
 #window_chooseIcon {
-
+  height: min(230px, 50%);
 }
-.iconListChoose {
-  margin: 8px;
+.iconListIcon {
+  transform: scale(0.8);
+  color: var(--c2);
+  opacity: 1;
+  margin: -0.5px;
+}
+.chooseIcon_iconList {
+  margin-right: 4px;
+  position: relative;
+  left: 5px;
+  margin-top: 5px;
+  text-align: center;
+  height: 168px;
+  width: 96%;
+  overflow-x: none;
+  overflow-y: scroll;
 }
 label {
   width: calc(100% - 23px) !important;
@@ -452,14 +472,15 @@ button.button {
   position: relative;
   left: 50%;
   opacity: 0;
-  transform: translateX(-50%) scaleX(1);
+  transform: translateX(-50%) scale(0.9);
   display: flex;
   justify-content: space-between;
   transition: transform 0.4s opacity 0.4s;
+
 }
 
 .window[data-open="1"] > .choosersTab {
-  transforM: translateX(-50%) scaleX(1);
+  transforM: translateX(-50%);
   opacity: 1;
 }
 /* Media Adjustments */
@@ -609,3 +630,85 @@ button.button {
     background: var(--c1);
     width: auto
   }
+  #input_searchicons {
+  }
+
+
+  
+.field.search {
+  --draw-duration: 0.1s;
+  --draw-color: #222;
+  --draw-line-width: 2px;
+  --draw-easing: linear;
+}
+
+.field.search .border {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: none;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  border-radius: 3px;
+}
+
+.field.search .border::after, 
+.field.search .border::before {
+  content: "";
+  width: 0;
+  height: 0;
+  display: inline-block;
+  position: absolute;
+  border-radius: 3px;
+}
+
+.field.search .border::before {
+  left: 0;
+  bottom: 0;
+  border-right: 0px solid var(--draw-color);
+  border-bottom: 0px solid var(--draw-color);
+  transition: 
+    border 0s linear calc(var(--draw-duration) * 4),
+    height var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 2),
+    width var(--draw-duration) var(--draw-easing) calc(var(--draw-duration) * 3);
+}
+
+.field.search .border::after {
+  right: 0;
+  top: 0;
+  border-left: 0px solid var(--draw-color);
+  border-top: 0px solid var(--draw-color);
+  transition: 
+    border 0s linear calc(var(--draw-duration) * 2),
+    height var(--draw-duration) var(--draw-easing),
+    width var(--draw-duration) var(--draw-easing) var(--draw-duration);
+}
+
+.field.search input:focus ~ .border::before,
+.field.search input:not(:placeholder-shown) ~ .border::before,
+.field.search input.dirty ~ .border::before,
+.field.search input:focus ~ .border::after,
+.field.search input:not(:placeholder-shown) ~ .border::after,
+.field.search input.dirty ~ .border::after {
+  width: 100%;
+  height: 100%;
+  border-width: var(--draw-line-width);
+}
+
+.field.search input:not(:placeholder-shown) ~ .border::before,
+.field.search input.dirty ~ .border::before,
+.field.search input:focus ~ .border::before {
+  transition-delay: 0s, var(--draw-duration), 0s;
+}
+
+.field.search input:not(:placeholder-shown) ~ .border::after,
+.field.search input.dirty ~ .border::after,
+.field.search input:focus ~ .border::after {
+  transition-delay: 
+    calc(var(--draw-duration) * 2), 
+    calc(var(--draw-duration) * 3), 
+    calc(var(--draw-duration) * 2);
+}

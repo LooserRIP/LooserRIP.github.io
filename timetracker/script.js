@@ -2,6 +2,7 @@
 const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 } 
+var types = [];
 
 function init() {
   let key = window.keyboard;
@@ -14,12 +15,26 @@ function init() {
       document.getElementById("windowsParent").dataset["keyboard"] = "0";
     }
   }
+  types = [];
   initLocalStorage();
   refreshTimeButtons();
 }
 function initLocalStorage() {
-  if (localStorage["tt_types"] == undefined) localStorage["tt_types"] = JSON.stringify(["School", "Work", "Sleep"]);
+  if (localStorage["tt_types"] == undefined) {localStorage["tt_types"] = JSON.stringify(types);} else {
+    types = JSON.parse(localStorage["tt_types"]);
+  }
+  addCategory("Work", "work", "#87a8ee;");
+  addCategory("Education", "school", "#71c1c9");
+  addCategory("Fitness", "fitness_center", "#ee8787");
+  addCategory("Meditation", "self_improvement", "#e9afa3");
+  addCategory("Procrastination", "remove", "#969696");
+  addCategory("Sleep", "hotel", "#c48ddd");
+  addCategory("Entertainment", "sports_esports", "#5dc365");
+}
 
+function addCategory(name, icon, color) {
+  types.push({name: name, icon: icon, color: color});
+  localStorage["tt_types"] = JSON.stringify(types);
 }
 
 function refreshTimeButtons() {
