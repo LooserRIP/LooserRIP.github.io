@@ -100,14 +100,14 @@
     </div>
   </div>
   <div class="windowsParent" id="windowsParent">
-    <div id="windowBackground"> </div>
+    <div id="windowBackground" onclick="closeAllWindows()"> </div>
     <div class="window" id="window_addCategory" data-form="1">
       <label class="field modern">
         <input type="text" placeholder=" " id="input_categoryname"/>
         <span class="placeholder">Enter Category Name</span>
       </label>
       <div class="choosersTab">
-        <div class="iconChoose">
+        <div class="iconChoose" onclick="openIconChoose()">
           <a class="iconChooseIcon material-icons" id="iconChoose">
             face
           </a>
@@ -121,9 +121,9 @@
       <div class="windowBottom">
         <hr class="windowHr">
         <div class="windowbuttons">
-          <button class="button" style="border-bottom-left-radius: 9px">Cancel</button>
+          <button class="button" style="border-bottom-left-radius: 9px" onclick="closeAllWindows()">Cancel</button>
           <div class="windowVr"></div>
-          <button class="button" style="border-bottom-right-radius: 9px">Add</button>
+          <button class="button" style="border-bottom-right-radius: 9px" onmousedown="submitAddCategory()" ontouchstart="submitAddCategory()">Add</button>
           <div>
         </div>
       </div>

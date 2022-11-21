@@ -4,6 +4,9 @@ const sleep = (milliseconds) => {
 } 
 var types = [];
 var history = [];
+var documentElements = {};
+var pickedCategory = 0;
+var cooldownWindowClose = 0;
 
 function init() {
   let key = window.keyboard;
@@ -17,35 +20,106 @@ function init() {
     }
   }
   types = [];
+  initDocElms();
   initLocalStorage();
   refreshTimeButtons();
 }
+function initDocElms() {
+  documentElements["categorySlider"] = document.getElementById("activitySlider");
+  documentElements["windowParent"] = document.getElementById("windowsParent");
+}
 function initLocalStorage() {
-  if (localStorage["tt_types"] == undefined) {localStorage["tt_types"] = JSON.stringify(types);} else {
+  if (localStorage["tt_types"] == undefined) {
+    addCategory("Work", "work", "#5874b0;");
+    addCategory("Education", "school", "#71c1c9");
+    addCategory("Fitness", "fitness_center", "#ee8787");
+    addCategory("Meditation", "self_improvement", "#e9afa3");
+    addCategory("Procrastination", "remove", "#969696");
+    addCategory("Sleep", "hotel", "#c48ddd");
+    addCategory("Entertainment", "sports_esports", "#5dc365");
+    localStorage["tt_types"] = JSON.stringify(types);
+  } else {
     types = JSON.parse(localStorage["tt_types"]);
   }
-  addCategory("Work", "work", "#87a8ee;");
-  addCategory("Education", "school", "#71c1c9");
-  addCategory("Fitness", "fitness_center", "#ee8787");
-  addCategory("Meditation", "self_improvement", "#e9afa3");
-  addCategory("Procrastination", "remove", "#969696");
-  addCategory("Sleep", "hotel", "#c48ddd");
-  addCategory("Entertainment", "sports_esports", "#5dc365");
 }
+function selectCategory(id) {
+  console.log(id);
+  for (let elmI = 0; elmI < types.length; elmI++) {
+    if (elmI == id) {
+      documentElements["category" + elmI].dataset["selected"] = "1";
+    } else {
+      documentElements["category" + elmI].dataset["selected"] = "0";
+    }
+  }
+}
+function addCategoryUI() {
+  openWindow("addCategory");
+}
+function openWindow(name) {
+  cooldownWindowClose = Date.now();
+  document.getElementById("windowBackground").dataset["active"] = "1";
+  document.getElementById("window_" + name).dataset['open'] = "1";
+}
+function closeWindow(name) {
+  document.getElementById("windowBackground").dataset["active"] = "0";
+  document.getElementById("window_" + name).dataset['open'] = "0";
+}
+function closeAllWindows() {
+  var opens = {};
+  if (cooldownWindowClose + 500 < Date.now())  {
+    var windows = document.getElementsByClassName("window");
+    for(var i = 0; i < windows.length; i++) {
+      windows[i].dataset["open"] = "0";
+    }
+    document.getElementById("windowBackground").dataset["active"] = "0";
+  }
+}
+function openIconChoose() {
 
+}
+function submitAddCategory() {
+  closeWindow("addCategory");
+  openWindow("chooseIcon");
+}
+function toggleWindow(name) {
+  if (document.getElementById("window_" + name).dataset['open'] == "1") {
+    closeWindow(name);
+  } else {
+    openWindow(name);
+  }
+}
 function addCategory(name, icon, color) {
   types.push({name: name, icon: icon, color: color});
   localStorage["tt_types"] = JSON.stringify(types);
 }
 function addCategoryButton(id) {
   var element = document.createElement("DIV");
-  element.outerHTML = text;
-  var text = '<div class="activityButton" data-big="0"> div class="activityDisc" style="background-color: #5dc365aa;"> <span class="material-icons">sports_esports</span> </div> </div>';
-}
+  element.className = "activityButton";
+  element.dataset["big"] = "0";
+  var text;
+  if (id != -1) {
+    var category = types[id];
+    element.setAttribute("ontouchstart", "selectCategory(" + id + ")");
+    element.setAttribute("onmousedown", "selectCategory(" + id + ")");
+    text = '<div class="activityDisc" style="background-color: ' + category.color + 'aa;"> <span class="material-icons">' + category.icon + '</span> </div>';
+  } else {
+    element.setAttribute("ontouchstart", "addCategoryUI()");
+    element.setAttribute("onmousedown", "addCategoryUI()");
+    text = '<div class="activityDisc" style="background-color: var(--c1);"><span class="material-icons">add</span></div>'
+  }
+  element.innerHTML = text;
+  documentElements.categorySlider.appendChild(element);
+  documentElements["category" + id] = element;
+} 
 
 function refreshTimeButtons() {
-  let types = JSON.parse(localStorage.tt_types);
-
+  var id = 0;
+  removeAllChildNodes(documentElements.categorySlider);
+  types.forEach(tof => {
+    addCategoryButton(id);
+    id++;
+  });
+  addCategoryButton(-1);
 }
 function createTimeButton() {
   
@@ -236,3 +310,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.keyboard = new Keyboard()
 
 })()
+
+function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+  }
+}
