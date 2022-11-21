@@ -3,6 +3,7 @@ const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 } 
 var types = [];
+var history = [];
 
 function init() {
   let key = window.keyboard;
@@ -35,6 +36,11 @@ function initLocalStorage() {
 function addCategory(name, icon, color) {
   types.push({name: name, icon: icon, color: color});
   localStorage["tt_types"] = JSON.stringify(types);
+}
+function addCategoryButton(id) {
+  var element = document.createElement("DIV");
+  element.outerHTML = text;
+  var text = '<div class="activityButton" data-big="0"> div class="activityDisc" style="background-color: #5dc365aa;"> <span class="material-icons">sports_esports</span> </div> </div>';
 }
 
 function refreshTimeButtons() {
