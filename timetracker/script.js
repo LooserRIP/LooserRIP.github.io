@@ -8,6 +8,8 @@ var documentElements = {};
 var pickedCategory = 0;
 var cooldownWindowClose = 0;
 
+
+
 function init() {
   let key = window.keyboard;
   key.addEventListener("keyboardchange", keyboardchange);
@@ -27,6 +29,7 @@ function init() {
 function initDocElms() {
   documentElements["categorySlider"] = document.getElementById("activitySlider");
   documentElements["windowParent"] = document.getElementById("windowsParent");
+  documentElements["iconList"] = document.getElementById("chooseIcon_iconList");
 }
 function initLocalStorage() {
   if (localStorage["tt_types"] == undefined) {
@@ -65,17 +68,24 @@ function closeWindow(name) {
   document.getElementById("window_" + name).dataset['open'] = "0";
 }
 function closeAllWindows() {
-  var opens = {};
+  var opens = [];
   if (cooldownWindowClose + 500 < Date.now())  {
     var windows = document.getElementsByClassName("window");
     for(var i = 0; i < windows.length; i++) {
-      windows[i].dataset["open"] = "0";
+      if (windows[i].dataset["open"] == "1") {
+        opens.push(windows[i].id);
+        windows[i].dataset["open"] = "0";
+      }
     }
     document.getElementById("windowBackground").dataset["active"] = "0";
+    if (opens.includes("window_chooseIcon")) {
+      openWindow("addCategory");
+    }
   }
 }
 function openIconChoose() {
-
+  closeAllWindows();
+  openWindow("chooseIcon");
 }
 function submitAddCategory() {
   closeWindow("addCategory");
@@ -111,6 +121,22 @@ function addCategoryButton(id) {
   documentElements.categorySlider.appendChild(element);
   documentElements["category" + id] = element;
 } 
+var iconUpdateCooldown = Date.now();
+var iconSearch = "";
+function checkIconListScroll() {
+  var winScroll = documentElements["iconList"].scrollTop || documentElements["iconList"].scrollTop;
+  var height = documentElements["iconList"].scrollHeight - documentElements["iconList"].clientHeight;
+  var scrolled = (winScroll / height) * 100;
+  if (scrolled > 90 && iconUpdateCooldown + 500 < Date.now()) {
+    iconUpdateCooldown = Date.now();
+    refreshIconList(iconSearch, documentElements.iconList.childElementCount, 10);
+  }
+}
+
+function refreshIconList(searchCondition, start, icons) {
+  var filterArray = [...iconArray];
+  if (searchCondition != "") filterArray = filterArray.filter(word => );
+}
 
 function refreshTimeButtons() {
   var id = 0;

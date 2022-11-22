@@ -1,5 +1,4 @@
-[
-  "format_clear",
+var iconArray = [ "format_clear",
   "format_align_justify",
   "format_line_spacing",
   "toggle_on",
@@ -4196,4 +4195,4 @@
   "account_balance-2",
   "accessible_forward-2",
   "3d_rotation-2"
-]
+];
