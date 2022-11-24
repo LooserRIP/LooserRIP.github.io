@@ -135,7 +135,17 @@ function checkIconListScroll() {
 
 function refreshIconList(searchCondition, start, icons) {
   var filterArray = [...iconArray];
-  if (searchCondition != "") filterArray = filterArray.filter(word => );
+  if (searchCondition != "") filterArray = filterArray.filter(word => word.includes(searchCondition));
+  for (let dli = start; dli < icons + start; dli++) {
+    var elem = filterArray[dli];
+    var elm = document.createElement("A");
+    elm.className = "iconListIcon material-icons";
+    elm.innerHTML = elem;
+    documentElements.iconList.appendChild(elm);
+  }
+}
+function clearIconList() {
+  removeAllChildNodes(documentElements.iconList);
 }
 
 function refreshTimeButtons() {
