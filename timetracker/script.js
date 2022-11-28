@@ -56,6 +56,8 @@ function selectCategory(id) {
   }
 }
 function addCategoryUI() {
+  document.getElementById("input_categoryname").value = "";
+  timeCategoryCooldown = Date.now();
   openWindow("addCategory");
 }
 function openWindow(name) {
@@ -85,11 +87,22 @@ function closeAllWindows() {
 }
 function openIconChoose() {
   closeAllWindows();
+  document.getElementById("input_searchicons").value = "";
+  iconSearch = "";
   openWindow("chooseIcon");
+  clearIconList();
+  refreshIconList(iconSearch, documentElements.iconList.childElementCount, 100);
 }
+var timeCategoryCooldown = 0;
 function submitAddCategory() {
-  closeWindow("addCategory");
-  openWindow("chooseIcon");
+  if (timeCategoryCooldown + 1000 < Date.now()) {
+    timeCategoryCooldown = Date.now();
+    closeWindow("addCategory");
+    addCategory(document.getElementById("input_categoryname").value, 
+      document.getElementById("iconChoose").innerHTML, 
+      document.getElementById("categoryChooseColor").value);
+    addCategoryButton(types.length - 1);
+  }
 }
 function toggleWindow(name) {
   if (document.getElementById("window_" + name).dataset['open'] == "1") {
@@ -115,21 +128,26 @@ function addCategoryButton(id) {
   } else {
     element.setAttribute("ontouchstart", "addCategoryUI()");
     element.setAttribute("onmousedown", "addCategoryUI()");
+    element.setAttribute("id", "addCategoryButton")
     text = '<div class="activityDisc" style="background-color: var(--c1);"><span class="material-icons">add</span></div>'
   }
   element.innerHTML = text;
   documentElements.categorySlider.appendChild(element);
+  if (document.getElementById("addCategoryButton") != null) {
+    documentElements.categorySlider.appendChild(document.getElementById("addCategoryButton"));
+  }
   documentElements["category" + id] = element;
 } 
 var iconUpdateCooldown = Date.now();
 var iconSearch = "";
+setInterval(checkIconListScroll, 250);
 function checkIconListScroll() {
   var winScroll = documentElements["iconList"].scrollTop || documentElements["iconList"].scrollTop;
   var height = documentElements["iconList"].scrollHeight - documentElements["iconList"].clientHeight;
   var scrolled = (winScroll / height) * 100;
   if (scrolled > 90 && iconUpdateCooldown + 500 < Date.now()) {
     iconUpdateCooldown = Date.now();
-    refreshIconList(iconSearch, documentElements.iconList.childElementCount, 10);
+    refreshIconList(iconSearch, documentElements.iconList.childElementCount, 100);
   }
 }
 
@@ -138,14 +156,25 @@ function refreshIconList(searchCondition, start, icons) {
   if (searchCondition != "") filterArray = filterArray.filter(word => word.includes(searchCondition));
   for (let dli = start; dli < icons + start; dli++) {
     var elem = filterArray[dli];
+    if (dli >= filterArray.length) return;
     var elm = document.createElement("A");
     elm.className = "iconListIcon material-icons";
+    elm.setAttribute("onclick", "selectIcon(this)");
     elm.innerHTML = elem;
     documentElements.iconList.appendChild(elm);
   }
 }
+function selectIcon(elm) {
+  closeAllWindows();
+  document.getElementById("iconChoose").innerHTML = elm.innerHTML;
+}
 function clearIconList() {
   removeAllChildNodes(documentElements.iconList);
+}
+function searchIcons(elm) {
+  clearIconList();
+  iconSearch = elm.value;
+  refreshIconList(iconSearch, documentElements.iconList.childElementCount, 100);
 }
 
 function refreshTimeButtons() {

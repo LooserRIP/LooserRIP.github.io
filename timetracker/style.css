@@ -345,10 +345,12 @@ hr.activityHr {
   height: min(230px, 50%);
 }
 .iconListIcon {
-  transform: scale(0.8);
+  transform: scale(1);
   color: var(--c2);
   opacity: 1;
-  margin: -0.5px;
+  margin: 6px;
+  height: 25.6px;
+  width: 25.6px;
 }
 .chooseIcon_iconList {
   margin-right: 4px;
