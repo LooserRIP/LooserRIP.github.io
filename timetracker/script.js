@@ -7,6 +7,7 @@ var history = [];
 var documentElements = {};
 var pickedCategory = 0;
 var cooldownWindowClose = 0;
+var selectedCategory = -1;
 
 
 
@@ -25,6 +26,7 @@ function init() {
   initDocElms();
   initLocalStorage();
   refreshTimeButtons();
+  selectCategory(0);
 }
 function initDocElms() {
   documentElements["categorySlider"] = document.getElementById("activitySlider");
@@ -33,20 +35,90 @@ function initDocElms() {
 }
 function initLocalStorage() {
   if (localStorage["tt_types"] == undefined) {
+    addCategory("Routine", "coffee", "#807f44;");
+      addText(0, "Morning Routine");
+      addText(0, "Evening Routine");
+      addText(0, "Night Routine");
     addCategory("Work", "work", "#5874b0;");
+      addText(1, "Paid Work");
+      addText(1, "Personal Hobby");
     addCategory("Education", "school", "#71c1c9");
+      addText(2, "School");
+      addText(2, "Homework");
     addCategory("Fitness", "fitness_center", "#ee8787");
+      addText(3, "Cardio");
+      addText(3, "Weight Lifting");
+      addText(3, "Calisthenics");
     addCategory("Meditation", "self_improvement", "#e9afa3");
+      addText(4, "Mindfulness");
+      addText(4, "Relaxation");
+      addText(4, "Gratitude");
     addCategory("Procrastination", "remove", "#969696");
+      addText(5, "Internet");
+      addText(5, "YouTube");
+      addText(5, "TikTok");
+      addText(5, "Instagram");
     addCategory("Sleep", "hotel", "#c48ddd");
+      addText(6, "Sleeping");
+      addText(6, "Resting");
     addCategory("Entertainment", "sports_esports", "#5dc365");
+      addText(7, "Video Games");
+      addText(7, "Hobbies");
+    addCategory("Social", "group", "#a55f43");
+      addText(8, "Hangouts");
+      addText(8, "Parties");
     localStorage["tt_types"] = JSON.stringify(types);
   } else {
     types = JSON.parse(localStorage["tt_types"]);
   }
 }
+function generateTextButtons(id) {
+  var activityTextsDoc = document.getElementById("activityTexts");
+  removeAllChildNodes(activityTextsDoc);
+  if (id != -1) {
+    types[id].texts.forEach(element => {
+      var addActivityTxt = document.createElement("P");
+      addActivityTxt.className = "activityTextPick";
+      addActivityTxt.innerText = element;
+      addActivityTxt.setAttribute("onmousedown", "startTextCount(this)");
+      addActivityTxt.setAttribute("ontouchstart", "startTextCount(this)");
+      addActivityTxt.setAttribute("onmouseup", "endTextCount(this)");
+      addActivityTxt.setAttribute("ontouchend", "endTextCount(this)");
+      activityTextsDoc.appendChild(addActivityTxt);
+    });
+    var addActivityTxta = document.createElement("P");
+    addActivityTxta.className = "activityTextPick";
+    addActivityTxta.id = "addActivityText";
+    addActivityTxta.innerText = "+";
+    activityTextsDoc.appendChild(addActivityTxta);
+  }
+}
+var dateSaveCountText = 0;
+var elementSaveCountText = null;
+function startTextCount(elm) {
+  dateSaveCountText = Date.now();
+  elementSaveCountText = elm;
+}
+function endTextCount(elm) {
+  console.log("ye");
+  if (elementSaveCountText == elm) {
+    var difference = Date.now() - dateSaveCountText;
+    console.log(difference);
+    if (difference > 1500) {
+      console.log(difference);
+    }
+    elementSaveCountText = null;
+  }
+}
+function addText(id, text) {
+  types[id].texts.push(text);
+  localStorage["tt_types"] = JSON.stringify(types);
+  if (id == selectedCategory) generateTextButtons(id);
+}
 function selectCategory(id) {
+  document.getElementById("categoryName").innerText = types[id].name;
   console.log(id);
+  selectedCategory = id;
   for (let elmI = 0; elmI < types.length; elmI++) {
     if (elmI == id) {
       documentElements["category" + elmI].dataset["selected"] = "1";
@@ -54,6 +126,7 @@ function selectCategory(id) {
       documentElements["category" + elmI].dataset["selected"] = "0";
     }
   }
+  generateTextButtons(id);
 }
 function addCategoryUI() {
   document.getElementById("input_categoryname").value = "";
@@ -112,7 +185,7 @@ function toggleWindow(name) {
   }
 }
 function addCategory(name, icon, color) {
-  types.push({name: name, icon: icon, color: color});
+  types.push({name: name, icon: icon, color: color, texts: []});
   localStorage["tt_types"] = JSON.stringify(types);
 }
 function addCategoryButton(id) {
