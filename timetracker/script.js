@@ -100,12 +100,10 @@ function startTextCount(elm) {
   elementSaveCountText = elm;
 }
 function endTextCount(elm) {
-  console.log("ye");
   if (elementSaveCountText == elm) {
     var difference = Date.now() - dateSaveCountText;
-    console.log(difference);
     if (difference > 1500) {
-      console.log(difference);
+      
     }
     elementSaveCountText = null;
   }

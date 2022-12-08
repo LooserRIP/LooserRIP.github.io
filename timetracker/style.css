@@ -371,6 +371,9 @@ hr.activityHr {
 #window_deleteConfirmation {
   height: min(130px, 50%);
 }
+.window[data-open="0"] > .deleteConfirm {
+  
+}
 .iconListIcon {
   transform: scale(1);
   color: var(--c2);
