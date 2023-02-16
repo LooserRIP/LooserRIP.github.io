@@ -95,15 +95,20 @@ function generateTextButtons(id) {
 }
 var dateSaveCountText = 0;
 var elementSaveCountText = null;
+function selectText(elm) {
+  
+}
 function startTextCount(elm) {
   dateSaveCountText = Date.now();
   elementSaveCountText = elm;
 }
-function endTextCount(elm) {
+function endTextCount(elm, category, text) {
   if (elementSaveCountText == elm) {
     var difference = Date.now() - dateSaveCountText;
     if (difference > 1500) {
       
+    } else {
+      selextText()
     }
     elementSaveCountText = null;
   }
