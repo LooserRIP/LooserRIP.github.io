@@ -2,7 +2,7 @@ var imagecache = {};
 async function getImage(name) {
     if (imagecache[name] != undefined) return imagecache[name];
     var link = "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&limit=1&pid=0&tags=" + encodeURIComponent(name) + "%20score:%3E=20%20-animated%20-comic";
-    if (Math.random() > 0.9) link = "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&limit=1&pid=0&tags=" + encodeURIComponent(name) + "%20sort:score%20-animated%20-comic";
+    if (Math.random() > 0.95) link = "https://api.rule34.xxx/index.php?page=dapi&s=post&q=index&limit=1&pid=0&tags=" + encodeURIComponent(name) + "%20sort:score%20-animated%20-comic";
     var matches = ["", ""];
     await fetch(link).then(async function (response) {
         // The API call was successful!
