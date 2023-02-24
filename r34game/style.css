@@ -1,0 +1,91 @@
+.flextotal {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+}
+@font-face {
+    font-family: myFirstFont;
+    src: url(cooprblk.ttf);
+  }
+.tag1 {
+    background-color: rgb(255, 105, 150);
+}
+.tag2 {
+    background-color: rgb(57, 242, 255);
+}
+.tag {
+    pointer-events: all !important;
+    padding: 0;
+    margin: 0;
+    width: 5000px;
+    height: 100%;
+    cursor: pointer;
+}
+.tagbg {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: auto;
+    overflow: hidden;
+    filter:blur(15px);
+    transition: filter 0.25s;
+}
+.tagbg[data-filter="1"] {
+    filter: blur(0px);
+}
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+* {
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;   
+  -o-user-select: none; 
+}
+.tagname {
+    pointer-events: none;
+    text-align: center;
+    font-size: 400%;
+    margin-top: 1.5em;
+    line-height: 0;
+    font-family: myFirstFont;
+    z-index: 1;
+    position: relative;
+}
+.tagtype {
+    pointer-events: none;
+    text-align: center;
+    font-size: 200%;
+    font-family: myFirstFont;
+    line-height: 0;
+    z-index: 1;
+    position: relative;
+}
+.tagscore {
+    pointer-events: none;
+    position: relative;
+    top: calc(50% - 220px);
+    text-align: center;
+    font-size: 500%;
+    font-family: myFirstFont;
+    line-height: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 1;
+    position: relative;
+}
+.tagscore[data-revealed="1"] {
+    pointer-events: none;
+    opacity: 1;
+}
