@@ -1,0 +1,684 @@
+:root {
+  --shade0: #20112c;
+  --shade1: #381b4e;
+  --shade2: #631d76;
+  --shade3: #9e4770;
+  --shade4: #ff784f;
+  --shade5: #db9d47;
+  --vh: 1vh;
+
+}
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 200,
+  'opsz' 48
+}
+body {
+    background-color: var(--shade0);
+    font-family: 'Quicksand', sans-serif;
+    color: var(--shade5);
+    overflow: hidden;
+    font-size: 110%;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+  }
+  h1 {
+    color: navy;
+    margin-left: 20px;
+  }
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+  .element {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    width: 110px;
+    height: 110px;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .sidebar {
+    font-size: 150%;
+    float: right;
+    width: 300px;
+    height: 100%;
+    background-color: var(--shade1);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-left: 5px;
+    box-shadow: -10px 0 0 0 var(--shade0), -15px 0 0 0 var(--shade1)
+  }
+  .sidebarelement {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sidebarimage {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    cursor: pointer;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .sidebarimage[data-disappear="1"] {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: none;
+  }
+  .sidebartext {
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    text-align: justify;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  } 
+  .sidebartext[data-small="1"] {
+    font-size: 75%;
+    font-weight:500;
+  }
+  .sidebartext[data-small="2"] {
+    font-size: 50%;
+    font-weight:500;
+  }
+  /*
+  .gamecontainer {
+    display: flex;
+    flex-direction: column;
+  }*/
+  .combinecircle {
+    position: absolute;
+    pointer-events: none;
+    height: 348px;
+    width: 348px;
+    border-radius: 100%;
+    background-color: var(--shade1);
+    transform: scale(0);
+    transition: transform 0.3s;
+    z-index: unset;
+  }
+  .combinecircle[data-show="1"] {
+    transform: scale(1.25);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .gameelement {
+    position: absolute;
+    pointer-events: none;
+  }
+  .gamecircle {
+    height: 100px;
+    width: 100px;
+    background-color: var(--shade1);
+    border-radius: 50%;
+    background-size: cover;
+    position: relative;
+    right: 50px;
+    bottom: 50px;
+    transform: scale(0);
+    pointer-events: none;
+    transition: transform 0.2s, background-color 0.2s;
+    margin-top: 0%;
+  }
+  .gameelement[data-hovered="1"] > .gamecircle {
+    transform: scale(2.5);
+  }
+  .gameelement[data-small="1"] > .gamecircle {
+    transform: scale(0);
+  }
+  .gameelement[data-small="2"] > .gamecircle {
+    transform: scale(0);
+  }
+  .gameelement[data-comb="1"] > .gamecircle {
+    transform: scale(2.5);
+    background-color: var(--shade2);
+  }
+  .gameelement[data-comba="2"] > .gamecircle {
+    transition: transform 0.3s, background-color 0.2s;
+    transform: scale(0);
+    background-color: var(--shade2);
+  }
+  .gameelement[data-newitem="1"] > .gamecircle::after {
+    animation: newdiscover 0.5s;
+  }
+  .gameimage {
+    height: 256px;
+    width: 256px;
+    background-size: cover;
+    position: relative;
+    bottom: 228px;
+    right: 128px;
+    transform: scale(1);
+    opacity: 1;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+  }
+  .gameelement[data-failed="1"] > .gameimage {
+    animation: shake 0.18s;
+  }
+  .gameelement[data-comb="1"] > .gameimage {
+    z-index: 2;
+  }
+  .gameelement[data-comba="2"] > .gameimage {
+    z-index: 2;
+    transition: transform 0.2s;
+    transform: scale(0);
+  }
+  .gamehitbox {
+    width: 180px;
+    height: 180px;
+    position: relative;
+    bottom: 446px;
+    right: 88px;
+    cursor: pointer;
+    pointer-events: all;
+  }
+  .gamehitbox[data-disable="1"] {
+    cursor: unset;
+    pointer-events: none;
+  }
+  .gameelement[data-dragging="1"] > .gamehitbox {
+    cursor: unset;
+    pointer-events: none;
+  }
+  .gameelement[data-comba="2"] > .gamehitbox {
+    bottom: 2000px;
+    cursor: unset;
+    pointer-events: none;
+  }
+  .gameelement[data-small="1"] > .gameimage {
+    transform: scale(0.390625);
+  }
+  .gameelement[data-small="2"] > .gameimage {
+    transform: scale(0);
+    transition: transform 0.6s, opacity 0.2s;
+    opacity: 0;
+  }
+  .gameelement[data-small="2"][data-finalitem="1"] > .gameimage {
+    transform: scale(0);
+    transition: transform 0.3s, opacity 0.2s;
+    opacity: 1;
+  }
+  .gameelement[data-small="2"][data-finalitem="2"] > .gameimage {
+    transform: scale(0);
+    transition: transform 0.5s, opacity 0.3s;
+    opacity: 0;
+  }
+  .gametext {
+    position: relative;
+    text-align: center;
+  }
+  
+  .gamebuttons {
+    position: absolute;
+    top: 214px;
+    left: 52px;
+    transform: scale(4);
+  }
+  .gamebutton {
+    pointer-events: all;
+    cursor: pointer;
+    display: block;
+    color: var(--shade1);
+    font-size: 200%;
+    margin-bottom: 8px;
+    transition: color 0.1s;
+  }
+  .gamebutton:hover {
+    color: var(--shade5);
+  }
+
+  #gb_clean {
+    animation: none;
+  }
+  #gb_clean[data-clean="1"] {
+    animation: wiggle 2.5s infinite;
+  }
+  #gb_dict {
+    transform: scale(1);
+    transition: transform 0.13s, color 0.1s;
+  }
+  #gb_dict:active {
+    transform: scale(0.8);
+  }
+
+  @keyframes wiggle {
+   0% { transform: rotate(0deg); }
+   5% { transform: rotate(15deg); }
+   15% { transform: rotate(-7deg); }
+   20% { transform: rotate(0deg); }
+   100% { transform: rotate(0deg); }
+  }
+
+
+
+  .dictionary {
+    position: absolute;
+    width: min(1200px, 80%);
+    height: min(800px, 80%);
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) scale(0.8);
+    pointer-events: none;
+    opacity: 0;
+    background-color: var(--shade1);
+    transition: transform 0.4s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
+    border-radius: 2%;
+    z-index: 8;
+    outline: var(--shade1) solid 0px;
+    outline-offset: 0px;
+  }
+  .dictionary[data-shown="1"] {
+    transform: translateX(-50%) translateY(-50%) scale(1);
+    opacity: 1;
+    pointer-events: all;
+    outline: var(--shade1) solid 4px;
+    outline-offset: 12px;
+  }
+  .iteminfo {
+    position: absolute;
+    width: min(600px, 80%);
+    height: min(800px, 80%);
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) scale(0.8);
+    pointer-events: none;
+    opacity: 0;
+    background-color: var(--shade1);
+    transition: transform 0.4s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
+    border-radius: 2%;
+    z-index: 9;
+    outline: var(--shade1) solid 0px;
+    outline-offset: 0px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+  .iteminfo[data-shown="1"] {
+    transform: translateX(-50%) translateY(-50%) scale(1);
+    opacity: 1;
+    pointer-events: all;
+    outline: var(--shade1) solid 4px;
+    outline-offset: 12px;
+  }
+  .uiinfoItem {
+    display: inline-block;
+    width: 256px;
+    height: 256px;
+    background-size: cover;
+    transition: transform 0.05s;
+  }
+  .iteminfoItemHolder {
+    display: flex;
+    /*justify-content: center; /* Align horizontal */
+    align-items: center; /* Align vertical */
+  }
+  .uiinfoDisclaimer {
+    text-align: center;
+    font-size: 200%;
+    text-overflow:clip;
+    white-space: nowrap;
+    font-weight: 600;
+    margin-bottom: 0;
+    padding: 0;
+  }
+  .uiinfoDescription {
+    width: calc(100% - 300px);
+    font-size: 130%;
+    display: inline-block;
+    text-align:center;
+    margin: 0;
+    padding: 0;
+  }
+  .iteminfoCollectionTitle {
+    margin-top: 90px;
+    text-align: center;
+    font-size: 200%;
+    text-overflow:clip;
+    white-space: nowrap;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .iteminfoCombinations {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 320px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Align horizontal */
+    align-items:flex-start; /* Align vertical */
+  }
+  .iteminfoCombination {
+    vertical-align: top;
+    display: flex;
+    justify-content: center; /* Align horizontal */
+    align-items:flex-start; /* Align vertical */
+  }
+  .iteminfoCombinationItem {
+    vertical-align: top;
+    display: inline-block;
+  }
+  .iteminfoCombinationText {
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 150%;
+    width: 128px;
+  }
+  .iteminfoCombination > .iteminfoCombinationText {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 150%;
+    display: inline-block;
+    width: unset;
+    position: relative;
+    top: 128px;
+  }
+  .iteminfoCombinationImg {
+    vertical-align: top;
+    width: 128px;
+    height: 128px;
+    background-size: cover;
+  }
+#dictionaryDisclaimer {
+  text-align: center;
+  font-size: 200%;
+  text-overflow:clip;
+  white-space: nowrap;
+}
+.dictionaryGradient {
+  position: relative;
+  text-align: center;
+  font-size: 200%;
+  width: 100%;
+  height: 50px;
+  position: relative;
+  bottom: 100px;
+  background-image: url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/gradient.png');
+  background-size: contain;
+  pointer-events: none;
+}
+.dictionaryGradient[data-up] {
+  text-align: center;
+  font-size: 200%;
+  width: 100%;
+  height: 50px;
+  position: relative;
+  transform: scaleY(-1);
+  bottom: -7px;
+  background-image: url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/gradient.png');
+  background-size: contain;
+  z-index: 5;
+}
+.dictionaryContainer {
+  position: relative;
+  top: -50px;
+  border-radius: 1%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-left: 8px;
+  margin-top: 8px;
+  height: calc(100% - 140px);
+}
+.dictItem {
+  width: 128px;
+  height: 128px;
+  display: inline-block;
+  background-size: cover;
+  transition: transform 0.05s;
+  cursor: pointer;
+}
+.dictItem:hover {
+  transform: scale(1.2);
+}
+
+#menutitle {
+  position: absolute;
+  width: 75%;
+  left: 50%;
+  top: calc(50% - 700px);
+  transform: translateX(-50%) scale(0);
+  font-size: 600%;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.75s, opacity 0.5s;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 7;
+}
+#menubg[data-shown] > #menutitle {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+
+.circlebg {
+  position: absolute;
+  height: calc(200 * var(--vh));
+  width: calc(200 * var(--vh));
+  background-color: var(--shade0);
+  opacity: 0;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+  transition: opacity 0.5s, transform 0.5s;
+  border-radius: 100%;
+  transform: translateX(-50%) translateY(-50%) scale(0.5);
+  z-index: 6;
+}
+#circlebg2 {
+  z-index: 9;
+}
+#menubg[data-shown] > #circlebg {
+  pointer-events: all;
+  opacity: 0.9;
+  transition: opacity 0.5s, transform 1s;
+  transform: translateX(-50%) translateY(-50%) scale(1.5);
+}
+#menubg[data-shown="2"] > #circlebg2 {
+  pointer-events: all;
+  opacity: 0.9;
+  transition: opacity 0.5s, transform 1s;
+  transform: translateX(-50%) translateY(-50%) scale(1.5);
+}
+
+#newDiscovery {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--shade0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.7s;
+}
+#newDiscovery[data-shown="1"] {
+  pointer-events: all;
+  opacity: 1;
+}
+#newDiscoveryTitle {
+  position: absolute;
+  width: 75%;
+  left: 50%;
+  top: calc(50% - 200px);
+  transform: translateX(-50%) scale(0);
+  font-size: 600%;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.5s, top 0.35s;
+  pointer-events: none;
+}
+#newDiscovery[data-shown="1"] > #newDiscoveryTitle {
+  top: calc(50% - 450px);
+  transform: translateX(-50%) scale(1);
+}
+#newDiscoveryDescription {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 600px);
+  width: 70%;
+  height: 100%;
+  transform: translateX(-50%) scale(0);
+  line-height: 90%;
+  font-size: 300%;
+  text-align: center;
+  transition: transform 0.5s, top 0.35s;
+  pointer-events: none;
+}
+#newDiscovery[data-shown="1"] > #newDiscoveryDescription {
+  top: calc(50% + 180px);
+  transform: translateX(-50%) scale(1);
+}
+#newDiscoveryImage {
+  position: absolute;
+  width: 512px;
+  height: 512px;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) scale(0);
+  line-height: 0;
+  transition: transform 0.5s;
+}
+#newDiscovery[data-shown="1"] > #newDiscoveryImage {
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#newDiscoveryRays {
+  position: absolute;
+  width: 768px;
+  height: 768px;
+  left: 50%;
+  top: 50%;
+  background-image: url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/rays.svg');
+  transform: translateX(-50%) translateY(-50%) scale(0);
+  line-height: 0;
+  transition: opacity 0.6s;
+  animation: rotating 10s linear infinite;
+  opacity: 0;
+  pointer-events: none;
+}
+#newDiscovery[data-shown="1"] > #newDiscoveryRays {
+  opacity: 0.5;
+  transition: opacity 1.2s;
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  animation: rotating 10s linear infinite;
+}
+
+
+.hint {
+  position: absolute;
+  width: min(600px, 80%);
+  height: min(800px, 80%);
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) scale(0.8);
+  pointer-events: none;
+  opacity: 0;
+  background-color: var(--shade1);
+  transition: transform 0.4s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
+  border-radius: 2%;
+  z-index: 9;
+  outline: var(--shade1) solid 0px;
+  outline-offset: 0px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.hint[data-shown="1"] {
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  opacity: 1;
+  pointer-events: all;
+  outline: var(--shade1) solid 4px;
+  outline-offset: 12px;
+}
+.hint[data-wiggle="1"] {
+  transform: translateX(-50%) translateY(-50%) scale(0.9);
+  transition: transform 0.2s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--shade2); 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--shade2); 
+}
+
+@keyframes rotating {
+  from {
+    transform: translateX(-50%) translateY(-50%) scale(1) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) translateY(-50%) scale(1) rotate(360deg);
+  }
+}
+@keyframes newdiscover {
+  0% {
+    width: 100px;
+    height: 100px;
+    background-color: var(--shade5);
+    outline: var(--shade4) solid 0px;
+    outline-offset: 0px;
+    transform: scale(1);
+    opacity: 1;
+  }
+  25% {
+  }
+  50% {
+    background-color: var(--shade5);
+    outline: var(--shade4) solid 5px;
+    outline-offset: 15px;
+    transform: scale(4);
+    opacity: 0.5;
+  }
+  75% {
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-5px, 5px);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  75% {
+    transform: translate(5px, -5px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
