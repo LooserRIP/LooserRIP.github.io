@@ -133,6 +133,9 @@ function gb_exitsidebarsearch() {
 function gi_sidebar() {
   renderSidebar();
 }
+function gi_sidebarcheck(elm) {
+  if (elm.value.replaceAll(" ", "") == "" && elm.dataset.show == "1") gb_exitsidebarsearch();
+}
 function renderSidebar() {
   let filter = null;
   if (document.getElementById('gi_sidebar').dataset['show'] == "1" && document.getElementById('gi_sidebar').value != "") {
