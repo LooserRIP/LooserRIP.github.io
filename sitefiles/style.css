@@ -249,6 +249,20 @@ body {
   .gamebutton:hover {
     color: var(--shade5);
   }
+  #gb_sidebarsearch {
+    font-weight: 700;
+    position: absolute;
+    pointer-events: all;
+    cursor: pointer;
+    display: block;
+    color: var(--shade1);
+    font-size: 200%;
+    margin-bottom: 8px;
+    left: calc(100% - 364px);
+    top: 12px;
+    transform: scale(1.2);
+    transition: color 0.1s;
+  }
   #gb_exithint {
     transform: scale(0);
     opacity: 0;
@@ -347,6 +361,16 @@ body {
     outline: var(--shade1) solid 4px;
     outline-offset: 12px;
   }
+  #iteminfoRecipeDepth {
+    margin: 0;
+    margin-top: 50px;
+    padding: 0;
+  }
+  #iteminfoID {
+    margin: 0;
+    margin-bottom: 18px;
+    padding: 0;
+  }
   .uiinfoItem {
     display: inline-block;
     width: 256px;
@@ -429,12 +453,23 @@ body {
     height: 128px;
     background-size: cover;
   }
-#dictionaryDisclaimer {
-  text-align: center;
-  font-size: 200%;
-  text-overflow:clip;
-  white-space: nowrap;
-}
+  #dictionaryDisclaimer {
+    text-align: center;
+    font-size: 200%;
+    text-overflow:clip;
+    white-space: nowrap;
+    transform: scale(1);
+    transition: transform 0.2s, font-size 0.2s;
+  }
+  #dictionaryDisclaimer[data-font="1"] {
+    font-size: 150%;
+  }
+  #dictionaryDisclaimer:hover {
+    transform: scale(1.05);
+  }
+  #dictionaryDisclaimer:active {
+    transform: scale(0.95);
+  }
 .dictionaryGradient {
   position: relative;
   text-align: center;

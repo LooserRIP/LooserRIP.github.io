@@ -23,6 +23,9 @@
 </head>
 
 <body onload="initbody()" class="vsc-initialized">
+    <div><span id="gb_sidebarsearch" onclick="gb_sidebarsearch()" class="material-symbols-outlined">
+        search
+    </span></div>
     <div class="sidebar" id="sidebar">
     </div>
     <div class="gamecontainer" id="gamecontainer">
@@ -56,7 +59,7 @@
         <p id="newDiscoveryDescription">`A fluid force that shapes and sustains life, capable of both gentle flow and powerful destruction.`</p>
     </div>
     <div class="dictionary" id="dictionary">
-        <p id="dictionaryDisclaimer">You have found 18/8211 items and 40/15600 recipes.</p>
+        <p id="dictionaryDisclaimer" onmousedown="dictswitchsort()">You have found 18/8211 items and 40/15600 recipes.</p>
         <div class="dictionaryGradient" data-up></div>
         <div class="dictionaryContainer" id="dictionaryContainer">
         </div>
@@ -106,6 +109,8 @@
                 </div>
             </div>
         </div>
+        <p class="iteminfoCollectionTitle" id="iteminfoRecipeDepth">Recipe Depth: 5</p>
+        <p class="iteminfoCollectionTitle" id="iteminfoID">ID: 525</p>
     </div>
     <div class="hint" id="hint">
         <p class="uiinfoDisclaimer" id="hintDisclaimer">Water</p>

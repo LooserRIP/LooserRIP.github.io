@@ -110,7 +110,7 @@ function addNewItem(id) {
   }
   depths.splice(depths.indexOf(id), 1)
   sidebar_add(id)
-  dict_add(id);
+  //dict_add(id);
 }
 function sidebar_add(id){
   if (database.elements[id].potential == 0) return;
@@ -122,6 +122,60 @@ function sidebar_add(id){
   if (database.elements[id].name.length > 12) addElm.childNodes[1].dataset['small'] = "1"
   if (database.elements[id].name.length > 17) addElm.childNodes[1].dataset['small'] = "2"
   document.getElementById("sidebar").appendChild(addElm)
+}
+let dictsortingmode = 0;
+function dictswitchsort() {
+  dictsortingmode++;
+  if (dictsortingmode > 5) dictsortingmode = 0;
+  renderDictionary();
+}
+function renderDictionary() {
+  let additionsDisclaimer = ["", " (Remaining Potential)", " (Remaining Combinations)", " (Depth)", " (Alphabetical Order)", " (ID)"]
+  document.getElementById('dictionaryDisclaimer').innerText = "You have found " + collectionitems.length + "/8211 items and " + collection.length + "/20262 recipes." + additionsDisclaimer[dictsortingmode];
+  if (dictsortingmode > 0) document.getElementById('dictionaryDisclaimer').dataset['font'] = "1";
+  newsort = [...collectionitems];
+  let elms = database.elements;
+  if (dictsortingmode == 1) {
+    usedpotentials = {};
+    collection.forEach(colladd => {
+      let collsplit = colladd.split(".").map(Number);
+      if (usedpotentials[collsplit[0]] == undefined) {
+        usedpotentials[collsplit[0]] = 0
+      }
+      usedpotentials[collsplit[0]] += 1;
+      if (collsplit[0] != collsplit[1]) {
+        if (usedpotentials[collsplit[1]] == undefined) {
+          usedpotentials[collsplit[1]] = 0
+        }
+        usedpotentials[collsplit[1]] += 1;
+      }
+    })
+    newsort = newsort.sort((a, b) => (elms[b].potential - (usedpotentials[b]||0)) - (elms[a].potential - (usedpotentials[a]||0)));
+  }
+  if (dictsortingmode == 2) {
+    usedrecipes = {};
+    collection.forEach(colladd => {
+      if (usedrecipes[database.recipes[colladd]] == undefined) {
+        usedrecipes[database.recipes[colladd]] = 0
+      }
+      usedpotentials[database.recipes[colladd]] += 1;
+    })
+    newsort = newsort.sort((a, b) => (elms[b].recipes - (usedrecipes[b]||0)) - (elms[a].recipes - (usedrecipes[a]||0)));
+  }
+  if (dictsortingmode == 3) {
+    newsort = newsort.sort((a, b) => (elms[b].depth - elms[a].depth));
+  }
+  if (dictsortingmode == 4) {
+    newsort = newsort.sort((a, b) => (elms[a].name.localeCompare(elms[b].name)));
+  }
+  if (dictsortingmode == 5) {
+    newsort = newsort.sort((a, b) => (a - b));
+  }
+  
+  document.getElementById("dictionaryContainer").innerHTML = "";
+  newsort.forEach(addToSidebar => {
+    dict_add(addToSidebar)
+  })
 }
 function dict_add(id) {
   let addElm = document.createElement("DIV");
@@ -326,6 +380,7 @@ async function sparks(elm) {
   partyElm.remove()
 }
 function startDrag(elm, ignore) {
+  currentlyHovering = null;
   currentlyDraggingCounter = Date.now();
   if (currentlyDragging != null) stopDrag()
   elm.dataset['dragging'] = "1"
@@ -496,8 +551,7 @@ async function gb_clean() {
   document.getElementById("gb_clean").dataset["clean"] = "0";
 }
 function gb_dict() {
-
-  document.getElementById('dictionaryDisclaimer').innerText = "You have found " + collectionitems.length + "/8211 items and " + collection.length + "/20262 recipes."
+  renderDictionary();
   openMenu("dictionary");
 }
 
@@ -509,6 +563,8 @@ function openDict(id) {
   document.getElementById("iteminfoDescription").innerText = database.elements[id].description;
   document.getElementById("iteminfoCombinations").innerHTML = "";
   document.getElementById("iteminfoPotentials").innerHTML = "";
+  document.getElementById("iteminfoRecipeDepth").innerText = "Recipe Depth: " + database.elements[id].depth;
+  document.getElementById("iteminfoID").innerText = "ID: " + id;
   var collectionCounter = 0;
   var potentialCounter = 0;
   collection.forEach(colladd => {
@@ -648,4 +704,59 @@ async function openHint(id, ignoreHint) {
 function biasedRandomNumber(power, max) {
   const rand = Math.random();
   return Math.floor(Math.pow(rand, power) * max);
+}
+
+
+function jaroDistance(s1, s2) {
+  if (s1 === s2) return 1.0;
+
+  let len1 = s1.length, len2 = s2.length;
+  let maxDist = Math.floor(Math.max(len1, len2) / 2) - 1;
+  let match = 0;
+  let hashS1 = new Array(s1.length).fill(0);
+  let hashS2 = new Array(s2.length).fill(0);
+
+  for (let i = 0; i < len1; i++) {
+    for (let j = Math.max(0, i - maxDist); j < Math.min(len2, i + maxDist + 1); j++) {
+      if (s1[i] === s2[j] && hashS2[j] === 0) {
+        hashS1[i] = 1;
+        hashS2[j] = 1;
+        match++;
+        break;
+      }
+    }
+  }
+
+  if (match === 0) return 0.0;
+
+  let t = 0;
+  let point = 0;
+
+  for (let i = 0; i < len1; i++) {
+    if (hashS1[i] === 1) {
+      while (hashS2[point] === 0) point++;
+      if (s1[i] !== s2[point++]) t++;
+    }
+  }
+
+  t /= 2;
+  return ((match) / (len1) + (match) / (len2) + (match - t) / (match)) / 3.0;
+}
+
+function jaroWinkler(s1, s2) {
+  let jaroDist = jaroDistance(s1, s2);
+
+  if (jaroDist > 0.7) {
+    let prefix = 0;
+
+    for (let i = 0; i < Math.min(s1.length, s2.length); i++) {
+      if (s1[i] === s2[i]) prefix++;
+      else break;
+    }
+
+    prefix = Math.min(4, prefix);
+    jaroDist += 0.1 * prefix * (1 - jaroDist);
+  }
+
+  return jaroDist;
 }
