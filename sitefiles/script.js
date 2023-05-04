@@ -299,7 +299,6 @@ function loop() {
     totalMouseOffsetDragging += Math.sqrt(mouseOffset.x*mouseOffset.x + mouseOffset.y*mouseOffset.y);
     prevMousePosition = {x: mousePosition.x, y: mousePosition.y};
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
-    console.log(secondsPassed, totalMouseOffsetDragging);
     if (secondsPassed > 0.5 && totalMouseOffsetDragging < 20) {
       totalMouseOffsetDragging = 0;
 
@@ -498,9 +497,9 @@ async function sparks(elm) {
   await sleep(2000);
   partyElm.remove()
 }
-function startDrag(elm, ignore) {
+function startDrag(elm, ignore, ignoredoubleclick) {
   let secondsPassed = (Date.now() - doubleclicktimer) / 1000;
-  if (secondsPassed < 0.185) {
+  if (secondsPassed < 0.185 && ignoredoubleclick != true) {
     console.log("double click");
     //spawnitem(elm.dataset.id, parseInt(elm.style.left), parseInt(elm.style.top))
     dupeItem(elm);
@@ -517,6 +516,8 @@ function startDrag(elm, ignore) {
   if (ignore != true) dragOffset = {x: mousePosition.x - parseInt(elm.style.left), y: mousePosition.y - parseInt(elm.style.top)}
 }
 async function dupeItem(elm) {
+  let viewportWidth  = document.documentElement.clientWidth;
+  console.log(parseInt(elm.style.left), (viewportWidth) - 400)
   let spitem = spawnitem(elm.dataset.id, parseInt(elm.style.left) - 90, parseInt(elm.style.top) + 45, true);
   await sleep(100)
   spitem.dataset["small"] = "0";
@@ -605,7 +606,6 @@ function stopDrag() {
   if (currentlyDragging != null) {
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
     currentlyDraggingCounter = 9999999999999999999999999999999999999999;
-    console.log(secondsPassed);
     if (secondsPassed < 0.185) {
       doubleclicktimer = Date.now();
     }
@@ -632,7 +632,7 @@ function spawnside(elm) {
   dragOffset = {x: mousePosition.x - offsetElm.x, y: mousePosition.y - offsetElm.y}
   consolelog(dragOffset)
   let spawnedItem = spawnitem(id, offsetElm.x, offsetElm.y);
-  startDrag(spawnedItem, true);
+  startDrag(spawnedItem, true, true);
   dragOffset = {x: mousePosition.x - offsetElm.x, y: mousePosition.y - offsetElm.y}
 }
 function getOffset(el) {
