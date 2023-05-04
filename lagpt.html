@@ -23,9 +23,14 @@
 </head>
 
 <body onload="initbody()" class="vsc-initialized">
-    <div><span id="gb_sidebarsearch" onclick="gb_sidebarsearch()" class="material-symbols-outlined">
+    <div><span id="gb_sidebarsearch" onclick="gb_sidebarsearch()" data-show="1" class="material-symbols-outlined">
         search
-    </span></div>
+    </span>
+    <input type="text" id="gi_sidebar" oninput="gi_sidebar()"\>
+    <div><span id="gb_exitsidebarsearch" onclick="gb_exitsidebarsearch()" class="material-symbols-outlined">
+        close
+    </span>
+    </div>
     <div class="sidebar" id="sidebar">
     </div>
     <div class="gamecontainer" id="gamecontainer">

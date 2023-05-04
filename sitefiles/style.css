@@ -11,7 +11,7 @@
 .material-symbols-outlined {
   font-variation-settings:
   'FILL' 1,
-  'wght' 400,
+  'wght' 200,
   'GRAD' 200,
   'opsz' 48
 }
@@ -61,6 +61,7 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     padding-left: 5px;
+    padding-top: 10px;
     box-shadow: -10px 0 0 0 var(--shade0), -15px 0 0 0 var(--shade1)
   }
   .sidebarelement {
@@ -72,6 +73,9 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .sidebarelement[data-push="1"] {
+    margin-top: 80px;
   }
   .sidebarimage {
     display: inline-block;
@@ -249,19 +253,79 @@ body {
   .gamebutton:hover {
     color: var(--shade5);
   }
-  #gb_sidebarsearch {
-    font-weight: 700;
+  textarea:focus, input:focus{
+    outline: none;
+}
+#gb_sidebarsearch {
+  font-weight: 700;
+  position: absolute;
+  pointer-events: all;
+  cursor: pointer;
+  display: block;
+  color: var(--shade2);
+  font-size: 200%;
+  margin-bottom: 8px;
+  left: calc(100% - 364px);
+  top: 12px;
+  transform: scaleX(1.2) scaleY(0);
+  border-radius: 10%;
+  transition: color 0.1s;
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s;
+}
+#gb_exitsidebarsearch {
+  font-weight: 700;
+  position: absolute;
+  pointer-events: all;
+  cursor: pointer;
+  display: block;
+  color: var(--shade1);
+  font-size: 200%;
+  margin-bottom: 8px;
+  left: calc(100% - 661px);
+  top: 13px;
+  font-weight: 300 !important;
+  transform: scaleX(1.4) scaleY(0);
+  border-radius: 10%;
+  transition: color 0.1s;
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s, color 0.2s;
+}
+#gb_sidebarsearch[data-show="1"] {
+  transform: scaleX(1.2) scaleY(1.2);
+  opacity: 1;
+}
+#gb_exitsidebarsearch[data-show="1"] {
+  transform: scaleX(1.4) scaleY(1.4);
+  opacity: 1;
+}
+#gb_exitsidebarsearch[data-show="1"]:hover {
+  color: var(--shade5);
+}
+  #gi_sidebar {
+    border: 0px solid;
     position: absolute;
     pointer-events: all;
+    height: 38px;
     cursor: pointer;
     display: block;
-    color: var(--shade1);
-    font-size: 200%;
+    color: var(--shade5);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 130%;
     margin-bottom: 8px;
-    left: calc(100% - 364px);
+    background-color: var(--shade1);
+    outline: none;
+    left: calc(100% - 592px);
+    width: 240px;
     top: 12px;
-    transform: scale(1.2);
-    transition: color 0.1s;
+    transform: scaleX(1.2) scaleY(0);
+    border-radius: 4%;
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s, color 0.1s;
+  }
+  #gi_sidebar[data-show="1"] {
+    transform: scaleX(1.2) scaleY(1.2);
+    opacity: 1;
   }
   #gb_exithint {
     transform: scale(0);
@@ -270,7 +334,7 @@ body {
     right: 5px;
     transition: transform 0.2s, opacity 0.1s, color 0.1s;
     pointer-events:none;
-    color: var(--shade3);
+    color: var(--shade2);
   }
   #gb_exithint[data-hint="1"] {
     transform: scale(0.7);
@@ -299,7 +363,7 @@ body {
   }
   #gb_hint[data-hint="1"] {
     transform: scale(1.1);
-    color: var(--shade3);
+    color: var(--shade2);
     
   }
 
