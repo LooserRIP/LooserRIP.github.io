@@ -779,6 +779,21 @@ body {
   transform: translateX(-50%) translateY(-50%) scale(1.05);
   transition: transform 0.1s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
 }
+#info > .iteminfoCollectionTitle:first-child {
+  margin-top: 50px;
+}
+
+#info > .iteminfoCollectionTitle:nth-child(2) {
+  cursor: pointer;
+  margin-top: 35px;
+  color: #49b4fb;
+}
+
+#info > .iteminfoCollectionTitle:nth-child(3) {
+  margin-top: 35px;
+  font-size: 120%;
+}
+.iictc { margin-left: 10px; margin-right: 10px; margin-top: 22px;font-weight: unset;white-space: unset;font-size: 120%;}
 
 ::-webkit-scrollbar {
   width: 5px;
@@ -845,3 +860,5 @@ body {
     transform: translate(0, 0);
   }
 }
+
+

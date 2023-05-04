@@ -755,6 +755,9 @@ async function openMenu(id, ignorehintg) {
     document.getElementById("gi_menu").dataset["show"] = "1";
     if (ignorehintg != true) document.getElementById("gi_menu").value = "";
   }
+  if (openedMenu.length == 0 && id == "info") {
+    document.getElementById("menutitle").innerText = "Information";
+  }
   if (openedMenu.length == 0 && id == "iteminfo") {
     document.getElementById("menutitle").innerText = "Dictionary";
   }
@@ -789,6 +792,9 @@ function gb_hint() {
     return;
   }
   openHint(depths[biasedRandomNumber(8, depths.length - 1)]);
+}
+function gb_info() {
+  openMenu("info");
 }
 function gb_exithint() {
   document.getElementById("gb_hint").dataset["hint"] = "0";
@@ -916,4 +922,9 @@ function jaroWinkler(s1, s2) {
   }
 
   return jaroDist;
+}
+
+
+function redirectVideo() {
+  window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
 }
