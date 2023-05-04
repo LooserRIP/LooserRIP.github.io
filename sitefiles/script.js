@@ -14,6 +14,7 @@ let dragOffset = {x: 0, y: 0}
 let bringBackSidebar = null;
 let currentlyHovering = null;
 let combineCircle = null;
+let currentlyDraggingCounter = 0;
 /*
 (async () => {
   var request = new XMLHttpRequest();
@@ -30,7 +31,7 @@ let combineCircle = null;
 
 function initbody() {
   bodyLoaded = true;
-  console.log("Body Initialized")
+  consolelog("Body Initialized")
   combineCircle = document.getElementById("combinecircle");
   if (jsonLoaded) {
     init()
@@ -40,7 +41,7 @@ function initbody() {
   request.send(null)
   database = JSON.parse(request.responseText);
   jsonLoaded = true;
-  console.log("Json Loaded")
+  consolelog("Json Loaded")
   if (bodyLoaded) {
     init()
   }
@@ -54,10 +55,10 @@ function initbody() {
   });
 }
 function init() {
-  console.log("Init");
+  consolelog("Init");
   setInterval(loop, 5)
   collection.forEach(collectioncheck => {
-    console.log(collectioncheck)
+    consolelog(collectioncheck)
     var res = database['recipes'][collectioncheck];
     if (!collectionitems.includes(res)) {
       collectionitems.push(res);
@@ -244,9 +245,9 @@ async function combineGameElements(on, below) {
     id1 = id2;
     id2 = temp;
   }
-  console.log("COMBINE!", id1, id2)
+  consolelog("COMBINE!", id1, id2)
   let combinationResult = database['recipes'][id1 + '.' + id2];
-  console.log(combinationResult);
+  consolelog(combinationResult);
   //if (combinationResult == 4) combinationResult = undefined;
   if (combinationResult == undefined) {
     on.dataset["comba"] = "0";
@@ -321,6 +322,7 @@ async function sparks(elm) {
   partyElm.remove()
 }
 function startDrag(elm, ignore) {
+  currentlyDraggingCounter = Date.now();
   if (currentlyDragging != null) stopDrag()
   elm.dataset['dragging'] = "1"
   hoverElement(elm.childNodes[0], false)
@@ -405,9 +407,12 @@ async function destroyElm(elm, final) {
   }
 }
 function stopDrag() {
+  
   consolelog("stopped dragging")
   if (bringBackSidebar != null) bringBackSidebar.dataset['disappear'] = "0";
   if (currentlyDragging != null) {
+    let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
+
     if (currentlyHovering != null) {
       combineGameElements(currentlyDragging, currentlyHovering.parentNode)
     }
@@ -469,7 +474,7 @@ function getElementPosition(element) {
   return Array.from(siblings).indexOf(element);
 }
 function consolelog(msg) {
-  //console.log(msg)
+  //consolelog(msg)
 }
 
 async function gb_clean() {
@@ -493,7 +498,7 @@ function gb_dict() {
 }
 
 function openDict(id) {
-  console.log("clicked" + id)
+  consolelog("clicked" + id)
   if (openedMenu.includes("iteminfo")) exitMenu()
   document.getElementById("iteminfoItem").style.backgroundImage = "url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/" + database.elements[id].stripped + ".png')";
   document.getElementById("iteminfoDisclaimer").innerText = database.elements[id].name;
@@ -508,7 +513,7 @@ function openDict(id) {
       let infocombelm = document.createElement("div");
       infocombelm.className = "iteminfoCombination";
       var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
-      console.log(innercomb)
+      consolelog(innercomb)
       infocombelm.innerHTML = innercomb;
       document.getElementById("iteminfoCombinations").appendChild(infocombelm);
       collectionCounter += 1;
@@ -522,7 +527,7 @@ function openDict(id) {
       let infocombelm = document.createElement("div");
       infocombelm.className = "iteminfoCombination";
       var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + database.recipes[colladd] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[database.recipes[colladd]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[database.recipes[colladd]].name + '</p></div>'
-      console.log(innercomb)
+      consolelog(innercomb)
       infocombelm.innerHTML = innercomb;
       document.getElementById("iteminfoPotentials").appendChild(infocombelm);
       potentialCounter += 1;
@@ -562,7 +567,7 @@ function gb_hint() {
 async function openHint(id) {
   if (document.getElementById("hint").dataset['wiggle'] == "1") return;
   if (id < 4) return;
-  console.log(id, database.elements[id].name);
+  consolelog(id, database.elements[id].name);
   if (openedMenu.includes("hint")) {
     exitMenu()
     document.getElementById("hint").dataset['wiggle'] = "1";
@@ -573,7 +578,7 @@ async function openHint(id) {
   document.getElementById("hintDescription").innerText = database.elements[id].description;
   let collsplit = database.elements[id].discovered;
   if (collsplit.length == 1) collsplit.push(collsplit[0]);
-  console.log(collsplit)
+  consolelog(collsplit)
   var recipeArray = [];
   var recipeKeys = Object.keys(database.recipes);
   recipeKeys.forEach(recipeCheck => {
@@ -583,16 +588,24 @@ async function openHint(id) {
     }
   })
   recipeArray = recipeArray.sort((a, b) => a.depth - b.depth);
-  collsplit = recipeArray[0].recipe;
-  console.log(collsplit)
-  let infocombelm = document.createElement("div");
-  infocombelm.className = "iteminfoCombination";
-  console.log(database.elements[recipeArray[0]]);
-  var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
-  console.log(innercomb)
-  infocombelm.innerHTML = innercomb;
+  consolelog(recipeArray);
+  if (recipeArray.length == 1) {
+    document.getElementById("hintPossible").innerText = "Possible Combination"
+  } else {
+    document.getElementById("hintPossible").innerText = "Possible Combinations"
+  }
   document.getElementById("hintComb").innerHTML = "";
-  document.getElementById("hintComb").appendChild(infocombelm);
+  for (let irg = 0; irg < Math.min(recipeArray.length, 3); irg++) {
+    collsplit = recipeArray[irg].recipe;
+    consolelog(collsplit)
+    let infocombelm = document.createElement("div");
+    infocombelm.className = "iteminfoCombination";
+    consolelog(database.elements[recipeArray[0]]);
+    var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
+    consolelog(innercomb)
+    infocombelm.innerHTML = innercomb;
+    document.getElementById("hintComb").appendChild(infocombelm);
+  }
   openMenu("hint");
   await sleep(50)
   document.getElementById("hint").dataset['wiggle'] = "0";
