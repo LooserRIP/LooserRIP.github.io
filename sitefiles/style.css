@@ -613,8 +613,8 @@ body {
   outline-offset: 12px;
 }
 .hint[data-wiggle="1"] {
-  transform: translateX(-50%) translateY(-50%) scale(0.9);
-  transition: transform 0.2s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
+  transform: translateX(-50%) translateY(-50%) scale(1.05);
+  transition: transform 0.1s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
 }
 
 ::-webkit-scrollbar {

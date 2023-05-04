@@ -559,7 +559,8 @@ function exitMenu() {
 function gb_hint() {
   openHint(depths[biasedRandomNumber(8, depths.length - 1)]);
 }
-function openHint(id) {
+async function openHint(id) {
+  if (document.getElementById("hint").dataset['wiggle'] == "1") return;
   if (id < 4) return;
   console.log(id, database.elements[id].name);
   if (openedMenu.includes("hint")) {
@@ -572,22 +573,29 @@ function openHint(id) {
   document.getElementById("hintDescription").innerText = database.elements[id].description;
   let collsplit = database.elements[id].discovered;
   if (collsplit.length == 1) collsplit.push(collsplit[0]);
-  if (collsplit.length > 2 && false) {
-    let clsp = [collsplit[1], collsplit[2]].sort()
-    if (database.recipes[clsp[0] + "." + clsp[1]] == collsplit[0]) {
-      collsplit[1] = collsplit[0]
+  console.log(collsplit)
+  var recipeArray = [];
+  var recipeKeys = Object.keys(database.recipes);
+  recipeKeys.forEach(recipeCheck => {
+    if (database.recipes[recipeCheck] == id) {
+      let collsplit2 = recipeCheck.split(".").map(Number);
+      recipeArray.push({recipe: collsplit2, depth: database.elements[collsplit2[0]].depth + database.elements[collsplit2[1]].depth})
     }
-  }
+  })
+  recipeArray = recipeArray.sort((a, b) => a.depth - b.depth);
+  collsplit = recipeArray[0].recipe;
   console.log(collsplit)
   let infocombelm = document.createElement("div");
   infocombelm.className = "iteminfoCombination";
-  console.log(database.elements[collsplit[0]]);
+  console.log(database.elements[recipeArray[0]]);
   var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
   console.log(innercomb)
   infocombelm.innerHTML = innercomb;
   document.getElementById("hintComb").innerHTML = "";
   document.getElementById("hintComb").appendChild(infocombelm);
   openMenu("hint");
+  await sleep(50)
+  document.getElementById("hint").dataset['wiggle'] = "0";
 }
 function biasedRandomNumber(power, max) {
   const rand = Math.random();
