@@ -120,6 +120,9 @@ function gb_sidebarsearch() {
   document.getElementById('gb_exitsidebarsearch').dataset['show'] = "1";
   document.getElementById('gi_sidebar').dataset['show'] = "1";
   document.getElementById('gi_sidebar').value = "";
+  document.getElementById('gi_sidebar').focus();
+  document.getElementById('sidebar').scrollTop = 0;
+  
 }
 function gb_exitsidebarsearch() {
   document.getElementById('gb_sidebarsearch').dataset['show'] = "1";
