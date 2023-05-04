@@ -79,6 +79,7 @@ let waitTimeCC = 0;
 let combining = null;
 let collection = [];
 let collectionitems = [0, 1, 2, 3];
+let doubleclicktimer = 0;
 // Collection Management
 if (localStorage["lagpt_collection"] == undefined) {
   localStorage["lagpt_collection"] = JSON.stringify([]);
@@ -134,7 +135,6 @@ function renderSidebar() {
   if (document.getElementById('gi_sidebar').dataset['show'] == "1" && document.getElementById('gi_sidebar').value != "") {
     filter = document.getElementById('gi_sidebar').value;
   }
-  var sidebarelms = document.getElementsByClassName("sidebarelement");
   let newsort = []
   let distances = {};
   let maxdistance = 0;
@@ -158,7 +158,6 @@ function renderSidebar() {
   if (filter != null) {
     newsort = newsort.sort((a, b) => (distances[b] - distances[a]));
   }
-  //console.log(newsort, distances)
   var indcounter = -1;
   if (maxdistance > 0.75) {
     indcounter = 0;
@@ -167,7 +166,6 @@ function renderSidebar() {
       indcounter++;
     }
   }
-  console.log(indcounter);
   var indcounternew = 0;
   newsort.forEach(addToSidebar => {
     var addElm = sidebar_add(addToSidebar)
@@ -195,12 +193,49 @@ function dictswitchsort() {
   if (dictsortingmode > 5) dictsortingmode = 0;
   renderDictionary();
 }
+function gi_menu() {
+  if (openedMenu.includes("dictionary")) {
+    renderDictionary()
+  } else if (openedMenu.includes("hint")) {
+    maxone = {id: -1, distance: 0};
+    var idelmr = 0;
+    let filter = document.getElementById('gi_menu').value;
+    for (const elmr of database.elements) {
+      let nameelm = elmr.name
+      let distance = jaroWinkler(filter.toLowerCase().replace(" ", ""), nameelm.toLowerCase().replace(" ", ""))
+      if (distance > maxone.distance) {
+        maxone = {id: idelmr, distance: distance};
+      }
+      idelmr++;
+    }
+    console.log(maxone);
+    if (maxone.id != -1) {
+      openHint(maxone.id, true);
+    }
+  }
+}
 function renderDictionary() {
+  
   let additionsDisclaimer = ["", " (Remaining Potential)", " (Remaining Combinations)", " (Depth)", " (Alphabetical Order)", " (ID)"]
   document.getElementById('dictionaryDisclaimer').innerText = "You have found " + collectionitems.length + "/8211 items and " + collection.length + "/20262 recipes." + additionsDisclaimer[dictsortingmode];
   if (dictsortingmode > 0) document.getElementById('dictionaryDisclaimer').dataset['font'] = "1";
   newsort = [...collectionitems];
   let elms = database.elements;
+  if (document.getElementById("gi_menu").value != "") {
+    console.log("Trying.")
+    let filter = document.getElementById('gi_menu').value;
+    let newsortset = []
+    let distances = {};
+    for (const elmr of collectionitems) {
+      let nameelm = database.elements[elmr].name;
+      let distance = jaroWinkler(filter.toLowerCase().replace(" ", ""), nameelm.toLowerCase().replace(" ", ""))
+      distances[elmr] = distance;
+      if (distance > 0.75) {
+        newsortset.push(elmr);
+      }
+    }
+    newsort = newsortset.sort((a, b) => (distances[b] - distances[a]));
+  }
   if (dictsortingmode == 1) {
     usedpotentials = {};
     collection.forEach(colladd => {
@@ -253,8 +288,22 @@ function dict_add(id) {
   document.getElementById("dictionaryContainer").appendChild(addElm)
 }
 
+let prevMousePosition = {x: 0, y: 0}
+let totalMouseOffsetDragging = 0;
 function loop() {
   if (currentlyDragging != null) {
+    let mouseOffset = {x: mousePosition.x - prevMousePosition.x, y: mousePosition.y - prevMousePosition.y};
+    totalMouseOffsetDragging += Math.sqrt(mouseOffset.x*mouseOffset.x + mouseOffset.y*mouseOffset.y);
+    prevMousePosition = {x: mousePosition.x, y: mousePosition.y};
+    let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
+    console.log(secondsPassed, totalMouseOffsetDragging);
+    if (secondsPassed > 0.5 && totalMouseOffsetDragging < 20) {
+      totalMouseOffsetDragging = 0;
+
+      openDict(currentlyDragging.dataset.id);
+      stopDrag();
+      return;
+    }
     let viewportWidth  = document.documentElement.clientWidth;
     let viewportHeight = document.documentElement.clientHeight;
     currentlyDragging.style.left = (parseInt(mousePosition.x - dragOffset.x)) + "px";
@@ -292,6 +341,7 @@ function loop() {
   if (bringBack.length > 0) {
     removeId = null;
   }
+  prevMousePosition = {x: mousePosition.x, y: mousePosition.y};
 }
 let discoveryMenu = null;
 function openDiscoveryMenu(id) {
@@ -446,6 +496,14 @@ async function sparks(elm) {
   partyElm.remove()
 }
 function startDrag(elm, ignore) {
+  let secondsPassed = (Date.now() - doubleclicktimer) / 1000;
+  if (secondsPassed < 0.185) {
+    console.log("double click");
+    //spawnitem(elm.dataset.id, parseInt(elm.style.left), parseInt(elm.style.top))
+    dupeItem(elm);
+    return;
+  }
+  totalMouseOffsetDragging = 0;
   currentlyHovering = null;
   currentlyDraggingCounter = Date.now();
   if (currentlyDragging != null) stopDrag()
@@ -454,6 +512,12 @@ function startDrag(elm, ignore) {
   currentlyDragging = elm;
   moveToLastSibling(elm)
   if (ignore != true) dragOffset = {x: mousePosition.x - parseInt(elm.style.left), y: mousePosition.y - parseInt(elm.style.top)}
+}
+async function dupeItem(elm) {
+  let spitem = spawnitem(elm.dataset.id, parseInt(elm.style.left) - 90, parseInt(elm.style.top) + 45, true);
+  await sleep(100)
+  spitem.dataset["small"] = "0";
+  spitem.dataset["newitem"] = "1";
 }
 function gameElmPress(elm) {
   consolelog("yes");
@@ -537,6 +601,11 @@ function stopDrag() {
   if (bringBackSidebar != null) bringBackSidebar.dataset['disappear'] = "0";
   if (currentlyDragging != null) {
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
+    currentlyDraggingCounter = 9999999999999999999999999999999999999999;
+    console.log(secondsPassed);
+    if (secondsPassed < 0.185) {
+      doubleclicktimer = Date.now();
+    }
 
     if (currentlyHovering != null) {
       combineGameElements(currentlyDragging, currentlyHovering.parentNode)
@@ -669,13 +738,21 @@ function openDict(id) {
   openMenu("iteminfo");
 }
 let openedMenu = [];
-async function openMenu(id) {
-  if (id == "dictionary") {
+async function openMenu(id, ignorehintg) {
+  if (openedMenu.length == 0 && id == "dictionary") {
     document.getElementById("menutitle").innerText = "Collection";
+    document.getElementById("gi_menu").dataset["show"] = "2";
+    document.getElementById("gi_menu").value = "";
   }
-  if (id == "hint") {
+  if (openedMenu.length == 0 && id == "hint") {
     document.getElementById("menutitle").innerText = "Hint";
+    document.getElementById("gi_menu").dataset["show"] = "1";
+    if (ignorehintg != true) document.getElementById("gi_menu").value = "";
   }
+  if (openedMenu.length == 0 && id == "iteminfo") {
+    document.getElementById("menutitle").innerText = "Dictionary";
+  }
+
   openedMenu.push(id);
   document.getElementById("menubg").dataset["shown"] = openedMenu.length;
   document.getElementById(id).dataset["shown"] = "1";
@@ -693,7 +770,10 @@ function exitMenu(ignoreHint) {
     }
     popped = openedMenu.pop();
     document.getElementById("menubg").dataset["shown"] = openedMenu.length;
-    if (openedMenu.length == 0) delete document.getElementById("menubg").dataset["shown"];
+    if (openedMenu.length == 0) {
+      delete document.getElementById("menubg").dataset["shown"];
+      document.getElementById("gi_menu").dataset["show"] = "0";
+    }
     document.getElementById(popped).dataset["shown"] = "0";
   }
 }
@@ -713,7 +793,7 @@ async function openHint(id, ignoreHint) {
   document.getElementById("gb_hint").dataset["hint"] = "1";
   document.getElementById("gb_exithint").dataset["hint"] = "1";
   if (document.getElementById("hint").dataset['wiggle'] == "1") return;
-  if (id < 4) return;
+  //if (id < 4) return;
   if (ignoreHint != true) {
     if (hintHistory.includes(id)) {
       hintHistory.slice(0, hintHistory.indexOf(id));
@@ -750,20 +830,25 @@ async function openHint(id, ignoreHint) {
   } else {
     document.getElementById("hintPossible").innerText = "Possible Combinations"
   }
-  document.getElementById("hintComb").innerHTML = "";
-  for (let irg = 0; irg < Math.min(recipeArray.length, 3); irg++) {
-    collsplit = recipeArray[irg].recipe;
-    consolelog(collsplit)
-    let infocombelm = document.createElement("div");
-    infocombelm.className = "iteminfoCombination";
-    consolelog(database.elements[recipeArray[0]]);
-    var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
-    consolelog(innercomb)
-    infocombelm.innerHTML = innercomb;
-    document.getElementById("hintComb").scrollTop = 0;
-    document.getElementById("hintComb").appendChild(infocombelm);
+  if (id < 4) {
+    document.getElementById("hintPossible").innerText = "Basic Element."
+    document.getElementById("hintComb").innerHTML = "";
+  } else {
+    document.getElementById("hintComb").innerHTML = "";
+    for (let irg = 0; irg < Math.min(recipeArray.length, 3); irg++) {
+      collsplit = recipeArray[irg].recipe;
+      consolelog(collsplit)
+      let infocombelm = document.createElement("div");
+      infocombelm.className = "iteminfoCombination";
+      consolelog(database.elements[recipeArray[0]]);
+      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
+      consolelog(innercomb)
+      infocombelm.innerHTML = innercomb;
+      document.getElementById("hintComb").scrollTop = 0;
+      document.getElementById("hintComb").appendChild(infocombelm);
+    }
   }
-  openMenu("hint");
+  openMenu("hint", ignoreHint);
   await sleep(50)
   document.getElementById("hint").dataset['wiggle'] = "0";
 }

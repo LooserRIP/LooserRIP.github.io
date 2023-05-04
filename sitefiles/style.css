@@ -302,31 +302,69 @@ body {
 #gb_exitsidebarsearch[data-show="1"]:hover {
   color: var(--shade5);
 }
-  #gi_sidebar {
-    border: 0px solid;
-    position: absolute;
-    pointer-events: all;
-    height: 38px;
-    cursor: pointer;
-    display: block;
-    color: var(--shade5);
-    font-family: 'Quicksand', sans-serif;
-    font-size: 130%;
-    margin-bottom: 8px;
-    background-color: var(--shade1);
-    outline: none;
-    left: calc(100% - 592px);
-    width: 240px;
-    top: 12px;
-    transform: scaleX(1.2) scaleY(0);
-    border-radius: 4%;
-    opacity: 0;
-    transition: transform 0.3s, opacity 0.3s, color 0.1s;
-  }
-  #gi_sidebar[data-show="1"] {
-    transform: scaleX(1.2) scaleY(1.2);
-    opacity: 1;
-  }
+#gi_sidebar {
+  border: 0px solid;
+  position: absolute;
+  pointer-events: all;
+  height: 38px;
+  cursor: pointer;
+  display: block;
+  color: var(--shade5);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 130%;
+  margin-bottom: 8px;
+  background-color: var(--shade1);
+  outline: none;
+  left: calc(100% - 592px);
+  width: 240px;
+  top: 12px;
+  transform: scaleX(1.2) scaleY(0);
+  border-radius: 4%;
+  opacity: 0;
+  transition: transform 0.3s, opacity 0.3s, color 0.1s;
+}
+#gi_sidebar[data-show="1"] {
+  transform: scaleX(1.2) scaleY(1.2);
+  opacity: 1;
+}
+#gi_menu {
+  border: 0px solid;
+  position: absolute;
+  pointer-events: all;
+  height: 38px;
+  display: block;
+  color: var(--shade5);
+  font-family: 'Quicksand', sans-serif;
+  font-size: 130%;
+  margin-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  background-color: var(--shade1);
+  left: calc(50% + 52px);
+  width: min(500px, 80%);
+  top: calc(50% + 450px);
+  z-index: 7;
+  transform: scaleX(1.2) scaleY(0) translateX(-50%);
+  border-radius: 1%;
+  opacity: 0;
+  outline: var(--shade1) solid 0px;
+  outline-offset: 0px;
+  transition: transform 0.3s, opacity 0.3s, color 0.1s, width 0.3s, left 0.3s, outline 0.4s, outline-offset 0.4s;
+}
+#gi_menu[data-show="1"] {
+  transform: scaleX(1.2) scaleY(1.2) translateX(-50%);
+  opacity: 1;
+}
+#gi_menu[data-show="2"] {
+  width: min(1000px, 80%);
+  left: calc(50% + 102px);
+  transform: scaleX(1.2) scaleY(1.2) translateX(-50%);
+  opacity: 1;
+}
+#gi_menu[data-show]:focus {
+  outline: var(--shade1) solid 3px;
+  outline-offset: 9px;
+}
   #gb_exithint {
     transform: scale(0);
     opacity: 0;
