@@ -6,6 +6,8 @@
   --shade4: #ff784f;
   --shade5: #db9d47;
   --vh: 1vh;
+  --br: 0;
+  --hitboxsize: 1;
 
 }
 .material-symbols-outlined {
@@ -83,6 +85,7 @@ body {
     width: 100px;
     height: 100px;
     background-size: cover;
+border-radius: var(--br);
     cursor: pointer;
     opacity: 1;
     transform: scale(1);
@@ -172,6 +175,7 @@ body {
     height: 256px;
     width: 256px;
     background-size: cover;
+border-radius: var(--br);
     position: relative;
     bottom: 228px;
     right: 128px;
@@ -199,6 +203,7 @@ body {
     right: 88px;
     cursor: pointer;
     pointer-events: all;
+    transform: scale(var(--hitboxsize));
   }
   .gamehitbox[data-disable="1"] {
     cursor: unset;
@@ -238,7 +243,7 @@ body {
   
   .gamebuttons {
     position: absolute;
-    top: 214px;
+    top: 264px;
     left: 92px;
     transform: scale(4);
   }
@@ -439,6 +444,30 @@ body {
     outline: var(--shade1) solid 4px;
     outline-offset: 12px;
   }
+
+  .finalitems {
+    position: absolute;
+    width: min(1200px, 80%);
+    height: min(800px, 80%);
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) scale(0.8);
+    pointer-events: none;
+    opacity: 0;
+    background-color: var(--shade1);
+    transition: transform 0.4s, opacity 0.4s, outline 0.4s, outline-offset 0.4s;
+    border-radius: 2%;
+    z-index: 8;
+    outline: var(--shade1) solid 0px;
+    outline-offset: 0px;
+  }
+  .finalitems[data-shown="1"] {
+    transform: translateX(-50%) translateY(-50%) scale(1);
+    opacity: 1;
+    pointer-events: all;
+    outline: var(--shade1) solid 4px;
+    outline-offset: 12px;
+  }
   .iteminfo {
     position: absolute;
     width: min(600px, 80%);
@@ -479,7 +508,11 @@ body {
     width: 256px;
     height: 256px;
     background-size: cover;
+    border-radius: var(--br);
     transition: transform 0.05s;
+  }
+  .uiinfoItem[data-hidden="1"] {
+    filter: brightness(0);
   }
   .iteminfoItemHolder {
     display: flex;
@@ -555,6 +588,7 @@ body {
     width: 128px;
     height: 128px;
     background-size: cover;
+border-radius: var(--br);
   }
   #dictionaryDisclaimer {
     text-align: center;
@@ -612,11 +646,29 @@ body {
   height: 128px;
   display: inline-block;
   background-size: cover;
-  transition: transform 0.05s;
+  transition: transform 0.05s, border-radius 0.05s;
   cursor: pointer;
+}
+.dictItem[data-found] {
+  /*background-color: var(--shade2);*/
+  /*filter:sepia(1) saturate(20) hue-rotate(250deg) brightness(0.4);*/
+}
+.dictitem[data-foundall] {
+  /*filter:sepia(0.8) saturate(5) hue-rotate(10deg);*/
+}
+.dictItem[data-notfound] {
+  transform: scale(0.6);
+  border-radius: 50%;
+  background-color: var(--shade0);
+  /*filter:sepia(0.8) saturate(5) hue-rotate(10deg);*/
 }
 .dictItem:hover {
   transform: scale(1.2);
+  border-radius: var(--br);
+}
+.dictitem[data-notfound]:hover {
+  transform: scale(0.8);
+  border-radius: 50%;
 }
 
 #menutitle {
@@ -720,12 +772,14 @@ body {
   height: 512px;
   left: 50%;
   top: 50%;
+  background-size: cover;
+  border-radius: var(--br);
   transform: translateX(-50%) translateY(-50%) scale(0);
   line-height: 0;
   transition: transform 0.5s;
 }
 #newDiscovery[data-shown="1"] > #newDiscoveryImage {
-  transform: translateX(-50%) translateY(-50%) scale(1);
+  transform: translateX(-50%) translateY(-50%) scale(calc(1 / var(--hitboxsize)));
   transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 #newDiscoveryRays {

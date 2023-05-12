@@ -6,6 +6,7 @@ const sleep = (milliseconds) => {
 
 let database;
 let depths;
+let totaldepths;
 let jsonLoaded = false;
 let bodyLoaded = false;
 let mousePosition = {x: 0, y: 0};
@@ -16,6 +17,7 @@ let currentlyHovering = null;
 let combineCircle = null;
 let currentlyDraggingCounter = 0;
 let hintHistory = [];
+let spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/";
 /*
 (async () => {
   var request = new XMLHttpRequest();
@@ -31,6 +33,16 @@ let hintHistory = [];
 */
 
 function initbody() {
+  if (localStorage['lagpt_style'] == undefined) localStorage['lagpt_style'] = "0";
+  let style = parseInt(localStorage['lagpt_style']);
+  if (style == 0) {
+    spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/";
+  }
+  if (style == 1) {
+    spriteDirectory = 'https://raw.githubusercontent.com/LooserRIP/AIElemental-EnvStyle/main/EnvStyle/';
+    document.documentElement.style.setProperty('--br', '12%');
+    document.documentElement.style.setProperty('--hitboxsize', '1.422');
+  }
   bodyLoaded = true;
   consolelog("Body Initialized")
   combineCircle = document.getElementById("combinecircle");
@@ -67,11 +79,13 @@ function init() {
   })
   const elements = [...database.elements].sort((a, b) => a.depth - b.depth);
   depths = elements.map(element => database.elements.indexOf(element));
+  totaldepths = elements.map(element => database.elements.indexOf(element));
   //collectionitems = collectionitems.sort((a, b) => a-b);
   collectionitems.forEach(addToSidebar => {
     addNewItem(addToSidebar, false)
   })
   renderSidebar();
+  startMusic();
 }
 let distanceLerp = 0;
 let bringBack = [];
@@ -183,7 +197,7 @@ function renderSidebar() {
 }
 function sidebar_add(id){
   if (database.elements[id].potential == 0) return;
-  let addHtml = '<div class="sidebarimage" onmousedown="spawnside(this)" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><span class="sidebartext">' + database.elements[id].name + '</span>';
+  let addHtml = '<div class="sidebarimage" onmousedown="spawnside(this)" style="background-image: url(\'' + spriteDirectory + database.elements[id].stripped + '.png\')"></div><span class="sidebartext">' + database.elements[id].name + '</span>';
   let addElm = document.createElement("DIV");
   addElm.dataset["id"] = id;
   addElm.className = "sidebarelement";
@@ -217,11 +231,11 @@ function gi_menu() {
     console.log(maxone);
     if (maxone.id != -1) {
       openHint(maxone.id, true);
+      hintHistory = [maxone.id];
     }
   }
 }
 function renderDictionary() {
-  
   let additionsDisclaimer = ["", " (Remaining Potential)", " (Remaining Combinations)", " (Depth)", " (Alphabetical Order)", " (ID)"]
   document.getElementById('dictionaryDisclaimer').innerText = "You have found " + collectionitems.length + "/8211 items and " + collection.length + "/20262 recipes." + additionsDisclaimer[dictsortingmode];
   if (dictsortingmode > 0) document.getElementById('dictionaryDisclaimer').dataset['font'] = "1";
@@ -284,14 +298,52 @@ function renderDictionary() {
     dict_add(addToSidebar)
   })
 }
+function renderFinalItems() {
+  let elms = database.elements;
+  newsort = [...totaldepths].filter(jj => database.elements[jj].potential == 0);
+  
+  document.getElementById("finalitemsContainer").innerHTML = "";
+  let foundstatus = 0;
+  newsort.forEach(addToSidebar => {
+    foundstatus = 1;
+    if (collectionitems.includes(addToSidebar)) {
+      foundstatus = 0;
+      var collectionCounter = 0;
+      collection.forEach(colladd => {
+        if (database.recipes[colladd] == addToSidebar) {
+          collectionCounter += 1;
+        }
+      })
+      if (collectionCounter == database.elements[addToSidebar].recipes) {
+        foundstatus = 2;
+      }
+    }
+    finalitems_add(addToSidebar, foundstatus)
+  })
+}
 function dict_add(id) {
   let addElm = document.createElement("DIV");
   addElm.onmousedown = function() {
     openDict(id);
   };
   addElm.className = "dictItem";
-  addElm.style.backgroundImage = "url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/" + database.elements[id].stripped + ".png')";
+  addElm.style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
   document.getElementById("dictionaryContainer").appendChild(addElm)
+}
+function finalitems_add(id, found) {
+  let addElm = document.createElement("DIV");
+  addElm.onmousedown = function() {
+    openDict(id);
+  };
+  addElm.className = "dictItem";
+  if (found == 0) addElm.dataset['found'] = "1";
+  if (found == 2) addElm.dataset['foundall'] = "1";
+  if (found == 1) {
+    addElm.dataset['notfound'] = "1";
+  } else {
+    addElm.style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
+  }
+  document.getElementById("finalitemsContainer").appendChild(addElm)
 }
 
 let prevMousePosition = {x: 0, y: 0}
@@ -304,8 +356,7 @@ function loop() {
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
     if (secondsPassed > 0.5 && totalMouseOffsetDragging < 20) {
       totalMouseOffsetDragging = 0;
-
-      openDict(currentlyDragging.dataset.id);
+      openDict(parseInt(currentlyDragging.dataset.id));
       stopDrag();
       return;
     }
@@ -354,7 +405,7 @@ function openDiscoveryMenu(id) {
   document.getElementById("newDiscovery").dataset["shown"] = "1";
   document.getElementById("newDiscoveryTitle").innerText = database.elements[id].name;
   document.getElementById("newDiscoveryDescription").innerText = "'" + database.elements[id].description + "'";
-  document.getElementById("newDiscoveryImage").style.backgroundImage = "url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/" + database.elements[id].stripped + ".png')";
+  document.getElementById("newDiscoveryImage").style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
 }
 function closeDiscoveryMenu() {
   discoveryMenu = null;
@@ -362,7 +413,7 @@ function closeDiscoveryMenu() {
 }
 
 function spawnitem(id, posx, posy, smaller) {
-  let innerHtmlItem = '<div class="gamecircle"></div><div class="gameimage" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/%1%.png\')"></div><div class="gamehitbox" onmouseover="hoverElement(this, true)" onmouseout="hoverElement(this, false)" onmousedown="gameElmPress(this)"></div>'
+  let innerHtmlItem = '<div class="gamecircle"></div><div class="gameimage" style="background-image: url(\'%^%%1%.png\')"></div><div class="gamehitbox" onmouseover="hoverElement(this, true)" onmouseout="hoverElement(this, false)" onmousedown="gameElmPress(this)"></div>'
   let htmlItem = document.createElement("DIV");
   htmlItem.className = "gameelement";
   htmlItem.dataset['id'] = id;
@@ -370,7 +421,7 @@ function spawnitem(id, posx, posy, smaller) {
   htmlItem.style.left = posx + "px";
   htmlItem.style.top = posy + "px";
   if (smaller == true) htmlItem.dataset["small"] = "2";
-  htmlItem.innerHTML = innerHtmlItem.replace("%1%", database.elements[id].stripped);
+  htmlItem.innerHTML = innerHtmlItem.replace("%1%", database.elements[id].stripped).replace("%^%", spriteDirectory);
   document.getElementById("gamecontainer").appendChild(htmlItem)
   return htmlItem
 }
@@ -545,7 +596,7 @@ async function destroyElm(elm, final) {
   if (final != undefined) {
     elm.dataset["finalitem"] = "1";
     await sleep(200);
-    party.resolvableShapes["finalItem" + final] = `<img height="50px" width="50px" src="https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/` + database.elements[final].stripped + `.png"/>`;
+    party.resolvableShapes["finalItem" + final] = `<img height="50px" width="50px" src="` + spriteDirectory + database.elements[final].stripped + `.png"/>`;
     //rectsrc = party.sources.rectSource([parseInt(elm.style.left), parseInt(elm.style.top)]);
     var partyElm = document.createElement("DIV");
     partyElm.style.position = "absolute";
@@ -695,11 +746,16 @@ function gb_dict() {
   renderDictionary();
   openMenu("dictionary");
 }
+function gb_finalitems() {
+  renderDictionary();
+  openMenu("finalitems");
+}
 
 function openDict(id) {
   consolelog("clicked" + id)
   if (openedMenu.includes("iteminfo")) exitMenu()
-  document.getElementById("iteminfoItem").style.backgroundImage = "url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/" + database.elements[id].stripped + ".png')";
+  document.getElementById("iteminfoItem").style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
+  document.getElementById("iteminfoItem").dataset['hidden'] = (collectionitems.includes(id)) ? "0" : "1";
   document.getElementById("iteminfoDisclaimer").innerText = database.elements[id].name;
   document.getElementById("iteminfoDescription").innerText = database.elements[id].description;
   document.getElementById("iteminfoCombinations").innerHTML = "";
@@ -713,7 +769,7 @@ function openDict(id) {
     if (database.recipes[colladd] == id) {
       let infocombelm = document.createElement("div");
       infocombelm.className = "iteminfoCombination";
-      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
+      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[0] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[1] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'' + spriteDirectory + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
       consolelog(innercomb)
       infocombelm.innerHTML = innercomb;
       document.getElementById("iteminfoCombinations").scrollTop = 0;
@@ -728,7 +784,7 @@ function openDict(id) {
       }
       let infocombelm = document.createElement("div");
       infocombelm.className = "iteminfoCombination";
-      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + database.recipes[colladd] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[database.recipes[colladd]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[database.recipes[colladd]].name + '</p></div>'
+      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[0] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + collsplit[1] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openDict(' + database.recipes[colladd] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[database.recipes[colladd]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[database.recipes[colladd]].name + '</p></div>'
       consolelog(innercomb)
       infocombelm.innerHTML = innercomb;
       document.getElementById("iteminfoPotentials").scrollTop = 0;
@@ -760,6 +816,10 @@ async function openMenu(id, ignorehintg) {
   }
   if (openedMenu.length == 0 && id == "iteminfo") {
     document.getElementById("menutitle").innerText = "Dictionary";
+  }
+  if (openedMenu.length == 0 && id == "finalitems") {
+    renderFinalItems();
+    document.getElementById("menutitle").innerText = "Final Items";
   }
 
   openedMenu.push(id);
@@ -821,9 +881,10 @@ async function openHint(id, ignoreHint) {
     document.getElementById("hint").dataset['wiggle'] = "1";
   } 
     
-  document.getElementById("hintItem").style.backgroundImage = "url('https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/" + database.elements[id].stripped + ".png')";
+  document.getElementById("hintItem").style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
   document.getElementById("hintDisclaimer").innerText = database.elements[id].name;
   document.getElementById("hintDescription").innerText = database.elements[id].description;
+  console.log(id);
   let collsplit = database.elements[id].discovered;
   if (collsplit.length == 1) collsplit.push(collsplit[0]);
   consolelog(collsplit)
@@ -853,7 +914,7 @@ async function openHint(id, ignoreHint) {
       let infocombelm = document.createElement("div");
       infocombelm.className = "iteminfoCombination";
       consolelog(database.elements[recipeArray[0]]);
-      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/' + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
+      var innercomb = '<div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[0] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[collsplit[0]].stripped +'.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[0]].name + '</p></div><p class="iteminfoCombinationText">+</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" onclick="openHint(' + collsplit[1] + ')" style="background-image: url(\'' + spriteDirectory + database.elements[collsplit[1]].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[collsplit[1]].name + '</p></div><p class="iteminfoCombinationText">=</p><div class="iteminfoCombinationItem"><div class="iteminfoCombinationImg" style="background-image: url(\'' + spriteDirectory + database.elements[id].stripped + '.png\')"></div><p class="iteminfoCombinationText">' + database.elements[id].name + '</p></div>'
       consolelog(innercomb)
       infocombelm.innerHTML = innercomb;
       document.getElementById("hintComb").scrollTop = 0;
@@ -927,4 +988,212 @@ function jaroWinkler(s1, s2) {
 
 function redirectVideo() {
   window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+}
+
+
+
+var musicStructure = [];
+var structurePaths = [];
+
+async function startMusic() {
+  console.log('started');
+  //var compressor = Howler.ctx.createDynamicsCompressor();
+  //Howler.masterGain.disconnect(Howler.ctx.destination);
+  //Howler.masterGain.connect(compressor);
+  //compressor.connect(Howler.ctx.destination);
+  structurePaths.push({structure: "intro"},{structure: "introbuildup"})
+  renderAudioFiles();
+  console.log(":D");
+  musicUpdate();
+  setInterval(musicUpdate, 38400);
+}
+function musicUpdate() {
+  if (structurePaths.length == 0) {
+    continueMusicStructure(sp);
+    renderAudioFiles();
+  }
+  sp = structurePaths.shift();
+  console.log(sp);// Create an HTML audio element
+  var group = new Pizzicato.Group();
+  for (const spat of sp.paths) {
+    let add = new Pz.Sound('sounds/' + spat + '.mp3');
+    group.addSound(add);
+  }
+  var compressor = new Pizzicato.Effects.Compressor({
+    threshold: -20,
+    knee: 22,
+    attack: 0.05,
+    release: 0.05,
+    ratio: 18,
+    mix: 0.5
+  });
+
+  group.addEffect(compressor);
+  group.play();
+}
+
+function continueMusicStructure(prev) {
+  var random = Math.random() * 100;
+  if (prev == "buildup") {
+    structurePaths.push({structure: "normal"},{structure: "normal"});
+  } else if (random > 50) {
+      structurePaths.push({structure: "normal"},{structure: "normal"});
+    } else {
+      if (random < 33) {
+        structurePaths.push({structure: "ambient"},{structure: "ambient"});
+      } else {
+        structurePaths.push({structure: "ambient"},{structure: "ambient"},{structure: "ambient"},{structure: "buildup"});
+      }
+    }
+}
+function getMusicFactors() {
+  let totalBasics = [0.25,0.25,0.25,0.25];
+  let depthtotal = 0;
+  let amttotal = 0;
+  let apiLink = 'https://quickchart.io/chart/render/zm-8be3d8f4-383a-4076-9a12-7f1f811024ef?data1=';
+  let gameElms = document.getElementsByClassName("gameelement");
+  for (const gameElm of gameElms) {
+    if (gameElm.dataset['id'] != undefined && gameElm.dataset['small'] == "0") {
+      var iterator = [parseInt(gameElm.dataset['id'])];
+      depthtotal += database.elements[iterator[0]].depth;
+      amttotal += 1;
+      for (let iteratorindex = 0; iteratorindex < 500; iteratorindex++)  {
+        let shiftget = iterator.shift();
+        if (shiftget < 4) {
+          totalBasics[shiftget] += 1;
+          continue;
+        }
+        for (const checkColl of collection) {
+          if (database.recipes[checkColl] == shiftget) {
+            iterator.push(parseInt(checkColl.split('.')[0]))
+            iterator.push(parseInt(checkColl.split('.')[1]))
+            break;
+          }
+        }
+        if (iterator.length == 0) {
+          break;
+        }
+      }
+    }
+  }
+  totalBasicsNew = [totalBasics[0], totalBasics[1] / 1.2782, totalBasics[2] / 0.5141, totalBasics[3] / 0.7107];
+  let maxg = Math.max(Math.max(totalBasicsNew[0], totalBasicsNew[1]),Math.max(totalBasicsNew[2], totalBasicsNew[3]))
+  if (amttotal == 0) {
+    totalBasicsNew = [1,1,1,1];
+  } else {
+    totalBasicsNew = [Math.round(totalBasicsNew[0] / maxg * 1000) / 1000, Math.round(totalBasicsNew[1] / maxg * 1000) / 1000, Math.round(totalBasicsNew[2] / maxg * 1000) / 1000, Math.round(totalBasicsNew[3] / maxg * 1000) / 1000]
+  }
+  let sum = totalBasicsNew.reduce((partialSum, a) => partialSum + a, 0);
+  totalBasicsNew = [totalBasicsNew[0] / sum,totalBasicsNew[1] / sum,totalBasicsNew[2] / sum,totalBasicsNew[3] / sum];
+  return {elms: totalBasicsNew, depth: depthtotal, amount: amttotal};
+}
+function getTotalFactors() {
+  let totalBasics = [0,0,0,0];
+  let apiLink = 'https://quickchart.io/chart/render/zm-8be3d8f4-383a-4076-9a12-7f1f811024ef?data1=';
+  let gameElms = document.getElementsByClassName("gameelement");
+  let recipeobjects = Object.values(database.recipes);
+  let recipeobjectsk = Object.keys(database.recipes);
+  for (let index = 0; index < database.elements.length; index++) {
+    console.log(index)
+    if (true) {
+      var iterator = [index]
+      for (let iteratorindex = 0; iteratorindex < 50000; iteratorindex++)  {
+        let shiftget = iterator.shift();
+        if (shiftget < 4) {
+          totalBasics[shiftget] += 1;
+          //console.log("added to " + shiftget);
+          if (iterator.length == 0) {
+            break;
+          }
+          continue;
+        }
+        //console.log(shiftget, recipeobjects);
+        let checkColl = recipeobjectsk[recipeobjects.indexOf(shiftget)].split('.');
+        iterator.push(parseInt(checkColl[0]))
+        iterator.push(parseInt(checkColl[1]))
+        if (iterator.length == 0) {
+          break;
+        }
+      }
+    }
+  }
+  totalBasicsNew = [totalBasics[0], totalBasics[1] / 1.2782, totalBasics[2] / 0.5141, totalBasics[3] / 0.7107];
+  let maxg = Math.max(Math.max(totalBasicsNew[0], totalBasicsNew[1]),Math.max(totalBasicsNew[2], totalBasicsNew[3]))
+  totalBasicsNew = [Math.round(totalBasicsNew[0] / maxg * 100), Math.round(totalBasicsNew[1] / maxg * 100), Math.round(totalBasicsNew[2] / maxg * 100), Math.round(totalBasicsNew[3] / maxg * 100)]
+  console.log(totalBasicsNew);
+  console.log(apiLink + totalBasicsNew.join(','));
+}
+function renderAudioFiles() {
+  structurePathsNew = [];
+  let musicFactors = getMusicFactors();
+  let musicFactorsSave = [...musicFactors.elms];
+/*element paths - water, earth, fire, air
+  Water - harmonics
+  Earth - percussion
+  Fire - melody
+  Air - ear candy, twinkles, little small bell melodies, chimes   */
+
+  structurePaths.forEach(structureelmd => {
+    let elementPaths = [
+      ["water_pad"],    // Water
+      ["percussion_chill", "percussion_medium"],    // Earth
+      ["fun_ghostchoir", "fun_overkillpiano", "fun_whinyahhmelody"],    // Fire
+      ["arp_plucks", "arp_infected"]]   // Air
+
+    let complexity = Math.min(Math.round(Math.pow(Math.floor(musicFactors.amount), 0.7) + 1),9)
+    if (Math.random() > 0.9) {complexity += 1;} else if (Math.random() > 0.6 && complexity > 1) {complexity -= 1;}
+    let structureelm = structureelmd['structure'];
+    if (structureelmd['paths'] == undefined) {
+      let paths = [];
+      if (structureelm == "intro") {
+        paths.push("arp_intro")
+      }
+      if (structureelm == "introbuildup") {
+        paths.push("arp_buildup", "percussion_buildup")
+      } 
+      if (structureelm == "normal" || structureelm == "ambient") {
+     
+        let randomnumset = ["structure_water", "structure_earth", "structure_fire", "structure_air"][musicFactorsSave.indexOf(Math.max(...musicFactorsSave))];
+        paths.push(randomnumset);
+        for (let icpa = 0; icpa < complexity; icpa++) {
+          let randomGet = Math.random();
+          let indelm = 0;
+          if (randomGet >= musicFactors.elms[0]+musicFactors.elms[1]+musicFactors.elms[2] ) {  // Water
+            indelm = 3;
+          } else if (randomGet >= musicFactors.elms[0]+musicFactors.elms[1]) {  // Earth
+            indelm = 2;
+          } else if (randomGet >= musicFactors.elms[0]) {  // Fire
+            indelm = 1;
+          }
+          let ind = randomint(0, elementPaths[indelm].length - 1);
+          let indget = elementPaths[indelm][ind];
+          elementPaths[indelm].splice(ind, 1);
+          if (elementPaths[indelm].length == 0) {
+            musicFactors.elms[indelm] = 0;
+          }
+          let sum = musicFactors.elms[0] + musicFactors.elms[1] + musicFactors.elms[2] + musicFactors.elms[3]
+          musicFactors.elms = [musicFactors.elms[0] / sum,musicFactors.elms[1] / sum,musicFactors.elms[2] / sum,musicFactors.elms[3] / sum];
+          paths.push(indget)
+        }
+      }
+      structurePathsNew.push({structure: structureelm, paths: paths});
+    } else {
+      structurePathsNew.push(structureelmd);
+    }
+  })
+  structurePaths = structurePathsNew;
+}
+function randomint(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max- min + 1) + min);
+}
+
+
+function playSound(path) {
+  var sound = new Howl({
+    src: ['sounds/' + path + '.mp3'],
+    volume: 1
+  });
+  sound.play();
 }
