@@ -19,10 +19,11 @@ let currentlyDraggingCounter = 0;
 let hintHistory = [];
 let spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/";
 let elmPaths = [
-  ["bass_main"],    // Water
-  ["percussion_chill", "percussion_medium"],    // Earth
-  ["fun_ghostchoir", "fun_overkillpiano", "fun_whinyahhmelody"],    // Fire
-  ["arp_plucks", "arp_infected"]]   // Air
+  ["water_bass", "water_chillbeat", "water_flowerpad", "water_groovebeat", "water_heaven", "water_mysticbass"],    // Water
+  ["earth_chillbeat", "earth_distortedmysticbass", "earth_groovebeat"],    // Earth
+  ["fire_bass", "fire_bmo", "fire_distantmelody", "fire_distortedanimal", "fire_explosion", "fire_ghostchoir", "fire_overkillpiano"],    // Fire
+  ["air_bmo", "air_coldsun", "air_fluteradio", "air_futureplucks", "air_hightwinkles", "air_photosynthesis", "air_twinkles"]]   // Air
+let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
 let soundDictionary = {};
 let zoomFactor;
 /*
@@ -66,6 +67,7 @@ function initbody() {
   preload();
 }
 async function preload() {
+  let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.6, "structure_water": 0.8}
   const soundPaths = elmPaths.flat();
   const jsonURL = 'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json';
   
@@ -76,11 +78,19 @@ async function preload() {
 
   
   // Load all resources using Promise.all
+  
   const [jsonData, ...sounds] = await Promise.all([
     loadJSON(jsonURL),
     ...soundPaths.map(loadSound),
+    ...additionalAudioLoads.map(loadSound),
   ]);
-  
+  const keyacvs = Object.keys(audioChangeVolume);
+  for (const keyacv of keyacvs) {
+    if (soundDictionary[keyacv] != undefined) {
+      console.log("changing volume of " + keyacv + " to " + audioChangeVolume[keyacv])
+      soundDictionary[keyacv].volume  = audioChangeVolume[keyacv];
+    }
+  }
   // Now, all sounds and JSON data are loaded, and you can use them in your application
   console.log('All resources loaded');
   
@@ -89,11 +99,14 @@ async function preload() {
   
   console.log('JSON data loaded:', jsonData);
   document.getElementById("menubg").dataset.loading = "2";
-  dissolveText(document.getElementById("loadingtitle"), "     Loading...    ", "Little Alchemy GPT", 50);
+  let origText = document.getElementById("loadingtitle").innerText + "";
+  dissolveText(document.getElementById("loadingtitle"), origText, "Little Alchemy GPT", 50);
   //document.getElementById("loadingtitle").innerText = "Little Alchemy GPT"
   
   async function loadJSON(url) {
     const response = await fetch(url);
+    document.getElementById("loadingtitle").innerText = "Loading... (0/35)";
+    loadCount++;
     database = await response.json();
     return 0;
   }
@@ -101,6 +114,8 @@ async function preload() {
     return new Promise((resolve) => {
       const sound = new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + url + ".mp3"  } }, () => {
         soundDictionary[url] = sound;
+        document.getElementById("loadingtitle").innerText = "Loading... (" + loadCount + "/35)";
+        loadCount++;
         resolve(sound);
       });
     });
@@ -1068,7 +1083,7 @@ async function startMusic() {
   //Howler.masterGain.disconnect(Howler.ctx.destination);
   //Howler.masterGain.connect(compressor);
   //compressor.connect(Howler.ctx.destination);
-  structurePaths.push({structure: "intro"},{structure: "introbuildup"})
+  structurePaths.push({structure: "intro"})
   renderAudioFiles();
   console.log(":D");
   musicUpdate();
@@ -1223,7 +1238,7 @@ function renderAudioFiles() {
     if (structureelmd['paths'] == undefined) {
       let paths = [];
       if (structureelm == "intro") {
-        paths.push("arp_plucks")
+        paths.push("structure_intro")
       }
       if (structureelm == "introbuildup") {
         paths.push("arp_plucks", "percussion_chill")
@@ -1236,7 +1251,9 @@ function renderAudioFiles() {
           [...elmPaths[3]]
         ];
         let randomnumset = ["structure_water", "structure_earth", "structure_fire", "structure_air"][musicFactorsSave.indexOf(Math.max(...musicFactorsSave))];
+        let randombgadd = ["bg_thunderandrain", "bg_windandbirds", "bg_windandrain", "bg_windandthunder"][randomint(0, 3)];
         paths.push(randomnumset);
+        if (Math.random() > 0.75) paths.push(randombgadd)
         for (let icpa = 0; icpa < complexity; icpa++) {
           if (elementPaths.flat().length == 0) break;
           let randomGet = Math.random();
