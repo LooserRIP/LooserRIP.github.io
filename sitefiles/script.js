@@ -18,6 +18,13 @@ let combineCircle = null;
 let currentlyDraggingCounter = 0;
 let hintHistory = [];
 let spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/";
+let elmPaths = [
+  ["bass_main"],    // Water
+  ["percussion_chill", "percussion_medium"],    // Earth
+  ["fun_ghostchoir", "fun_overkillpiano", "fun_whinyahhmelody"],    // Fire
+  ["arp_plucks", "arp_infected"]]   // Air
+let soundDictionary = {};
+let zoomFactor;
 /*
 (async () => {
   var request = new XMLHttpRequest();
@@ -33,6 +40,8 @@ let spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/g
 */
 
 function initbody() {
+  zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
+  console.log(zoomFactor);
   if (localStorage['lagpt_style'] == undefined) localStorage['lagpt_style'] = "0";
   let style = parseInt(localStorage['lagpt_style']);
   if (style == 0) {
@@ -46,28 +55,86 @@ function initbody() {
   bodyLoaded = true;
   consolelog("Body Initialized")
   combineCircle = document.getElementById("combinecircle");
-  if (jsonLoaded) {
-    init()
-  }
-  var request = new XMLHttpRequest();
-  request.open("GET", "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json", false);
-  request.send(null)
-  database = JSON.parse(request.responseText);
-  jsonLoaded = true;
-  consolelog("Json Loaded")
-  if (bodyLoaded) {
-    init()
-  }
   document.addEventListener('mousemove', function(event) {
-      mousePosition.x = event.pageX;
-      mousePosition.y = event.pageY;
+      mousePosition.x = event.pageX / zoomFactor;
+      mousePosition.y = event.pageY / zoomFactor;
   });
   document.addEventListener('mouseup', function(event) {
     consolelog("stopped dragging")
     stopDrag()
   });
+  preload();
+}
+async function preload() {
+  const soundPaths = elmPaths.flat();
+  const jsonURL = 'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json';
+  
+  let loadCount = 0;
+  let totalResources = soundPaths.length + 1; // Add 1 for the JSON file
+  
+  //const sound = new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + path + ".mp3" } }, () => {
+
+  
+  // Load all resources using Promise.all
+  const [jsonData, ...sounds] = await Promise.all([
+    loadJSON(jsonURL),
+    ...soundPaths.map(loadSound),
+  ]);
+  
+  // Now, all sounds and JSON data are loaded, and you can use them in your application
+  console.log('All resources loaded');
+  
+  // Use the spread operator to log all loaded sounds
+  console.log('All sounds loaded:', ...sounds);
+  
+  console.log('JSON data loaded:', jsonData);
+  document.getElementById("menubg").dataset.loading = "2";
+  dissolveText(document.getElementById("loadingtitle"), "     Loading...    ", "Little Alchemy GPT", 50);
+  //document.getElementById("loadingtitle").innerText = "Little Alchemy GPT"
+  
+  async function loadJSON(url) {
+    const response = await fetch(url);
+    database = await response.json();
+    return 0;
+  }
+  function loadSound(url) {
+    return new Promise((resolve) => {
+      const sound = new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + url + ".mp3"  } }, () => {
+        soundDictionary[url] = sound;
+        resolve(sound);
+      });
+    });
+  }
+  
+    
+}
+function dissolveText(element, oldText, newText, interval) {
+  let currentIndexes = Array.from({ length: oldText.length }, (_, i) => i);
+  let currentText = oldText.split('');
+
+  const changeLetter = () => {
+      if (currentIndexes.length === 0) return;
+
+      const randomIndex = Math.floor(Math.random() * currentIndexes.length);
+      const index = currentIndexes[randomIndex];
+      currentIndexes.splice(randomIndex, 1);
+
+      currentText[index] = newText[index];
+      element.textContent = currentText.join('');
+
+      setTimeout(changeLetter, interval);
+  };
+
+  changeLetter();
+}
+
+function exitloading() {
+  if (document.getElementById("menubg") == undefined) return;
+  if (document.getElementById("menubg").dataset.loading == "2") init();
+  
 }
 function init() {
+  delete document.getElementById("menubg").dataset.loading
   consolelog("Init");
   setInterval(loop, 5)
   collection.forEach(collectioncheck => {
@@ -360,11 +427,11 @@ function loop() {
       stopDrag();
       return;
     }
-    let viewportWidth  = document.documentElement.clientWidth;
-    let viewportHeight = document.documentElement.clientHeight;
+    let viewportWidth  = document.documentElement.clientWidth / zoomFactor;
+    let viewportHeight = document.documentElement.clientHeight / zoomFactor;
     currentlyDragging.style.left = (parseInt(mousePosition.x - dragOffset.x)) + "px";
     currentlyDragging.style.top = (parseInt(mousePosition.y - dragOffset.y)) + "px";
-    if (parseInt(mousePosition.x - dragOffset.x) > (viewportWidth) - 300) {
+    if (parseInt(mousePosition.x - dragOffset.x) > (viewportWidth) - (300)) {
       if (currentlyDragging.dataset["small"] == "0") {
         currentlyDragging.dataset["small"] = "1"
       }
@@ -1015,9 +1082,17 @@ function musicUpdate() {
   sp = structurePaths.shift();
   console.log(sp);// Create an HTML audio element
   var group = new Pizzicato.Group();
+  var gainNode = Pizzicato.context.createGain();
+  var audioNode = Object.getPrototypeOf(Object.getPrototypeOf(gainNode));
+  var connect = audioNode.connect;
+  audioNode.connect = function(node) {
+    var endpoint = Pz.Util.isEffect(node) ? node.inputNode : node;
+    connect.call(this, endpoint);
+    return node;
+  };
   for (const spat of sp.paths) {
-    let add = new Pz.Sound('sounds/' + spat + '.mp3');
-    group.addSound(add);
+    console.log(soundDictionary[spat]);
+    group.addSound(soundDictionary[spat].clone());
   }
   var compressor = new Pizzicato.Effects.Compressor({
     threshold: -20,
@@ -1125,8 +1200,6 @@ function getTotalFactors() {
 }
 function renderAudioFiles() {
   structurePathsNew = [];
-  let musicFactors = getMusicFactors();
-  let musicFactorsSave = [...musicFactors.elms];
 /*element paths - water, earth, fire, air
   Water - harmonics
   Earth - percussion
@@ -1134,30 +1207,41 @@ function renderAudioFiles() {
   Air - ear candy, twinkles, little small bell melodies, chimes   */
 
   structurePaths.forEach(structureelmd => {
+    let musicFactors = getMusicFactors();
+    let musicFactorsSave = [...musicFactors.elms];
     let elementPaths = [
-      ["water_pad"],    // Water
-      ["percussion_chill", "percussion_medium"],    // Earth
-      ["fun_ghostchoir", "fun_overkillpiano", "fun_whinyahhmelody"],    // Fire
-      ["arp_plucks", "arp_infected"]]   // Air
+      [...elmPaths[0]],
+      [...elmPaths[1]],
+      [...elmPaths[2]],
+      [...elmPaths[3]]
+    ];
+    
 
-    let complexity = Math.min(Math.round(Math.pow(Math.floor(musicFactors.amount), 0.7) + 1),9)
+    let complexity = Math.min(Math.round(Math.pow(Math.floor(musicFactors.amount / 1.5), 0.7) + 1),9)
     if (Math.random() > 0.9) {complexity += 1;} else if (Math.random() > 0.6 && complexity > 1) {complexity -= 1;}
     let structureelm = structureelmd['structure'];
     if (structureelmd['paths'] == undefined) {
       let paths = [];
       if (structureelm == "intro") {
-        paths.push("arp_intro")
+        paths.push("arp_plucks")
       }
       if (structureelm == "introbuildup") {
-        paths.push("arp_buildup", "percussion_buildup")
+        paths.push("arp_plucks", "percussion_chill")
       } 
       if (structureelm == "normal" || structureelm == "ambient") {
-     
+        let elementPaths = [
+          [...elmPaths[0]],
+          [...elmPaths[1]],
+          [...elmPaths[2]],
+          [...elmPaths[3]]
+        ];
         let randomnumset = ["structure_water", "structure_earth", "structure_fire", "structure_air"][musicFactorsSave.indexOf(Math.max(...musicFactorsSave))];
         paths.push(randomnumset);
         for (let icpa = 0; icpa < complexity; icpa++) {
+          if (elementPaths.flat().length == 0) break;
           let randomGet = Math.random();
           let indelm = 0;
+          console.log(musicFactors.elms);
           if (randomGet >= musicFactors.elms[0]+musicFactors.elms[1]+musicFactors.elms[2] ) {  // Water
             indelm = 3;
           } else if (randomGet >= musicFactors.elms[0]+musicFactors.elms[1]) {  // Earth
@@ -1171,6 +1255,7 @@ function renderAudioFiles() {
           if (elementPaths[indelm].length == 0) {
             musicFactors.elms[indelm] = 0;
           }
+          console.log(icpa, elementPaths, indget, indelm);
           let sum = musicFactors.elms[0] + musicFactors.elms[1] + musicFactors.elms[2] + musicFactors.elms[3]
           musicFactors.elms = [musicFactors.elms[0] / sum,musicFactors.elms[1] / sum,musicFactors.elms[2] / sum,musicFactors.elms[3] / sum];
           paths.push(indget)

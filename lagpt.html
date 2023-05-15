@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 
-<body onload="initbody()" class="vsc-initialized">
+<body onload="initbody()" class="vsc-initialized" style="zoom:80%;">
     <div><span id="gb_sidebarsearch" onclick="gb_sidebarsearch()" data-show="1" class="material-symbols-outlined">
         search
     </span>
@@ -53,10 +53,13 @@
         </div>
         <div class="combinecircle" id="combinecircle" style="left:-174px; top:-174px"></div>
     </div>
-    <div id="menubg">
+    <div id="menubg" data-loading="1">
         <div class="circlebg" id="circlebg" onmousedown="exitMenu()"></div>
         <div class="circlebg" id="circlebg2" onmousedown="exitMenu()"></div>
-        <p id="menutitle">Collection</p>
+        <p class="uititle" id="menutitle">Collection</p>
+        <div class="circlebg" id="loadingbg" onmousedown="exitloading()"></div>
+        <p class="uititle" id="loadingtitle">Loading...</p>
+        <p class="uititle" id="loadingtitle2">Press to Play</p>
         <input type="text" id="gi_menu" oninput="gi_menu()" data-show="0"\>
     </div>
     <div data-shown="0" id="newDiscovery" onmousedown="closeDiscoveryMenu()">

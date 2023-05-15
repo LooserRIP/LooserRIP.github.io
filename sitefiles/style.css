@@ -671,7 +671,7 @@ border-radius: var(--br);
   border-radius: 50%;
 }
 
-#menutitle {
+.uititle {
   position: absolute;
   width: 75%;
   left: 50%;
@@ -685,8 +685,46 @@ border-radius: var(--br);
   pointer-events: none;
   z-index: 7;
 }
+#loadingtitle {
+  padding: 0;
+  margin: 0;
+  left: 50%;
+  top: 50%;
+  vertical-align: middle;
+  transition: transform 1.75s, opacity 0.4s;
+  z-index: 10 !important;
+  transform: translateX(-50%) scale(1);
+  opacity: 0;
+}
+#loadingtitle2 {
+  padding: 0;
+  margin: 0;
+  left: 50%;
+  top: 50%;
+  font-size: 400%;
+  vertical-align: middle;
+  transition: transform 1.75s, opacity 0.4s;
+  z-index: 10 !important;
+  transform: translateX(-50%) scale(1);
+  opacity: 0;
+}
 #menubg[data-shown] > #menutitle {
   transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+#menubg[data-loading] > #loadingtitle {
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  transition: transform 0.75s, opacity 0.5s;
+  opacity: 1;
+}
+#menubg[data-loading="2"] > #loadingtitle {
+  transform: translateX(-50%) translateY(calc(-50% - 40px)) scale(1);
+  transition: transform 0.75s, opacity 0.5s;
+  opacity: 1;
+}
+#menubg[data-loading="2"] > #loadingtitle2 {
+  transform: translateX(-50%) translateY(40px) scale(1);
+  transition: transform 0.75s, opacity 0.5s;
   opacity: 1;
 }
 
@@ -719,7 +757,12 @@ border-radius: var(--br);
   transition: opacity 0.5s, transform 1s;
   transform: translateX(-50%) translateY(-50%) scale(1.5);
 }
-
+#menubg[data-loading] > #loadingbg {
+  pointer-events: all;
+  opacity: 1;
+  transition: opacity 0.5s, transform 1s;
+  transform: translateX(-50%) translateY(-50%) scale(1.5);
+}
 #newDiscovery {
   position: absolute;
   width: 100%;
