@@ -243,7 +243,7 @@ border-radius: var(--br);
   
   .gamebuttons {
     position: absolute;
-    top: 264px;
+    top: 238px;
     left: 92px;
     transform: scale(4);
   }

@@ -67,7 +67,9 @@ function initbody() {
   preload();
 }
 async function preload() {
-  let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.6, "structure_water": 0.8}
+  let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5, 
+  "structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, 
+  "earth_groovebeat": 0.9, "earth_chillbeat": 0.9, "fire_distortedanimal": 0.8, "earth_distortedmysticbass": 0.7}
   const soundPaths = elmPaths.flat();
   const jsonURL = 'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json';
   
@@ -89,6 +91,8 @@ async function preload() {
     if (soundDictionary[keyacv] != undefined) {
       console.log("changing volume of " + keyacv + " to " + audioChangeVolume[keyacv])
       soundDictionary[keyacv].volume  = audioChangeVolume[keyacv];
+    } else {
+      console.log("tried to change volume of " + keyacv + " but no such sound exists.");
     }
   }
   // Now, all sounds and JSON data are loaded, and you can use them in your application
