@@ -1257,7 +1257,7 @@ function renderAudioFiles() {
         let randomnumset = ["structure_water", "structure_earth", "structure_fire", "structure_air"][musicFactorsSave.indexOf(Math.max(...musicFactorsSave))];
         let randombgadd = ["bg_thunderandrain", "bg_windandbirds", "bg_windandrain", "bg_windandthunder"][randomint(0, 3)];
         paths.push(randomnumset);
-        if (Math.random() > 0.75) paths.push(randombgadd)
+        if (Math.random() > 0.15) paths.push(randombgadd)
         for (let icpa = 0; icpa < complexity; icpa++) {
           if (elementPaths.flat().length == 0) break;
           let randomGet = Math.random();
