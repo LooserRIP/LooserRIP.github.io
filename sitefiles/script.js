@@ -24,7 +24,9 @@ let elmPaths = [
   ["fire_bass", "fire_bmo", "fire_distantmelody", "fire_distortedanimal", "fire_explosion", "fire_ghostchoir", "fire_overkillpiano"],    // Fire
   ["air_bmo", "air_coldsun", "air_fluteradio", "air_futureplucks", "air_hightwinkles", "air_photosynthesis", "air_twinkles"]]   // Air
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
+let sfxPaths = ["sfx_test"]
 let soundDictionary = {};
+let audioLoaded = true;
 let zoomFactor;
 /*
 (async () => {
@@ -75,17 +77,23 @@ async function preload() {
   
   let loadCount = 0;
   let totalResources = soundPaths.length + 1; // Add 1 for the JSON file
-  
+  const soundPathsCombined = soundPaths.concat(additionalAudioLoads);
   //const sound = new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + path + ".mp3" } }, () => {
 
   
   // Load all resources using Promise.all
   
-  const [jsonData, ...sounds] = await Promise.all([
-    loadJSON(jsonURL),
-    ...soundPaths.map(loadSound),
-    ...additionalAudioLoads.map(loadSound),
-  ]);
+  await loadJSON(jsonURL);
+  const _soundPromises = sfxPaths.map(loadSound);
+  const _soundsg = await Promise.all(_soundPromises);
+  console.log('JSON data loaded');
+  document.getElementById("menubg").dataset.loading = "2";
+  let origText = document.getElementById("loadingtitle").innerText + "";
+  dissolveText(document.getElementById("loadingtitle"), "    Loading...    ", "Little Alchemy GPT", 50);
+
+  const soundPromises = soundPathsCombined.map(loadSound);
+  const soundsg = await Promise.all(soundPromises);
+  console.log("finished loading");
   const keyacvs = Object.keys(audioChangeVolume);
   for (const keyacv of keyacvs) {
     if (soundDictionary[keyacv] != undefined) {
@@ -99,26 +107,21 @@ async function preload() {
   console.log('All resources loaded');
   
   // Use the spread operator to log all loaded sounds
-  console.log('All sounds loaded:', ...sounds);
+  console.log('All sounds loaded');
   
-  console.log('JSON data loaded:', jsonData);
-  document.getElementById("menubg").dataset.loading = "2";
-  let origText = document.getElementById("loadingtitle").innerText + "";
-  dissolveText(document.getElementById("loadingtitle"), origText, "Little Alchemy GPT", 50);
   //document.getElementById("loadingtitle").innerText = "Little Alchemy GPT"
   
   async function loadJSON(url) {
     const response = await fetch(url);
-    document.getElementById("loadingtitle").innerText = "Loading... (0/35)";
-    loadCount++;
     database = await response.json();
     return 0;
   }
   function loadSound(url) {
-    return new Promise((resolve) => {
-      const sound = new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + url + ".mp3"  } }, () => {
+    return new Promise(async (resolve) => {
+      console.log("loading " + url);
+      const sound = await new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + url + ".mp3" } }, () => {
         soundDictionary[url] = sound;
-        document.getElementById("loadingtitle").innerText = "Loading... (" + loadCount + "/35)";
+        //document.getElementById("loadingtitle").innerText = "Loading... (" + loadCount + "/35)";
         loadCount++;
         resolve(sound);
       });
