@@ -26,7 +26,8 @@ let elmPaths = [
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
 let sfxPaths = ["sfx_test"]
 let soundDictionary = {};
-let audioLoaded = true;
+let audioLoaded = false;
+let initHappened = false;
 let zoomFactor;
 /*
 (async () => {
@@ -70,8 +71,9 @@ function initbody() {
 }
 async function preload() {
   let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5, 
-  "structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, 
-  "earth_groovebeat": 0.9, "earth_chillbeat": 0.9, "fire_distortedanimal": 0.8, "earth_distortedmysticbass": 0.7}
+  "structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, "air_hightwinkles": 0.75, 
+  "earth_groovebeat": 0.4, "earth_chillbeat": 0.4, "fire_distortedanimal": 0.35, "earth_distortedmysticbass": 0.7,
+  "air_photosynthesis": 0.75, "air_fluteradio": 0.7, "fire_explosion": 0.5}
   const soundPaths = elmPaths.flat();
   const jsonURL = 'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json';
   
@@ -88,9 +90,9 @@ async function preload() {
   const _soundsg = await Promise.all(_soundPromises);
   console.log('JSON data loaded');
   document.getElementById("menubg").dataset.loading = "2";
-  let origText = document.getElementById("loadingtitle").innerText + "";
-  dissolveText(document.getElementById("loadingtitle"), "    Loading...    ", "Little Alchemy GPT", 50);
-
+  //let origText = document.getElementById("loadingtitle").innerText + "";
+  dissolveText(document.getElementById("loadingtitle"), "    Loading...    ", "Little Alchemy GPT", 38);
+  await sleep(38 * 17);
   const soundPromises = soundPathsCombined.map(loadSound);
   const soundsg = await Promise.all(soundPromises);
   console.log("finished loading");
@@ -108,7 +110,10 @@ async function preload() {
   
   // Use the spread operator to log all loaded sounds
   console.log('All sounds loaded');
-  
+  audioLoaded = true;
+  if (initHappened) {
+    startMusic();
+  }
   //document.getElementById("loadingtitle").innerText = "Little Alchemy GPT"
   
   async function loadJSON(url) {
@@ -121,6 +126,7 @@ async function preload() {
       console.log("loading " + url);
       const sound = await new Pizzicato.Sound({ source: 'file', options: { path: 'https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/sitefiles/sounds/' + url + ".mp3" } }, () => {
         soundDictionary[url] = sound;
+        console.log("loaded " + url);
         //document.getElementById("loadingtitle").innerText = "Loading... (" + loadCount + "/35)";
         loadCount++;
         resolve(sound);
@@ -130,24 +136,29 @@ async function preload() {
   
     
 }
-function dissolveText(element, oldText, newText, interval) {
+async function dissolveText(element, oldText, newText, interval) {
   let currentIndexes = Array.from({ length: oldText.length }, (_, i) => i);
   let currentText = oldText.split('');
-
   const changeLetter = () => {
       if (currentIndexes.length === 0) return;
 
       const randomIndex = Math.floor(Math.random() * currentIndexes.length);
       const index = currentIndexes[randomIndex];
       currentIndexes.splice(randomIndex, 1);
-
+      let oldtext = currentText[index];
       currentText[index] = newText[index];
       element.textContent = currentText.join('');
-
-      setTimeout(changeLetter, interval);
+      let intervaltemp = interval;
+      console.log(oldtext, newText[index]);
+      if (oldtext == newText[index]) {
+        intervaltemp = 0;
+        console.log("ignored");
+      }
+      setTimeout(changeLetter, intervaltemp);
   };
 
   changeLetter();
+  //setTimeout(changeLetter, interval);
 }
 
 function exitloading() {
@@ -156,6 +167,7 @@ function exitloading() {
   
 }
 function init() {
+  initHappened = true;
   delete document.getElementById("menubg").dataset.loading
   consolelog("Init");
   setInterval(loop, 5)
@@ -174,7 +186,9 @@ function init() {
     addNewItem(addToSidebar, false)
   })
   renderSidebar();
-  startMusic();
+  if (audioLoaded) {
+    startMusic();
+  }
 }
 let distanceLerp = 0;
 let bringBack = [];
