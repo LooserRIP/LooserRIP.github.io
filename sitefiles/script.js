@@ -621,7 +621,7 @@ async function combineGameElements(on, below) {
       collection_addRecipe(id1, id2);
     }
     await sleep(100)
-    playSound("sfx_itemmade");
+    playSound("sfx_itemmade", 27);
     spitem.dataset["small"] = "0";
     spitem.dataset["newitem"] = "1";
     currentlyHovering = null;
@@ -673,7 +673,10 @@ function startDrag(elm, ignore, ignoredoubleclick) {
   hoverElement(elm.childNodes[0], false)
   currentlyDragging = elm;
   moveToLastSibling(elm)
-  if (ignore != true) dragOffset = {x: mousePosition.x - parseInt(elm.style.left), y: mousePosition.y - parseInt(elm.style.top)}
+  if (ignore != true) {
+    dragOffset = {x: mousePosition.x - parseInt(elm.style.left), y: mousePosition.y - parseInt(elm.style.top)}
+    playSound("sfx_dragstart");
+  }
 }
 async function dupeItem(elm) {
   let viewportWidth  = document.documentElement.clientWidth;
@@ -760,10 +763,10 @@ async function destroyElm(elm, final) {
   }
 }
 function stopDrag() {
-  
   consolelog("stopped dragging")
   if (bringBackSidebar != null) bringBackSidebar.dataset['disappear'] = "0";
   if (currentlyDragging != null) {
+    playSound("sfx_dragend");
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
     currentlyDraggingCounter = 9999999999999999999999999999999999999999;
     if (secondsPassed < 0.185) {
@@ -906,7 +909,7 @@ function openDict(id) {
   openMenu("iteminfo");
 }
 let openedMenu = [];
-async function openMenu(id, ignorehintg) {
+async function openMenu(id, ignorehintg, nosound) {
   if (openedMenu.length == 0 && id == "dictionary") {
     document.getElementById("menutitle").innerText = "Collection";
     document.getElementById("gi_menu").dataset["show"] = "2";
@@ -927,14 +930,20 @@ async function openMenu(id, ignorehintg) {
     renderFinalItems();
     document.getElementById("menutitle").innerText = "Final Items";
   }
+  if (!(nosound != undefined && nosound == true)) playSound("sfx_menuopen");
 
   openedMenu.push(id);
   document.getElementById("menubg").dataset["shown"] = openedMenu.length;
   document.getElementById(id).dataset["shown"] = "1";
 }
 
-function exitMenu(ignoreHint) {
+function exitMenu(ignoreHint, diffsound) {
   if (openedMenu.length > 0) {
+    if (diffsound != true) {
+      playSound("sfx_menuclose");
+    } else {
+      playSound("sfx_menuchange");
+    }
     if (openedMenu[openedMenu.length - 1] == "hint") {
       if (hintHistory.length > 1 && ignoreHint != true) {
         hintHistory.pop();
@@ -968,6 +977,7 @@ function gb_exithint() {
   hintHistory = [];
 }
 async function openHint(id, ignoreHint) {
+  let noSound = false;
   document.getElementById("gb_hint").dataset["hint"] = "1";
   document.getElementById("gb_exithint").dataset["hint"] = "1";
   if (document.getElementById("hint").dataset['wiggle'] == "1") return;
@@ -983,6 +993,7 @@ async function openHint(id, ignoreHint) {
   console.log(id);
   consolelog(id, database.elements[id].name);
   if (openedMenu.includes("hint")) {
+    noSound = true;
     exitMenu(true)
     document.getElementById("hint").dataset['wiggle'] = "1";
   } 
@@ -1027,7 +1038,7 @@ async function openHint(id, ignoreHint) {
       document.getElementById("hintComb").appendChild(infocombelm);
     }
   }
-  openMenu("hint", ignoreHint);
+  openMenu("hint", ignoreHint, noSound);
   await sleep(50)
   document.getElementById("hint").dataset['wiggle'] = "0";
 }
