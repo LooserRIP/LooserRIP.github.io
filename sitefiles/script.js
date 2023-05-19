@@ -24,7 +24,7 @@ let elmPaths = [
   ["fire_bass", "fire_bmo", "fire_distantmelody", "fire_distortedanimal", "fire_explosion", "fire_ghostchoir", "fire_overkillpiano"],    // Fire
   ["air_bmo", "air_coldsun", "air_fluteradio", "air_futureplucks", "air_hightwinkles", "air_photosynthesis", "air_twinkles"]]   // Air
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
-let sfxPaths = ["sfx_test"]
+let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose"];
 let soundDictionary = {};
 let audioLoaded = false;
 let initHappened = false;
@@ -596,6 +596,7 @@ async function combineGameElements(on, below) {
     below.dataset["failed"] = "0";
     combining = false;
   } else {
+    playSound("sfx_combining", 100);
     hoverElement(below, false);
     currentlyHovering = null;
     let interpolated = {x: (parseInt(on.style.left) + parseInt(below.style.left))/2, y: (parseInt(on.style.top) + parseInt(below.style.top))/2};
@@ -620,10 +621,12 @@ async function combineGameElements(on, below) {
       collection_addRecipe(id1, id2);
     }
     await sleep(100)
+    playSound("sfx_itemmade");
     spitem.dataset["small"] = "0";
     spitem.dataset["newitem"] = "1";
     currentlyHovering = null;
     if (newDiscovery) {
+      playSound("sfx_newitem");
       addNewItem(combinationResult);
       openDiscoveryMenu(combinationResult)
       for (let iw = 0; iw < 500; iw++) {
@@ -1313,6 +1316,9 @@ function randomint(min, max) {
 }
 
 
-function playSound(path) {
+async function playSound(path, delay) {
+  if (delay != undefined) {
+    await sleep(delay);
+  }
   soundDictionary[path].clone().play();
 }
