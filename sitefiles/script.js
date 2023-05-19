@@ -73,7 +73,7 @@ async function preload() {
   let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5, 
   "structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, "air_hightwinkles": 0.75, 
   "earth_groovebeat": 0.4, "earth_chillbeat": 0.4, "fire_distortedanimal": 0.35, "earth_distortedmysticbass": 0.7,
-  "air_photosynthesis": 0.75, "air_fluteradio": 0.7, "fire_explosion": 0.5}
+  "air_photosynthesis": 0.75, "air_fluteradio": 0.7, "fire_explosion": 0.5, "water_flowerpad": 0.75}
   const soundPaths = elmPaths.flat();
   const jsonURL = 'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json';
   
@@ -1314,9 +1314,5 @@ function randomint(min, max) {
 
 
 function playSound(path) {
-  var sound = new Howl({
-    src: ['sounds/' + path + '.mp3'],
-    volume: 1
-  });
-  sound.play();
+  soundDictionary[path].clone().play();
 }
