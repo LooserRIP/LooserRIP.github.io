@@ -596,7 +596,7 @@ async function combineGameElements(on, below) {
     below.dataset["failed"] = "0";
     combining = false;
   } else {
-    playSound("sfx_combining", 100);
+    playSound("sfx_combining");
     hoverElement(below, false);
     currentlyHovering = null;
     let interpolated = {x: (parseInt(on.style.left) + parseInt(below.style.left))/2, y: (parseInt(on.style.top) + parseInt(below.style.top))/2};
