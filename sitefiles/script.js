@@ -24,7 +24,7 @@ let elmPaths = [
   ["fire_bass", "fire_bmo", "fire_distantmelody", "fire_distortedanimal", "fire_explosion", "fire_ghostchoir", "fire_overkillpiano"],    // Fire
   ["air_bmo", "air_coldsun", "air_fluteradio", "air_futureplucks", "air_hightwinkles", "air_photosynthesis", "air_twinkles"]]   // Air
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
-let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose"];
+let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose", "sfx_menuchange", "sfx_dragstart", "sfx_dragend"];
 let soundDictionary = {};
 let audioLoaded = false;
 let initHappened = false;
@@ -665,6 +665,7 @@ function startDrag(elm, ignore, ignoredoubleclick) {
     dupeItem(elm);
     return;
   }
+  playSound("sfx_dragstart");
   totalMouseOffsetDragging = 0;
   currentlyHovering = null;
   currentlyDraggingCounter = Date.now();
@@ -675,7 +676,6 @@ function startDrag(elm, ignore, ignoredoubleclick) {
   moveToLastSibling(elm)
   if (ignore != true) {
     dragOffset = {x: mousePosition.x - parseInt(elm.style.left), y: mousePosition.y - parseInt(elm.style.top)}
-    playSound("sfx_dragstart");
   }
 }
 async function dupeItem(elm) {
@@ -994,7 +994,7 @@ async function openHint(id, ignoreHint) {
   consolelog(id, database.elements[id].name);
   if (openedMenu.includes("hint")) {
     noSound = true;
-    exitMenu(true)
+    exitMenu(true, true)
     document.getElementById("hint").dataset['wiggle'] = "1";
   } 
     
@@ -1328,6 +1328,7 @@ function randomint(min, max) {
 
 
 async function playSound(path, delay) {
+  console.log(path,delay);
   if (delay != undefined) {
     await sleep(delay);
   }
