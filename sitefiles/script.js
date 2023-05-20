@@ -26,6 +26,14 @@ let elmPaths = [
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
 let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose", "sfx_menuchange", "sfx_dragstart", "sfx_dragend", "sfx_nocombination", "sfx_dupe", "sfx_newitem2"];
 let soundDictionary = {};
+let audioClones = [];
+let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5, 
+"structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, "air_hightwinkles": 0.75, 
+"earth_groovebeat": 0.4, "earth_chillbeat": 0.4, "fire_distortedanimal": 0.35, "earth_distortedmysticbass": 0.7,
+"air_photosynthesis": 0.75, "air_fluteradio": 0.7, "fire_explosion": 0.5, "water_flowerpad": 0.75};
+let musicVolume = 1;
+let sfxVolume = 1;
+let ambientVolume = 1;
 let audioLoaded = false;
 let initHappened = false;
 let zoomFactor;
@@ -70,10 +78,6 @@ function initbody() {
   preload();
 }
 async function preload() {
-  let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5, 
-  "structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, "air_hightwinkles": 0.75, 
-  "earth_groovebeat": 0.4, "earth_chillbeat": 0.4, "fire_distortedanimal": 0.35, "earth_distortedmysticbass": 0.7,
-  "air_photosynthesis": 0.75, "air_fluteradio": 0.7, "fire_explosion": 0.5, "water_flowerpad": 0.75}
   const soundPaths = elmPaths.flat();
   const jsonURL = 'https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/database.json';
   
@@ -136,6 +140,42 @@ async function preload() {
   
     
 }
+
+async function soundRender() {
+  const soundPaths = elmPaths.flat();
+  const soundPathsCombined = soundPaths.concat(additionalAudioLoads);
+  sfxPaths.forEach(sfxPath => {
+    let mixMult = 1;
+    if (audioChangeVolume[sfxPath] != undefined) mixMult = audioChangeVolume[sfxPath];
+    soundDictionary[sfxPath].volume = mixMult * sfxVolume;
+    console.log("changed SFX '" + sfxPath + "' volume to " + soundDictionary[sfxPath].volume);
+  })
+  soundPathsCombined.forEach(soundPath => {
+    let mixMult = 1;
+    if (audioChangeVolume[soundPath] != undefined) mixMult = audioChangeVolume[soundPath];
+    let volumeSet = mixMult * musicVolume;
+    if (soundPath.startsWith("bg_")) {
+      volumeSet = mixMult * ambientVolume;
+      console.log("changed AMBIENT '" + soundPath + "' volume to " + volumeSet);
+    } else {
+      console.log("changed MUSIC '" + soundPath + "' volume to " + volumeSet);
+    }
+    soundDictionary[soundPath].volume = volumeSet;
+  })
+  audioClones.forEach(aclone => {
+    let mixMult = 1;
+    if (audioChangeVolume[aclone.name] != undefined) mixMult = audioChangeVolume[aclone.name];
+    let volumeSet = mixMult * musicVolume;
+    if (aclone.name.startsWith("bg_")) {
+      volumeSet = mixMult * ambientVolume;
+      console.log("changed AMBIENT CLONE '" + aclone.name + "' volume to " + volumeSet);
+    } else {
+      console.log("changed MUSIC CLONE '" + aclone.name + "' volume to " + volumeSet);
+    }
+    aclone.sound.volume = volumeSet;
+  })
+}
+
 async function dissolveText(element, oldText, newText, interval) {
   let currentIndexes = Array.from({ length: oldText.length }, (_, i) => i);
   let currentText = oldText.split('');
@@ -427,7 +467,7 @@ function renderFinalItems() {
 function dict_add(id) {
   let addElm = document.createElement("DIV");
   addElm.onmousedown = function() {
-    openDict(id);
+    openDict(id, true);
   };
   addElm.className = "dictItem";
   addElm.style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
@@ -436,7 +476,7 @@ function dict_add(id) {
 function finalitems_add(id, found) {
   let addElm = document.createElement("DIV");
   addElm.onmousedown = function() {
-    openDict(id);
+    openDict(id, true);
   };
   addElm.className = "dictItem";
   if (found == 0) addElm.dataset['found'] = "1";
@@ -459,7 +499,7 @@ function loop() {
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
     if (secondsPassed > 0.5 && totalMouseOffsetDragging < 20) {
       totalMouseOffsetDragging = 0;
-      openDict(parseInt(currentlyDragging.dataset.id));
+      openDict(parseInt(currentlyDragging.dataset.id), true);
       stopDrag();
       return;
     }
@@ -843,6 +883,7 @@ async function gb_clean() {
   if (document.getElementById("gb_clean").dataset["clean"] == "1") {
     return;
   }
+  playSound("sfx_nocombination");
   document.getElementById("gb_clean").dataset["clean"] = "1";
   var elms = document.getElementsByClassName("gameelement");
   for (const elmr of elms) {
@@ -862,9 +903,11 @@ function gb_finalitems() {
   openMenu("finalitems");
 }
 
-function openDict(id) {
+function openDict(id, plays) {
   consolelog("clicked" + id)
-  if (openedMenu.includes("iteminfo")) exitMenu()
+  if (openedMenu.includes("iteminfo")) {
+   exitMenu(false, true);
+  }  
   document.getElementById("iteminfoItem").style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
   document.getElementById("iteminfoItem").dataset['hidden'] = (collectionitems.includes(id)) ? "0" : "1";
   document.getElementById("iteminfoDisclaimer").innerText = database.elements[id].name;
@@ -908,7 +951,9 @@ function openDict(id) {
   if (database.elements[id].potential == 0) {
     document.getElementById("iteminfoPotential").innerText = "Final Item";
   }
-  openMenu("iteminfo");
+  let gl = true;
+  if (plays == true) gl = false;
+  openMenu("iteminfo", undefined, gl);
 }
 let openedMenu = [];
 async function openMenu(id, ignorehintg, nosound) {
@@ -941,11 +986,6 @@ async function openMenu(id, ignorehintg, nosound) {
 
 function exitMenu(ignoreHint, diffsound) {
   if (openedMenu.length > 0) {
-    if (diffsound != true) {
-      playSound("sfx_menuclose");
-    } else {
-      playSound("sfx_menuchange");
-    }
     if (openedMenu[openedMenu.length - 1] == "hint") {
       if (hintHistory.length > 1 && ignoreHint != true) {
         hintHistory.pop();
@@ -953,6 +993,11 @@ function exitMenu(ignoreHint, diffsound) {
         openHint(pophint, false)
         return;
       }
+    }
+    if (diffsound != true) {
+      playSound("sfx_menuclose");
+    } else {
+      playSound("sfx_menuchange");
     }
     popped = openedMenu.pop();
     document.getElementById("menubg").dataset["shown"] = openedMenu.length;
@@ -1127,6 +1172,7 @@ async function startMusic() {
   setInterval(musicUpdate, 38400);
 }
 function musicUpdate() {
+  audioClones = [];
   if (structurePaths.length == 0) {
     continueMusicStructure(sp);
     renderAudioFiles();
@@ -1144,7 +1190,9 @@ function musicUpdate() {
   };
   for (const spat of sp.paths) {
     console.log(soundDictionary[spat]);
-    group.addSound(soundDictionary[spat].clone());
+    let cloningGet = soundDictionary[spat].clone();
+    audioClones.push({sound: cloningGet, name: spat});
+    group.addSound(cloningGet);
   }
   var compressor = new Pizzicato.Effects.Compressor({
     threshold: -20,
