@@ -24,7 +24,7 @@ let elmPaths = [
   ["fire_bass", "fire_bmo", "fire_distantmelody", "fire_distortedanimal", "fire_explosion", "fire_ghostchoir", "fire_overkillpiano"],    // Fire
   ["air_bmo", "air_coldsun", "air_fluteradio", "air_futureplucks", "air_hightwinkles", "air_photosynthesis", "air_twinkles"]]   // Air
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
-let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose", "sfx_menuchange", "sfx_dragstart", "sfx_dragend", "sfx_dupe", "sfx_newitem2"];
+let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose", "sfx_menuchange", "sfx_dragstart", "sfx_dragend", "sfx_nocombination", "sfx_dupe", "sfx_newitem2"];
 let soundDictionary = {};
 let audioLoaded = false;
 let initHappened = false;
@@ -591,6 +591,7 @@ async function combineGameElements(on, below) {
     below.dataset["comb"] = "0";
     below.dataset["hovered"] = "0";
     below.dataset["failed"] = "1";
+    playSound("sfx_nocombination");
     await sleep(200)
     on.dataset["failed"] = "0";
     below.dataset["failed"] = "0";
@@ -626,7 +627,7 @@ async function combineGameElements(on, below) {
     spitem.dataset["newitem"] = "1";
     currentlyHovering = null;
     if (newDiscovery) {
-      playSound("sfx_newitem");
+      playSound("sfx_newitem2");
       addNewItem(combinationResult);
       openDiscoveryMenu(combinationResult)
       for (let iw = 0; iw < 500; iw++) {
