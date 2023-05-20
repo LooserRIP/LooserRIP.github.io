@@ -680,6 +680,7 @@ function startDrag(elm, ignore, ignoredoubleclick) {
 }
 async function dupeItem(elm) {
   let viewportWidth  = document.documentElement.clientWidth;
+  playSound("sfx_dupe")
   console.log(parseInt(elm.style.left), (viewportWidth) - 400)
   let spitem = spawnitem(elm.dataset.id, parseInt(elm.style.left) - 90, parseInt(elm.style.top) + 45, true);
   await sleep(100)
