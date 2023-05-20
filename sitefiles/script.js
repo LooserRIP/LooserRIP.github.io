@@ -24,7 +24,7 @@ let elmPaths = [
   ["fire_bass", "fire_bmo", "fire_distantmelody", "fire_distortedanimal", "fire_explosion", "fire_ghostchoir", "fire_overkillpiano"],    // Fire
   ["air_bmo", "air_coldsun", "air_fluteradio", "air_futureplucks", "air_hightwinkles", "air_photosynthesis", "air_twinkles"]]   // Air
 let additionalAudioLoads = ["structure_intro", "structure_water", "structure_earth", "structure_fire", "structure_air", "bg_windandbirds", "bg_thunderandrain", "bg_windandthunder", "bg_windandrain"]
-let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose", "sfx_menuchange", "sfx_dragstart", "sfx_dragend"];
+let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", "sfx_menuclose", "sfx_menuchange", "sfx_dragstart", "sfx_dragend", "sfx_dupe", "sfx_newitem2"];
 let soundDictionary = {};
 let audioLoaded = false;
 let initHappened = false;
