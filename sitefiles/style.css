@@ -24,10 +24,13 @@ body {
     background-color: var(--shade0);
     font-family: 'Quicksand', sans-serif;
     color: var(--shade5);
-    overflow: hidden;
+    overflow-x: none;
+    overflow-y: none;
     font-size: 110%;
     margin: 0 0 0 0;
     padding: 0 0 0 0;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
   }
   h1 {
     color: navy;
