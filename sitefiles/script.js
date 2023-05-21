@@ -218,15 +218,14 @@ async function preload() {
 
 
 async function soundRender() {
-  const soundPaths = elmPaths.flat();
-  console.log(ambientVolume)
   if (!audioLoaded) return;
+  const soundPaths = elmPaths.flat();
   const soundPathsCombined = soundPaths.concat(additionalAudioLoads);
   sfxPaths.forEach(sfxPath => {
     let mixMult = 1;
     if (audioChangeVolume[sfxPath] != undefined) mixMult = audioChangeVolume[sfxPath];
     soundDictionary[sfxPath].volume = mixMult * sfxVolume;
-    console.log("changed SFX '" + sfxPath + "' volume to " + soundDictionary[sfxPath].volume);
+   // console.log("changed SFX '" + sfxPath + "' volume to " + soundDictionary[sfxPath].volume);
   })
   soundPathsCombined.forEach(soundPath => {
     let mixMult = 1;
@@ -234,9 +233,9 @@ async function soundRender() {
     let volumeSet = mixMult * musicVolume;
     if (soundPath.startsWith("bg_")) {
       volumeSet = mixMult * ambientVolume;
-      console.log("changed AMBIENT '" + soundPath + "' volume to " + volumeSet);
+     // console.log("changed AMBIENT '" + soundPath + "' volume to " + volumeSet);
     } else {
-      console.log("changed MUSIC '" + soundPath + "' volume to " + volumeSet);
+     // console.log("changed MUSIC '" + soundPath + "' volume to " + volumeSet);
     }
     soundDictionary[soundPath].volume = volumeSet;
   })
@@ -246,9 +245,9 @@ async function soundRender() {
     let volumeSet = mixMult * musicVolume;
     if (aclone.name.startsWith("bg_")) {
       volumeSet = mixMult * ambientVolume;
-      console.log("changed AMBIENT CLONE '" + aclone.name + "' volume to " + volumeSet);
+     // console.log("changed AMBIENT CLONE '" + aclone.name + "' volume to " + volumeSet);
     } else {
-      console.log("changed MUSIC CLONE '" + aclone.name + "' volume to " + volumeSet);
+     // console.log("changed MUSIC CLONE '" + aclone.name + "' volume to " + volumeSet);
     }
     aclone.sound.volume = volumeSet;
   })
@@ -267,10 +266,8 @@ async function dissolveText(element, oldText, newText, interval) {
       currentText[index] = newText[index];
       element.textContent = currentText.join('');
       let intervaltemp = interval;
-      console.log(oldtext, newText[index]);
       if (oldtext == newText[index]) {
         intervaltemp = 0;
-        console.log("ignored");
       }
       setTimeout(changeLetter, intervaltemp);
   };
@@ -979,6 +976,7 @@ async function gb_clean() {
     }
   }
   await sleep(600);
+  saveBoard();
   document.getElementById("gb_clean").dataset["clean"] = "0";
 }
 function gb_dict() {
@@ -1147,9 +1145,7 @@ async function openHint(id, ignoreHint) {
     } else {
       hintHistory.push(id);
     }
-    console.log("hint history", hintHistory);
   }
-  console.log(id);
   consolelog(id, database.elements[id].name);
   if (openedMenu.includes("hint")) {
     noSound = true;
@@ -1160,10 +1156,8 @@ async function openHint(id, ignoreHint) {
   document.getElementById("hintItem").style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
   document.getElementById("hintDisclaimer").innerText = database.elements[id].name;
   document.getElementById("hintDescription").innerText = database.elements[id].description;
-  console.log(id);
   let collsplit = database.elements[id].discovered;
   if (collsplit.length == 1) collsplit.push(collsplit[0]);
-  consolelog(collsplit)
   var recipeArray = [];
   var recipeKeys = Object.keys(database.recipes);
   recipeKeys.forEach(recipeCheck => {
@@ -1173,7 +1167,6 @@ async function openHint(id, ignoreHint) {
     }
   })
   recipeArray = recipeArray.sort((a, b) => a.depth - b.depth);
-  consolelog(recipeArray);
   if (recipeArray.length == 1) {
     document.getElementById("hintPossible").innerText = "Possible Combination"
   } else {
@@ -1272,25 +1265,23 @@ var musicStructure = [];
 var structurePaths = [];
 
 async function startMusic() {
-  console.log('started');
+  console.log('started music');
   //var compressor = Howler.ctx.createDynamicsCompressor();
   //Howler.masterGain.disconnect(Howler.ctx.destination);
   //Howler.masterGain.connect(compressor);
   //compressor.connect(Howler.ctx.destination);
   structurePaths.push({structure: "intro"})
   renderAudioFiles();
-  console.log(":D");
   musicUpdate();
   setInterval(musicUpdate, 38400);
 }
 function musicUpdate() {
-  audioClones = [];
+  audioClones = audioClones.filter(word => word.sound.playing);
   if (structurePaths.length == 0) {
     continueMusicStructure(sp);
     renderAudioFiles();
   }
   sp = structurePaths.shift();
-  console.log(sp);// Create an HTML audio element
   var group = new Pizzicato.Group();
   var gainNode = Pizzicato.context.createGain();
   var audioNode = Object.getPrototypeOf(Object.getPrototypeOf(gainNode));
