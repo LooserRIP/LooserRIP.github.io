@@ -1090,6 +1090,7 @@ function changeVolumeOutput() {
 function changeStyle() {
   gameStyle++;
   updateStyle();
+  saveSettings();
 }
 
 function exitMenu(ignoreHint, diffsound) {
