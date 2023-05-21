@@ -75,6 +75,56 @@ function loadSettings() {
   gameStyle = settings.style;
   changeVolumeOutput();
 }
+function attemptSaveBoard() {
+  saveBoard();
+}
+function saveBoard() {
+  let totalSaveList = [];
+  let gameElms = document.getElementsByClassName("gameelement");
+  for (const gameElm of gameElms) {
+    if (gameElm.dataset['id'] != undefined && gameElm.dataset['small'] == "0") {
+      totalSaveList.push({id: parseInt(gameElm.dataset['id']), left: parseInt(gameElm.style.left), top: parseInt(gameElm.style.top)});
+    }
+  }
+  localStorage['lagpt_boardsave'] = JSON.stringify(totalSaveList);
+}
+async function loadBoard() {
+  if (localStorage["lagpt_boardsave"] != undefined) {
+    let parseBoard = JSON.parse(localStorage.lagpt_boardsave);
+    var elms = document.getElementsByClassName("gameelement");
+    for (const elmr of elms) {
+      if (elmr.dataset.id != undefined) {
+        destroyElm(elmr, -1)
+      }
+    }
+    let i = 0;
+    parseBoard.forEach(elm => {
+      loadBoardElm(elm, i)
+      i++;
+    })
+  }
+}
+async function refreshBoardTextures() {
+  let parseBoard = JSON.parse(localStorage.lagpt_boardsave);
+  var elms = document.getElementsByClassName("gameelement");
+  for (const elmr of elms) {
+    if (elmr.dataset.id != undefined) {
+      elmr.childNodes[1].style.backgroundImage = 'url(\'%^%%1%.png\')'.replace("%1%", database.elements[parseInt(elmr.dataset.id)].stripped).replace("%^%", spriteDirectory);
+    }
+  }
+}
+
+async function loadBoardElm(elm, i) {
+  console.log(elm.id, elm.left, elm.top)
+  let spitem = spawnitem(elm.id, elm.left, elm.top, true);
+  let tempi = parseInt(i);
+  console.log(tempi);
+  await sleep(100 + (100 * tempi))
+  spitem.dataset["small"] = "0";
+  spitem.dataset["newitem"] = "1";
+  i++;
+
+}
 
 function initbody() {
   zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
@@ -107,6 +157,7 @@ function updateStyle() {
   }
   if (initHappened) {
     renderSidebar();
+    refreshBoardTextures();
   }
 }
 async function preload() {
@@ -253,6 +304,7 @@ function init() {
     addNewItem(addToSidebar, false)
   })
   renderSidebar();
+  loadBoard();
   if (audioLoaded) {
     startMusic();
   }
@@ -519,9 +571,11 @@ function finalitems_add(id, found) {
 let prevMousePosition = {x: 0, y: 0}
 let totalMouseOffsetDragging = 0;
 function loop() {
+  let changeD = 0;
   if (currentlyDragging != null) {
     let mouseOffset = {x: mousePosition.x - prevMousePosition.x, y: mousePosition.y - prevMousePosition.y};
-    totalMouseOffsetDragging += Math.sqrt(mouseOffset.x*mouseOffset.x + mouseOffset.y*mouseOffset.y);
+    changeD = Math.sqrt(mouseOffset.x*mouseOffset.x + mouseOffset.y*mouseOffset.y);
+    totalMouseOffsetDragging += changeD;
     prevMousePosition = {x: mousePosition.x, y: mousePosition.y};
     let secondsPassed = (Date.now() - currentlyDraggingCounter) / 1000;
     if (secondsPassed > 0.5 && totalMouseOffsetDragging < 20) {
@@ -560,6 +614,11 @@ function loop() {
       distanceLerp = 0;
       combineCircle.dataset["show"] = "0";
       currentlyDragging.dataset["comb"] = "0";
+    }
+    console.log(changeD);
+    if (changeD != 0) {
+      console.log("saving board");
+      attemptSaveBoard();
     }
   } else {
     distanceLerp = 0;
@@ -731,6 +790,7 @@ function startDrag(elm, ignore, ignoredoubleclick) {
     console.log("double click");
     //spawnitem(elm.dataset.id, parseInt(elm.style.left), parseInt(elm.style.top))
     dupeItem(elm);
+    saveBoard()
     return;
   }
   playSound("sfx_dragstart");
@@ -762,12 +822,12 @@ function gameElmPress(elm) {
     startDrag(elm.parentNode, false);
   }
 }
-async function destroyElm(elm, final) {
+async function destroyElm(elm, final, instant) {
   elm.dataset["small"] = "2";
   elm.childNodes[2].dataset["disable"] = "1";
   if (final == -1) {
     elm.dataset["finalitem"] = "2";
-    await sleep(700);
+    if (instant != true) await sleep(700);
     elm.remove();
     return;
   }
