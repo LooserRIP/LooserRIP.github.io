@@ -17,6 +17,9 @@
   'GRAD' 200,
   'opsz' 48
 }
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
 body {
     background-color: var(--shade0);
     font-family: 'Quicksand', sans-serif;
@@ -111,6 +114,25 @@ border-radius: var(--br);
   .sidebartext[data-small="2"] {
     font-size: 50%;
     font-weight:500;
+  }
+  @media only screen and (max-width: 680px) {
+    .sidebartext {
+      display: inline-block;
+      max-width: 100%;
+      white-space: nowrap;
+      text-align: justify;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: 150%;
+    } 
+    .sidebartext[data-small="1"] {
+      font-size: 100%;
+      font-weight:500;
+    }
+    .sidebartext[data-small="2"] {
+      font-size: 50%;
+      font-weight:500;
+    }
   }
   /*
   .gamecontainer {
@@ -241,11 +263,45 @@ border-radius: var(--br);
     text-align: center;
   }
   
+  .gamebuttonsdown {
+    position: absolute;
+    width: 100%;
+    height: 125px;
+    top: calc(100% - 125px);
+    background-color: var(--shade0);
+    border-radius: 5px;
+    box-shadow: 0 -10px 0 0 var(--shade0), 0 -15px 0 0 var(--shade1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly; /* Align horizontal */
+    align-items:flex-start; /* Align vertical */
+  }
+  .gamebuttonsdown[data-disable="1"] {
+    display: none;
+  }
+  .gamebuttondown {
+    pointer-events: all;
+    cursor: pointer;
+    display: block;
+    color: var(--shade1);
+    font-size: 400%;
+    margin-bottom: 8px;
+    transition: color 0.1s;
+  }
+  .gamebuttondown:active {
+    color: var(--shade5);
+  }
+  .gamebuttondownenhance {
+    transform: scale(4);
+  }
   .gamebuttons {
     position: absolute;
     top: 278px;
     left: 92px;
     transform: scale(4);
+  }
+  .gamebuttons[data-disable="1"] {
+    display: none;
   }
   .gamebutton {
     pointer-events: all;
@@ -366,6 +422,14 @@ border-radius: var(--br);
   left: calc(50% + 102px);
   transform: scaleX(1.2) scaleY(1.2) translateX(-50%);
   opacity: 1;
+}
+@media only screen and (max-width: 680px) {
+  #gi_menu[data-show="2"] {
+    width: min(500px, 80%);
+    left: calc(50% + 52px);
+    transform: scaleX(1.2) scaleY(1.2) translateX(-50%);
+    opacity: 1;
+  }
 }
 #gi_menu[data-show]:focus {
   outline: var(--shade1) solid 3px;
@@ -601,6 +665,13 @@ border-radius: var(--br);
   #dictionaryDisclaimer[data-font="1"] {
     font-size: 150%;
   }
+  @media only screen and (max-width: 680px) {
+    #dictionaryDisclaimer {
+      white-space: unset;
+    }
+    #dictionaryDisclaimer[data-font="1"] {
+    }
+  }
   #dictionaryDisclaimer:hover {
     transform: scale(1.05);
   }
@@ -640,6 +711,14 @@ border-radius: var(--br);
   margin-left: 8px;
   margin-top: 8px;
   height: calc(100% - 140px);
+}
+@media only screen and (max-width: 680px) {
+  .dictionaryGradient {
+    display: none;
+  }
+  .dictionaryContainer {
+    top: -20px;
+  }
 }
 .dictItem {
   width: 128px;
@@ -707,6 +786,15 @@ border-radius: var(--br);
   z-index: 10 !important;
   transform: translateX(-50%) scale(1);
   opacity: 0;
+}
+@media only screen and (max-width: 680px) {
+  .uititle {
+    width: 100%;
+    font-size: 400%;
+  }
+  #loadingtitle2 {
+    font-size: 250%;
+  }
 }
 #menubg[data-shown] > #menutitle {
   transform: translateX(-50%) scale(1);
@@ -808,6 +896,20 @@ border-radius: var(--br);
 #newDiscovery[data-shown="1"] > #newDiscoveryDescription {
   top: calc(50% + 180px);
   transform: translateX(-50%) scale(1);
+}
+@media only screen and (max-width: 680px) {
+  #newDiscoveryTitle {
+    width: 100%;
+    font-size: 600%;
+  }
+  #newDiscovery[data-shown="1"] > #newDiscoveryTitle {
+    top: calc(50% - 650px);
+    transform: translateX(-50%) scale(1);
+  }
+  #newDiscovery[data-shown="1"] > #newDiscoveryDescription {
+    top: calc(50% + 280px);
+    transform: translateX(-50%) scale(1);
+  }
 }
 #newDiscoveryImage {
   position: absolute;

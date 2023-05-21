@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/party-js@latest/bundle/party.min.js"></script>
     <script src="sitefiles/script.js"></script>
     <meta name="description" content="A remake of elemental made with stable diffusion and gpt-3.5.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <script src="https://cdn.rawgit.com/magicien/undo-canvas/v0.1.3/undo-canvas.js"></script>
     <link rel="stylesheet" href="sitefiles/style.css">
     <link rel="icon" type="image/png"
@@ -34,8 +35,25 @@
     </div>
     <div class="sidebar" id="sidebar">
     </div>
+    <div class="gamebuttonsdown" data-disable="1" id="gamebuttonsdown">
+        <div class="gamebuttondownenhance"><p id="gb_clean" onclick="gb_clean()" class="gamebuttondown material-symbols-outlined">
+            mop
+        </p></div>
+        <div class="gamebuttondownenhance"><p id="gb_dict" onmousedown="gb_dict()" class="gamebuttondown material-symbols-outlined">
+            menu_book
+        </p></div>
+        <div class="gamebuttondownenhance"><p id="gb_hint" ontouchstart="gts_hint()" ontouchend="gte_hint()" class="gamebuttondown material-symbols-outlined">
+            lightbulb
+        </p></div>
+        <div class="gamebuttondownenhance"><p id="gb_settings" onclick="gb_settings()" class="gamebuttondown material-symbols-outlined">
+            settings
+        </p></div>
+        <div class="gamebuttondownenhance"><p id="gb_info" onclick="gb_info()" class="gamebuttondown material-symbols-outlined">
+            info
+        </p></div>
+    </div>
     <div class="gamecontainer" id="gamecontainer">
-        <div class="gamebuttons">
+        <div class="gamebuttons" id="gamebuttons">
             <div><span id="gb_clean" onclick="gb_clean()" class="gamebutton material-symbols-outlined">
                 mop
             </span></div>

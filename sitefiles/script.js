@@ -28,7 +28,7 @@ let sfxPaths = ["sfx_newitem", "sfx_itemmade", "sfx_combining", "sfx_menuopen", 
 let soundDictionary = {};
 let audioClones = [];
 let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5, 
-"structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.5, "air_hightwinkles": 0.75, 
+"structure_water": 0.8, "air_twinkles": 0.5, "water_heaven": 0.3, "air_hightwinkles": 0.75, 
 "earth_groovebeat": 0.4, "earth_chillbeat": 0.4, "fire_distortedanimal": 0.35, "earth_distortedmysticbass": 0.7,
 "air_photosynthesis": 0.75, "air_fluteradio": 0.7, "fire_explosion": 0.5, "water_flowerpad": 0.75};
 let musicVolume = 1;
@@ -125,6 +125,27 @@ async function loadBoardElm(elm, i) {
   i++;
 
 }
+let prevMobileStatus = false;
+function checkMobile() {
+  let viewportWidth  = document.documentElement.clientWidth;
+  let viewportHeight = document.documentElement.clientHeight;
+  console.log(viewportWidth);
+  let isMobile = (viewportWidth <= 680);
+  if (prevMobileStatus != isMobile) {
+    if (isMobile) {
+      document.getElementById("gamebuttons").dataset['disable'] = "1";
+      document.getElementById("gamebuttonsdown").dataset['disable'] = "0";
+      document.body.style.zoom = "50%";
+      zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
+    } else {
+      document.getElementById("gamebuttons").dataset['disable'] = "0";
+      document.getElementById("gamebuttonsdown").dataset['disable'] = "1";
+      document.body.style.zoom = "80%";
+      zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
+    }
+    prevMobileStatus = isMobile;
+  }
+}
 
 function initbody() {
   zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
@@ -133,15 +154,27 @@ function initbody() {
   console.log(zoomFactor);
   bodyLoaded = true;
   consolelog("Body Initialized")
+  checkMobile();
   combineCircle = document.getElementById("combinecircle");
   document.addEventListener('mousemove', function(event) {
       mousePosition.x = event.pageX / zoomFactor;
       mousePosition.y = event.pageY / zoomFactor;
   });
+  document.addEventListener('touchmove', function(event) {
+      var touchLocation = event.targetTouches[0];
+      mousePosition.x = touchLocation.pageX / zoomFactor;
+      mousePosition.y = touchLocation.pageY / zoomFactor;
+      console.log(mousePosition);
+  });
   document.addEventListener('mouseup', function(event) {
     consolelog("stopped dragging")
     stopDrag()
   });
+  document.addEventListener('touchend', function(event) {
+    consolelog("stopped dragging")
+    stopDrag()
+  });
+  window.addEventListener("resize", checkMobile);
   preload();
 }
 function updateStyle() {
@@ -420,9 +453,11 @@ function sidebar_add(id){
   let addElm = document.createElement("DIV");
   addElm.dataset["id"] = id;
   addElm.className = "sidebarelement";
+  if (prevMobileStatus) addHtml = addHtml.replace('onmousedown="spawnside(this)"', 'ontouchstart="spawnside(this, event)"');
   addElm.innerHTML = addHtml;
-  if (database.elements[id].name.length > 12) addElm.childNodes[1].dataset['small'] = "1"
-  if (database.elements[id].name.length > 17) addElm.childNodes[1].dataset['small'] = "2"
+  multGet = (prevMobileStatus) ? 0.7 : 1
+  if (database.elements[id].name.length > 12 * multGet) addElm.childNodes[1].dataset['small'] = "1"
+  if (database.elements[id].name.length > 17 * multGet) addElm.childNodes[1].dataset['small'] = "2"
   document.getElementById("sidebar").appendChild(addElm)
   return addElm;
 }
@@ -545,6 +580,9 @@ function dict_add(id) {
   addElm.onmousedown = function() {
     openDict(id, true);
   };
+  addElm.ontouchstart = function() {
+    openDict(id, true);
+  };
   addElm.className = "dictItem";
   addElm.style.backgroundImage = "url('" + spriteDirectory + database.elements[id].stripped + ".png')";
   document.getElementById("dictionaryContainer").appendChild(addElm)
@@ -552,6 +590,9 @@ function dict_add(id) {
 function finalitems_add(id, found) {
   let addElm = document.createElement("DIV");
   addElm.onmousedown = function() {
+    openDict(id, true);
+  };
+  addElm.ontouchstart = function() {
     openDict(id, true);
   };
   addElm.className = "dictItem";
@@ -567,8 +608,74 @@ function finalitems_add(id, found) {
 
 let prevMousePosition = {x: 0, y: 0}
 let totalMouseOffsetDragging = 0;
+function checkCollision(element1HitboxWidth, element1HitboxHeight, element2HitboxWidth, element2HitboxHeight, element1PositionX, element1PositionY, element2PositionX, element2PositionY) {
+  const element1Left = element1PositionX - element1HitboxWidth / 2;
+  const element1Right = element1PositionX + element1HitboxWidth / 2;
+  const element1Top = element1PositionY - element1HitboxHeight / 2;
+  const element1Bottom = element1PositionY + element1HitboxHeight / 2;
+
+  const element2Left = element2PositionX - element2HitboxWidth / 2;
+  const element2Right = element2PositionX + element2HitboxWidth / 2;
+  const element2Top = element2PositionY - element2HitboxHeight / 2;
+  const element2Bottom = element2PositionY + element2HitboxHeight / 2;
+
+  return !(element1Right < element2Left || element1Left > element2Right || element1Bottom < element2Top || element1Top > element2Bottom);
+}
+
+function mobileHoverCheck() {
+  let gameElms = document.getElementsByClassName("gameelement");
+  let currentlyDraggingCoords = [];
+  let sizeCurrentlyDragging;
+  if (currentlyDragging != null) {
+    currentlyDraggingCoords = [parseInt(currentlyDragging.style.left), parseInt(currentlyDragging.style.top)];
+    sizeCurrentlyDragging = [currentlyDragging.childNodes[2].clientWidth, currentlyDragging.childNodes[2].clientHeight];
+  }
+  for (const gameElm of gameElms) {
+    if (gameElm.dataset['id'] != undefined && gameElm.dataset['small'] == "0" && gameElm != currentlyDragging) {
+      let coords = [parseInt(gameElm.style.left), parseInt(gameElm.style.top)];
+      let size = [gameElm.childNodes[2].clientWidth, gameElm.childNodes[2].clientHeight];
+      let collision = false;
+      if (currentlyDragging != null) {
+        collision = checkCollision(size[0], size[1], sizeCurrentlyDragging[0], sizeCurrentlyDragging[1], coords[0], coords[1], currentlyDraggingCoords[0], currentlyDraggingCoords[1])
+      }
+      console.log(gameElm.dataset['id'], collision);
+      if ((gameElm.dataset['hoversave'] == undefined || gameElm.dataset['hoversave'] == "0") && collision) {
+        hoverElement(gameElm.childNodes[2], true);
+      } else if (gameElm.dataset['hoversave'] == "1" && !collision) {
+        hoverElement(gameElm.childNodes[2], false);
+      }
+    }
+  }
+}
+let gtshint = 999999999999999999999999999999999999999999999999999999;
+let gtsRemove = false;
+let gtsIgnore = false;
+function gts_hint() {
+  gtshint = Date.now();
+  gtsRemove = true;
+}
+function gte_hint() {
+  if (gtsIgnore) {
+    gtsIgnore = false;
+    return;
+  }
+  console.log(Date.now() - gtshint);
+  if (Date.now() - gtshint > 500 && gtsRemove) {
+    gb_exithint();
+  } else {
+    gb_hint();
+  }
+  gtsRemove = false;
+  gtsIgnore = false;
+}
 function loop() {
   let changeD = 0;
+  mobileHoverCheck();
+  if (Date.now() - gtshint > 500 && gtsRemove) {
+    gb_exithint();
+    gtsRemove = false;
+    gtsIgnore = true;
+  }
   if (currentlyDragging != null) {
     let mouseOffset = {x: mousePosition.x - prevMousePosition.x, y: mousePosition.y - prevMousePosition.y};
     changeD = Math.sqrt(mouseOffset.x*mouseOffset.x + mouseOffset.y*mouseOffset.y);
@@ -647,6 +754,7 @@ function spawnitem(id, posx, posy, smaller) {
   htmlItem.style.left = posx + "px";
   htmlItem.style.top = posy + "px";
   if (smaller == true) htmlItem.dataset["small"] = "2";
+  if (prevMobileStatus) innerHtmlItem = innerHtmlItem.replace('onmousedown="gameElmPress(this)"', 'ontouchstart="gameElmPress(this, event)"');
   htmlItem.innerHTML = innerHtmlItem.replace("%1%", database.elements[id].stripped).replace("%^%", spriteDirectory);
   document.getElementById("gamecontainer").appendChild(htmlItem)
   return htmlItem
@@ -655,6 +763,7 @@ async function hoverElement(elm, status) {
   if (combining) return;
   if (currentlyDragging != null && currentlyDragging == elm) return; 
   let circleElm = elm.parentNode;
+  circleElm.dataset["hoversave"] = status ? "1" : "0";
   var rndid = Math.round(Math.random() * 1000)
   consolelog("hover", rndid)
   if (status) {
@@ -784,7 +893,7 @@ async function sparks(elm) {
 function startDrag(elm, ignore, ignoredoubleclick) {
   let secondsPassed = (Date.now() - doubleclicktimer) / 1000;
   if (secondsPassed < 0.185 && ignoredoubleclick != true) {
-    console.log("double click");
+    console.log("double click")
     //spawnitem(elm.dataset.id, parseInt(elm.style.left), parseInt(elm.style.top))
     dupeItem(elm);
     saveBoard()
@@ -812,8 +921,15 @@ async function dupeItem(elm) {
   spitem.dataset["small"] = "0";
   spitem.dataset["newitem"] = "1";
 }
-function gameElmPress(elm) {
-  consolelog("yes");
+function gameElmPress(elm, event) {
+  if (event != undefined) {
+    console.log(event);
+    var touchLocation = event.targetTouches[0];
+    mousePosition.x = touchLocation.pageX / zoomFactor;
+    mousePosition.y = touchLocation.pageY / zoomFactor;
+    console.log(mousePosition);
+  }
+  console.log("yes");
   consolelog(elm.parentNode.dataset['small'])
   if (elm.parentNode.dataset['small'] == "0") {
     startDrag(elm.parentNode, false);
@@ -912,7 +1028,13 @@ function stopDrag() {
   currentlyDragging = null;
 }
 
-function spawnside(elm) {
+function spawnside(elm, event) {
+  if (event != undefined) {
+    var touchLocation = event.targetTouches[0];
+    mousePosition.x = touchLocation.pageX / zoomFactor;
+    mousePosition.y = touchLocation.pageY / zoomFactor;
+    console.log(mousePosition);
+  }
   let id = parseInt(elm.parentNode.dataset.id);
   consolelog(elm.parentNode, id)
   elm.dataset['disappear'] = "1"
@@ -1292,7 +1414,6 @@ function musicUpdate() {
     return node;
   };
   for (const spat of sp.paths) {
-    console.log(soundDictionary[spat]);
     let cloningGet = soundDictionary[spat].clone();
     audioClones.push({sound: cloningGet, name: spat});
     group.addSound(cloningGet);
@@ -1320,7 +1441,7 @@ function continueMusicStructure(prev) {
       if (random < 33) {
         structurePaths.push({structure: "ambient"},{structure: "ambient"});
       } else {
-        structurePaths.push({structure: "ambient"},{structure: "ambient"},{structure: "ambient"},{structure: "buildup"});
+        structurePaths.push({structure: "ambient"},{structure: "ambient"},{structure: "ambient"},{structure: "ambient"});
       }
     }
 }
@@ -1429,7 +1550,6 @@ function renderAudioFiles() {
       let paths = [];
       if (structureelm == "intro") {
         paths.push("structure_intro")
-        paths.push(randombgadd) 
       }
       if (structureelm == "introbuildup") {
         paths.push("arp_plucks", "percussion_chill")
