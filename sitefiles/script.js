@@ -34,9 +34,12 @@ let audioChangeVolume = {"air_coldsun": 0.8, "fire_bmo": 0.5,
 let musicVolume = 1;
 let sfxVolume = 1;
 let ambientVolume = 1;
+let gameStyle = 0;
+let styleNames = ["Classic", "Epic"];
 let audioLoaded = false;
 let initHappened = false;
 let zoomFactor;
+let settings = {};
 /*
 (async () => {
   var request = new XMLHttpRequest();
@@ -51,19 +54,33 @@ let zoomFactor;
 })();
 */
 
+function saveSettings() {
+  settings.style = gameStyle;
+  settings.volumes[0] = musicVolume;
+  settings.volumes[1] = sfxVolume;
+  settings.volumes[2] = ambientVolume;
+  localStorage['lagpt_settings'] = JSON.stringify(settings);
+}
+function loadSettings() {
+  if (localStorage['lagpt_settings'] == undefined) {
+    localStorage['lagpt_settings'] = JSON.stringify({style: 0, volumes: [1,1,1]})
+  }
+  settings = JSON.parse(localStorage.lagpt_settings);
+  musicVolume = settings.volumes[0];
+  sfxVolume = settings.volumes[1];
+  ambientVolume = settings.volumes[2];
+  document.getElementById("volume_music").value = musicVolume;
+  document.getElementById("volume_sfx").value = sfxVolume;
+  document.getElementById("volume_ambient").value = ambientVolume;
+  gameStyle = settings.style;
+  changeVolumeOutput();
+}
+
 function initbody() {
   zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
+  loadSettings();
+  updateStyle();
   console.log(zoomFactor);
-  if (localStorage['lagpt_style'] == undefined) localStorage['lagpt_style'] = "0";
-  let style = parseInt(localStorage['lagpt_style']);
-  if (style == 0) {
-    spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/";
-  }
-  if (style == 1) {
-    spriteDirectory = 'https://raw.githubusercontent.com/LooserRIP/AIElemental-EnvStyle/main/EnvStyle/';
-    document.documentElement.style.setProperty('--br', '12%');
-    document.documentElement.style.setProperty('--hitboxsize', '1.422');
-  }
   bodyLoaded = true;
   consolelog("Body Initialized")
   combineCircle = document.getElementById("combinecircle");
@@ -76,6 +93,21 @@ function initbody() {
     stopDrag()
   });
   preload();
+}
+function updateStyle() {
+  if (gameStyle >= styleNames.length) gameStyle = 0;
+  document.getElementById("stylesetting").innerText = "Style: " + styleNames[gameStyle];
+  if (gameStyle == 0) {
+    spriteDirectory = "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/";
+  }
+  if (gameStyle == 1) {
+    spriteDirectory = 'https://raw.githubusercontent.com/LooserRIP/AIElemental-EnvStyle/main/EnvStyle/';
+    document.documentElement.style.setProperty('--br', '12%');
+    document.documentElement.style.setProperty('--hitboxsize', '1.422');
+  }
+  if (initHappened) {
+    renderSidebar();
+  }
 }
 async function preload() {
   const soundPaths = elmPaths.flat();
@@ -100,21 +132,13 @@ async function preload() {
   const soundPromises = soundPathsCombined.map(loadSound);
   const soundsg = await Promise.all(soundPromises);
   console.log("finished loading");
-  const keyacvs = Object.keys(audioChangeVolume);
-  for (const keyacv of keyacvs) {
-    if (soundDictionary[keyacv] != undefined) {
-      console.log("changing volume of " + keyacv + " to " + audioChangeVolume[keyacv])
-      soundDictionary[keyacv].volume  = audioChangeVolume[keyacv];
-    } else {
-      console.log("tried to change volume of " + keyacv + " but no such sound exists.");
-    }
-  }
   // Now, all sounds and JSON data are loaded, and you can use them in your application
   console.log('All resources loaded');
   
   // Use the spread operator to log all loaded sounds
   console.log('All sounds loaded');
   audioLoaded = true;
+  soundRender();
   if (initHappened) {
     startMusic();
   }
@@ -141,8 +165,11 @@ async function preload() {
     
 }
 
+
 async function soundRender() {
   const soundPaths = elmPaths.flat();
+  console.log(ambientVolume)
+  if (!audioLoaded) return;
   const soundPathsCombined = soundPaths.concat(additionalAudioLoads);
   sfxPaths.forEach(sfxPath => {
     let mixMult = 1;
@@ -973,6 +1000,12 @@ async function openMenu(id, ignorehintg, nosound) {
   if (openedMenu.length == 0 && id == "iteminfo") {
     document.getElementById("menutitle").innerText = "Dictionary";
   }
+  if (openedMenu.length == 0 && id == "settings") {
+    document.getElementById("volume_music").value = musicVolume;
+    document.getElementById("volume_sfx").value = sfxVolume;
+    document.getElementById("volume_ambient").value = ambientVolume;
+    document.getElementById("menutitle").innerText = "Settings";
+  }
   if (openedMenu.length == 0 && id == "finalitems") {
     renderFinalItems();
     document.getElementById("menutitle").innerText = "Final Items";
@@ -982,6 +1015,21 @@ async function openMenu(id, ignorehintg, nosound) {
   openedMenu.push(id);
   document.getElementById("menubg").dataset["shown"] = openedMenu.length;
   document.getElementById(id).dataset["shown"] = "1";
+}
+
+function changeVolumeOutput() {
+  musicVolume = parseFloat(document.getElementById("volume_music").value);
+  sfxVolume = parseFloat(document.getElementById("volume_sfx").value);
+  ambientVolume = parseFloat(document.getElementById("volume_ambient").value);
+  saveSettings();
+  document.getElementById("volumetext_music").innerText = (Math.round(musicVolume * 100)) + "%";
+  document.getElementById("volumetext_sfx").innerText = (Math.round(sfxVolume * 100)) + "%";
+  document.getElementById("volumetext_ambient").innerText = (Math.round(ambientVolume * 100)) + "%";
+  soundRender();
+}
+function changeStyle() {
+  gameStyle++;
+  updateStyle();
 }
 
 function exitMenu(ignoreHint, diffsound) {
@@ -1017,6 +1065,9 @@ function gb_hint() {
 }
 function gb_info() {
   openMenu("info");
+}
+function gb_settings() {
+  openMenu("settings");
 }
 function gb_exithint() {
   document.getElementById("gb_hint").dataset["hint"] = "0";
@@ -1299,6 +1350,7 @@ function getTotalFactors() {
   console.log(apiLink + totalBasicsNew.join(','));
 }
 function renderAudioFiles() {
+  let randombgcoll = ["bg_thunderandrain", "bg_windandbirds", "bg_windandrain", "bg_windandthunder"];
   structurePathsNew = [];
 /*element paths - water, earth, fire, air
   Water - harmonics
@@ -1309,6 +1361,7 @@ function renderAudioFiles() {
   structurePaths.forEach(structureelmd => {
     let musicFactors = getMusicFactors();
     let musicFactorsSave = [...musicFactors.elms];
+    let randombgadd = randombgcoll[randomint(0, 3)];
     let elementPaths = [
       [...elmPaths[0]],
       [...elmPaths[1]],
@@ -1324,6 +1377,7 @@ function renderAudioFiles() {
       let paths = [];
       if (structureelm == "intro") {
         paths.push("structure_intro")
+        paths.push(randombgadd) 
       }
       if (structureelm == "introbuildup") {
         paths.push("arp_plucks", "percussion_chill")
@@ -1336,9 +1390,9 @@ function renderAudioFiles() {
           [...elmPaths[3]]
         ];
         let randomnumset = ["structure_water", "structure_earth", "structure_fire", "structure_air"][musicFactorsSave.indexOf(Math.max(...musicFactorsSave))];
-        let randombgadd = ["bg_thunderandrain", "bg_windandbirds", "bg_windandrain", "bg_windandthunder"][randomint(0, 3)];
         paths.push(randomnumset);
-        if (Math.random() > 0.15) paths.push(randombgadd)
+        paths.push(randombgadd) 
+        //if (Math.random() > 0.15) paths.push(randombgcoll[randomint(0, 3)]) 
         for (let icpa = 0; icpa < complexity; icpa++) {
           if (elementPaths.flat().length == 0) break;
           let randomGet = Math.random();
