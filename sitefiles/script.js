@@ -144,6 +144,12 @@ function checkMobile() {
       zoomFactor = parseFloat(document.body.style.zoom) / 100 || 1;
     }
     prevMobileStatus = isMobile;
+    if (initHappened) {
+
+      renderSidebar();
+      saveBoard();
+      loadBoard();
+    }
   }
 }
 
@@ -276,12 +282,7 @@ async function soundRender() {
     let mixMult = 1;
     if (audioChangeVolume[aclone.name] != undefined) mixMult = audioChangeVolume[aclone.name];
     let volumeSet = mixMult * musicVolume;
-    if (aclone.name.startsWith("bg_")) {
-      volumeSet = mixMult * ambientVolume;
-     // console.log("changed AMBIENT CLONE '" + aclone.name + "' volume to " + volumeSet);
-    } else {
-     // console.log("changed MUSIC CLONE '" + aclone.name + "' volume to " + volumeSet);
-    }
+    if (aclone.name.startsWith("bg_")) volumeSet = mixMult * ambientVolume;
     aclone.sound.volume = volumeSet;
   })
 }
@@ -630,17 +631,23 @@ function mobileHoverCheck() {
     currentlyDraggingCoords = [parseInt(currentlyDragging.style.left), parseInt(currentlyDragging.style.top)];
     sizeCurrentlyDragging = [currentlyDragging.childNodes[2].clientWidth, currentlyDragging.childNodes[2].clientHeight];
   }
+  let hovering = false;
   for (const gameElm of gameElms) {
     if (gameElm.dataset['id'] != undefined && gameElm.dataset['small'] == "0" && gameElm != currentlyDragging) {
+      if (gameElm.dataset['hoversave'] == "1" && hovering) {
+        hoverElement(gameElm.childNodes[2], false);
+        continue;
+      }
       let coords = [parseInt(gameElm.style.left), parseInt(gameElm.style.top)];
       let size = [gameElm.childNodes[2].clientWidth, gameElm.childNodes[2].clientHeight];
       let collision = false;
       if (currentlyDragging != null) {
         collision = checkCollision(size[0], size[1], sizeCurrentlyDragging[0], sizeCurrentlyDragging[1], coords[0], coords[1], currentlyDraggingCoords[0], currentlyDraggingCoords[1])
       }
-      console.log(gameElm.dataset['id'], collision);
+      //console.log(gameElm.dataset['id'], collision);
       if ((gameElm.dataset['hoversave'] == undefined || gameElm.dataset['hoversave'] == "0") && collision) {
         hoverElement(gameElm.childNodes[2], true);
+        hovering = true;
       } else if (gameElm.dataset['hoversave'] == "1" && !collision) {
         hoverElement(gameElm.childNodes[2], false);
       }
@@ -670,7 +677,7 @@ function gte_hint() {
 }
 function loop() {
   let changeD = 0;
-  mobileHoverCheck();
+  if (prevMobileStatus) mobileHoverCheck();
   if (Date.now() - gtshint > 500 && gtsRemove) {
     gb_exithint();
     gtsRemove = false;
