@@ -1,0 +1,18 @@
+{
+  "short_name": "Elemental",
+  "name": "AI Elemental",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/LooserRIP/AIElemental/gh-pages/cdn/IconsStyle/earth.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/lagpt",
+  "background_color": "#20112c",
+  "display": "standalone",
+  "scope": "/lagpt",
+  "theme_color": "#20112c",
+  "description": "Loading the website...",
+  "prefer_related_applications": true
+}
