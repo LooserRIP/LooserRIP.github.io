@@ -1,0 +1,8 @@
+body {
+    background-color: #333333;
+    color: #fff;
+}
+textarea {
+    width: 100%;
+    height: 500px;
+}
