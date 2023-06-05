@@ -18,7 +18,6 @@ function findAction(actionname) {
         }
         idRun++;
     }
-    console.log(actiondump.actions[findID].name, actionname, findVal);
     return findID;
 }
 
@@ -37,12 +36,10 @@ function test() {
         var data        = pako.inflate(binData);
         var strData     = String.fromCharCode.apply(null, new Uint16Array(data));
         let jsonData = JSON.parse(strData);
-        console.log(jsonData.blocks);
         let i = 0;
         let spacesCount = 0;
         for (const block of jsonData.blocks) {
             if (block.id == "block") {
-                console.log(block.block, block.action, block.id);
                 if (i == 0) {
                     let dataname = "";
                     if (block.data != undefined) {
@@ -57,6 +54,7 @@ function test() {
                     spacesCount++;
                 }
                 if (i > 0) {
+                    console.log(block);
                     let nameOfBlock = titleCase(block.block.replace("_", " ")).replace(" ", "");
                     let nameOfAction = block.action;
                     if (spacesCount > 0) {
@@ -64,9 +62,28 @@ function test() {
                     }
                     finalString = finalString + nameOfBlock + "." + nameOfAction + "(";
                     args = [];
+                    sortedArguments = block.args.items.filter(obj => obj.item.id != "bl_tag");
+                    sortedTags = block.args.items.filter(obj => obj.item.id == "bl_tag");
+                    var slotIndex = 0;
+                    if (block.target != undefined) {
+                        args.push("Target: " + block.target);
+                    }
                     for (const argument of actiondump.actions[findAction(nameOfAction)].icon.arguments) {
-                        console.log(argument);
-                        args.push(argument.description + ": ");
+                        let params = [];
+                        let found = 0;
+                        if (argument.plural) {
+                            for (let lpi = slotIndex; lpi < sortedArguments.length; lpi++) {
+                                params.push(formatParameter(sortedArguments[slotIndex]))
+                            }
+                        } else {
+                            found = sortedArguments.find(obj => obj.slot === slotIndex);
+                            if (found != undefined) params.push(formatParameter(found))
+                        }
+                        if (found != undefined) args.push(removeAmpersand(argument.description.join(" ")) + ": " + params.join(", "));
+                        slotIndex += 1;
+                    }
+                    for (const addTagParam of sortedTags) {
+                        args.push(addTagParam.item.data.tag + ": " + addTagParam.item.data.option);
                     }
                     finalString += args.join(", ")
                     finalString = finalString + ")";
@@ -93,11 +110,29 @@ function test() {
         }
         finalString = finalString + "}";
         finalStrings.push(finalString);
-        console.warn(finalString);
     })
-    console.log(finalStrings.join("\n"));
+    finishedString = finalStrings.join("\n")
+    console.log(finishedString);
 }
-
+function formatParameter(input) {
+    input = input.item;
+    if (input.id == "var") {
+        return "var(" + input.data.name + ", " + input.data.scope + ")";
+    }
+    if (input.id == "num") {
+        return input.data.name;
+    }
+    if (input.id == "txt") {
+        return "'" + input.data.name + "'";
+    }
+    if (input.id == "item") {
+        return "itemnbt(" + input.data.item + ")";
+    }
+}
+function removeAmpersand(str) {
+    return str.replace(/&\w/g, '');
+  }
+  
 function base64ToArrayBuffer(base64) {
     var binaryString = atob(base64);
     var bytes = new Uint8Array(binaryString.length);
