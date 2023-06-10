@@ -6,6 +6,8 @@
   <head>
     </head>
     <body onload="init()">
+      <p>API key</p>
+      <input onchange="saveapikey()" id="apikey"/>
         <form>
             <p><label for="w3review">put code template data chatlogs hmere!:</label></p>
             <textarea id="w3review" name="w3review" rows="4" cols="50">[15:07:12] [Render thread/INFO]: [System] [CHAT] STARTING CODE TEMPLATE CONVERSION
@@ -16,4 +18,8 @@
             <br>
             <input type="button" value="Submit" onclick="test()">
           </form>
+          <div id="ungenerated">
+            <textarea class="ungenerated">test</textarea>
+            <textarea class="ungenerated">test2</textarea>
+          </div>
     </body>

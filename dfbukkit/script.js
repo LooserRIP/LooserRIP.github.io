@@ -1,10 +1,17 @@
 let actiondump;
-function init() {
-    fetch("https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/dfbukkit/action_dump.json")
+let itemID = 0;
+let nbts = [];
+async function init() {
+    if (localStorage["dfpaper-api_key"]) document.getElementById("apikey").value = localStorage["dfpaper-api_key"]
+    await fetch("https://raw.githubusercontent.com/LooserRIP/LooserRIP.github.io/master/dfbukkit/action_dump.json")
     .then(res => res.json())
     .then(data => actiondump = data)
+    actiondump.actions.splice(736, 1);
+    console.log(actiondump)
 }
-
+function saveapikey() {
+    localStorage["dfpaper-api_key"] = document.getElementById("apikey").value;
+}
 function findAction(actionname) {
     if (actiondump == undefined) return 0;
     let findID = 0;
@@ -22,6 +29,9 @@ function findAction(actionname) {
 }
 
 function test() {
+    document.getElementById("ungenerated").innerHTML = "";
+    itemID = -1;
+    nbts = [];
     const templateList = [];
     let splitinput = document.getElementById("w3review").value.split("\n");
     splitinput.forEach(elm => {templateList.push(elm.substring(49));});
@@ -38,6 +48,9 @@ function test() {
         let jsonData = JSON.parse(strData);
         let i = 0;
         let spacesCount = 0;
+
+        console.log(jsonData.blocks);
+        console.log(JSON.stringify(jsonData));
         for (const block of jsonData.blocks) {
             if (block.id == "block") {
                 if (i == 0) {
@@ -50,30 +63,45 @@ function test() {
                     let nameOfEvent = titleCase(block.block.replace("_", " ")).replace(" ", "");
                     if (nameOfEvent == "Event") nameOfEvent = "PlayerEvent";
                     if (nameOfEvent == "Process") nameOfEvent = "AsyncFunction";
+                    if (nameOfEvent == "Func") nameOfEvent = "Function";
                     finalString = finalString + nameOfEvent + "." + dataname.replace(" ", "-") + " {\n"
                     spacesCount++;
                 }
                 if (i > 0) {
-                    console.log(block);
                     let nameOfBlock = titleCase(block.block.replace("_", " ")).replace(" ", "");
+                    if (nameOfBlock == "CallFunc") nameOfBlock = "CallFunction";
+                    
                     let nameOfAction = block.action;
+                    if (block.data) nameOfAction = block.data;
                     if (spacesCount > 0) {
                         finalString += " ".repeat(spacesCount * 4);
                     }
+                    if (nameOfBlock == "Else") {
+                        finalString = finalString + nameOfBlock + " ";
+                        continue;
+                    }
                     finalString = finalString + nameOfBlock + "." + nameOfAction + "(";
                     args = [];
+                    console.log(block);
                     sortedArguments = block.args.items.filter(obj => obj.item.id != "bl_tag");
                     sortedTags = block.args.items.filter(obj => obj.item.id == "bl_tag");
                     var slotIndex = 0;
                     if (block.target != undefined) {
                         args.push("Target: " + block.target);
                     }
-                    for (const argument of actiondump.actions[findAction(nameOfAction)].icon.arguments) {
+                    argFilter = [];
+                    if (!block.data) {
+                        argFilter = actiondump.actions[findAction(nameOfAction)].icon.arguments.filter(obj => obj.description != undefined)
+                    }
+                    if (nameOfAction.toLowerCase() == "wait" && sortedArguments.length == 0) {
+                        sortedArguments.push({slot: 0, item: {id: "num", data: {name: 1}}})
+                    }
+                    for (const argument of argFilter) {
                         let params = [];
                         let found = 0;
                         if (argument.plural) {
                             for (let lpi = slotIndex; lpi < sortedArguments.length; lpi++) {
-                                params.push(formatParameter(sortedArguments[slotIndex]))
+                                params.push(formatParameter(sortedArguments[lpi]))
                             }
                         } else {
                             found = sortedArguments.find(obj => obj.slot === slotIndex);
@@ -110,13 +138,27 @@ function test() {
         }
         finalString = finalString + "}";
         finalStrings.push(finalString);
+        finishedString = finalStrings.join("\n")
+        if (finishedString.length > 1200) {
+            addString(finishedString);//
+        }
     })
     finishedString = finalStrings.join("\n")
-    console.log(finishedString);
+    addString(finishedString)
+
+    function addString(str) {
+        console.log(str);
+        finalStrings = [];
+        newtext = document.createElement("TEXTAREA");
+        newtext.className = "ungenerated";
+        newtext.innerHTML = str;
+        document.getElementById("ungenerated").appendChild(newtext);
+    }
 }
 function formatParameter(input) {
     input = input.item;
     if (input.id == "var") {
+        if (input.data.scope == "unsaved") input.data.scope = "global";
         return "var(" + input.data.name + ", " + input.data.scope + ")";
     }
     if (input.id == "num") {
@@ -124,6 +166,55 @@ function formatParameter(input) {
     }
     if (input.id == "txt") {
         return "'" + input.data.name + "'";
+    }
+    if (input.id == "item") {
+        itemID++;
+        nbts.push(input.data.item);
+        return "item(" + itemID + ")";
+    }
+    if (input.id == "g_val") {
+        if (input.data.target.toLowerCase() == "default") {
+            return "gameValue(" + input.data.type + ")";
+        }
+        return "gameValue(" + input.data.type + ", Target: " + input.data.target + ")";
+    }
+    if (input.id == "snd") {
+        if (input.data.variant) {
+            return "sound(" + input.data.sound + ", Pitch: " + input.data.pitch + ", Volume:" + input.data.vol + ", Variant: '" + input.data.variant + "')";
+        }
+        return "sound(" + input.data.sound + ", Pitch: " + input.data.pitch + ", Volume:" + input.data.vol + ")";
+    }
+    if (input.id == "loc") {
+        if ((input.data.loc.pitch == undefined || input.data.loc.pitch == 0) && (input.data.loc.yaw == undefined || input.data.loc.yaw == 0)) {
+            return "location(" + input.data.loc.x + ", " + input.data.loc.y + ", " + input.data.loc.z + ")";
+        }
+        return "location(" + input.data.loc.x + ", " + input.data.loc.y + ", " + input.data.loc.z + ", pitch: " + input.data.loc.pitch + ", yaw: " + input.data.loc.yaw + ")";
+    }
+    if (input.id == "vec") {
+        return "Vector(" + input.data.x + ", " + input.data.y + ", " + input.data.z + ")";
+    }
+    if (input.id == "part") {
+        additionalInfo = "";
+        if (input.data.data && Object.keys(input.data.data).length > 0) {
+            additionalInfoList = [];
+            Object.keys(input.data.data).forEach(idd => {
+                additionalInfoList.push(idd + ": " + input.data.data[idd]);
+            })
+            additionalInfo = ", " + additionalInfoList.join(", ");
+        }
+        if (input.data.cluster == undefined) {
+            return "Particle(" + input.data.particle + additionalInfo + ")";
+        }
+        if (input.data.cluster.horizontal == 0 && input.data.cluster.vertical == 0 && input.data.cluster.amount == 1) {
+            return "Particle(" + input.data.particle + additionalInfo + ")";    
+        }
+        if (input.data.cluster.horizontal == 0 && input.data.cluster.vertical == 0) {
+            return "Particle(" + input.data.particle + ", Amount: " + input.data.cluster.amount + additionalInfo + ")";    
+        }
+        return "Particle(" + input.data.particle + ", Amount: " + input.data.cluster.amount + ", Horizontal Spread: " + input.data.cluster.horizontal + ", Vertical Spread: " + input.data.cluster.vertical + additionalInfo + ")";
+    }
+    if (input.id == "pot") {
+        return "PotionEffect(" + input.data.pot + ", Duration (Ticks): " + input.data.dur + ", Amplifier: " + input.data.amp + ")";
     }
     if (input.id == "item") {
         return "itemnbt(" + input.data.item + ")";
