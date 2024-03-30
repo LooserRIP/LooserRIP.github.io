@@ -1,0 +1,67 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+  }
+  
+  #world {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    will-change: transform;
+    transition: all 0.1s;
+  }
+  
+  .tile {
+    width: 160px;
+    height: 90px;
+    position: absolute;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    background-color: #171717;
+    background-size: contain;
+    background-repeat: no-repeat;
+    color: #fff;
+  }
+  .tile > p {
+    font-size: 100%;
+    text-align:center;
+  }
+  
+  .red {
+    background-image: url('https://img.youtube.com/vi/DEFiZIcjbyY/default.jpg');
+  }
+  .popup {
+    position: absolute;
+    height: 1000px;
+    width: 2000px;
+    top: calc(50% - 500px);
+    left: calc(50% - 1000px);
+    margin-top:    50px;
+    margin-left:   50px;
+    margin-right:  50px;
+    margin-bottom: 50px;
+    text-align:center;
+    background-color: #101010;
+    color: #fff;
+    font-size: 300%;
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.4s;
+  }
+  .popup[data-remove="1"] {
+    opacity: 0;
+    transform: scale(0);
+  }
+  #boat {
+    width: 160px;
+    height: 90px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*background-image: url('boat.png'); /* You can replace this with an actual boat image */
+    background-size: cover;
+    z-index: 10;
+  }
